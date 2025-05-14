@@ -1,0 +1,7 @@
+export 'antropometrico.dart';
+export 'contacto.dart';
+export 'historia_clinica.dart';
+export 'paciente.dart';
+export 'medida.dart';
+export 'antecedente.dart';
+export 'habitos.dart';
