@@ -7,7 +7,7 @@ ThemeData getTheme() {
     visualDensity: VisualDensity.adaptivePlatformDensity,
     useMaterial3: true,
     searchBarTheme: const SearchBarThemeData(
-      elevation: MaterialStatePropertyAll(1),
+      elevation: WidgetStatePropertyAll(1),
     ),
     searchViewTheme: const SearchViewThemeData(elevation: 1.5),
   );

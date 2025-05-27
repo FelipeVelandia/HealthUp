@@ -32,7 +32,7 @@ class PasswordsForm extends StatelessWidget {
                 labelText: "Confirmar contraseña",
                 //isDense: true,
                 filled: true,
-                fillColor: Theme.of(context).colorScheme.background),
+                fillColor: Theme.of(context).colorScheme.surface),
           )
         ],
       ),
