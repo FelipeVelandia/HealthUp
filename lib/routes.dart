@@ -81,6 +81,7 @@ GoRouter getRouter(BuildContext context) {
       // Obtén el estado de autenticación
       final authService = Provider.of<DatabaseService>(context, listen: false);
       final isAuthenticated = authService.isAuthenticated;
+      final onBoard = authService.onBoard;
       final goingToLogin = state.fullPath == '/login';
       final goingToRegister = state.fullPath == '/register';
 
@@ -92,6 +93,10 @@ GoRouter getRouter(BuildContext context) {
       // Si está autenticado y está tratando de ir a /login, redirige al home
       if (isAuthenticated && (goingToLogin || goingToRegister)) {
         return '/progress';
+      }
+
+      if (!onBoard) {
+        return '/initial';
       }
 
       // No redirigir en otros casos
