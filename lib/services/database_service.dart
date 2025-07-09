@@ -3,14 +3,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nutrialg_life/models/models.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DatabaseService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late bool _onBoard = true;
 
   //* Getter para el usuario actual
   User? get user => _auth.currentUser;
   bool get isAuthenticated => _auth.currentUser != null;
+  bool get onBoard => _onBoard;
 
   //* Sign in
   Future<void> signIn(
@@ -40,13 +43,21 @@ class DatabaseService extends ChangeNotifier {
       // Obtener el ID del usuario recién creado
       String userId = userCredential.user?.uid ?? '';
 
+      // Guardar ID Usuario
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      prefs.setString("UserID", userId);
+
       // Verificar si el userId es válido antes de insertar los datos
       if (userId.isNotEmpty) {
         // Crear los datos del paciente que se insertarán en Firestore
         Map<String, dynamic> data = paciente.toJson();
 
         // Insertar los datos del usuario en Firestore
-        await _firestore.collection('paciente').doc(userId).set(data);
+        await _firestore.collection('pacientes').doc(userId).set(data);
+
+        // Comlpetar Initial Survey
+        _onBoard = false;
 
         // Notificar que los datos han sido guardados
         notifyListeners();
@@ -80,5 +91,34 @@ class DatabaseService extends ChangeNotifier {
   Future<void> signOut() async {
     await _auth.signOut();
     notifyListeners();
+  }
+
+  //* Register Antecedente
+
+  Future<void> initial(
+      BuildContext context, Antecedentes antecedentes, Habito habitos) async {
+
+        Map<String, dynamic> dataAnt = antecedentes.toJson();
+        Map<String, dynamic> dataHab = habitos.toJson();
+
+        // Obtener ID Usuario
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        String? userId = prefs.getString("UserID");
+
+        // Insertar los datos del usuario en Firestore
+        await _firestore.collection('antecedentes').doc(userId).set(dataAnt);
+        await _firestore.collection('habitos').doc(userId).set(dataHab);
+
+        // Comlpetar Initial Survey
+        _onBoard = true;
+
+        // Regresando a la página principal
+        if (context.mounted) {
+          context.go("/progress");
+        }
+
+        // Notificar que se ha completado la survey
+        notifyListeners();
   }
 }

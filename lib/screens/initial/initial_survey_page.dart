@@ -5,6 +5,8 @@ import 'package:nutrialg_life/widgets/checkbox_with_descriptions.dart';
 import 'package:nutrialg_life/widgets/dynamic_input.dart';
 import 'package:nutrialg_life/widgets/form_step.dart';
 import 'package:nutrialg_life/widgets/select_input.dart';
+import 'package:provider/provider.dart';
+import 'package:nutrialg_life/services/database_service.dart';
 
 class InitialSurveyPage extends StatefulWidget {
   const InitialSurveyPage({super.key});
@@ -36,6 +38,7 @@ class _InitialSurveyPageState extends State<InitialSurveyPage> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<DatabaseService>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Padding(
@@ -159,7 +162,12 @@ class _InitialSurveyPageState extends State<InitialSurveyPage> {
                 subtitle: "Marque todas las opciones correspondientes.",
                 type: StepType.end,
                 next: _nextPage,
-                send: () async {},
+                back: _prevPage,
+                send: () async {
+                  if (formKey.currentState!.validate()) {
+                          auth.initial(context, Antecedentes.fromControllers(antecedentesController), Habito.fromControllers(habitosController));
+                  }
+                },
                 children: [
                   DynamicInputField(
                     type: InputType.multiline,
