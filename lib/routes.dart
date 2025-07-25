@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
+import "package:nutrialg_life/screens/diet/details_page.dart";
 import "package:nutrialg_life/screens/screens.dart";
 import "package:nutrialg_life/services/database_service.dart";
 import "package:provider/provider.dart";
@@ -13,11 +14,11 @@ GoRouter getRouter(BuildContext context) {
         routes: [
           GoRoute(
             path: '/diet',
-            builder: (context, state) => const DietPage(),
+            builder: (context, state) => DietPage(),
             pageBuilder: (context, state) {
               return CustomTransitionPage(
                 key: state.pageKey,
-                child: const DietPage(),
+                child: DietPage(),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
                   return FadeTransition(
@@ -75,6 +76,10 @@ GoRouter getRouter(BuildContext context) {
       GoRoute(
         path: '/initial',
         builder: (context, state) => const InitialSurveyPage(),
+      ),
+      GoRoute(
+        path: '/details',
+        builder: (context, state) => DetailsPage(),
       )
     ],
     redirect: (context, state) {

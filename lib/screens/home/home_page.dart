@@ -59,33 +59,34 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: child,
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: const Icon(FontAwesomeIcons.carrot),
-      ),
+      ),*/
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
       bottomNavigationBar: BottomAppBar(
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
                 onPressed: () => changePath(context, "/diet"),
                 icon: const Icon(
-                  FontAwesomeIcons.cartShopping,
-                  size: 20,
+                  FontAwesomeIcons.appleWhole,
+                  size: 30,
                 )),
             const SizedBox(width: 12),
             IconButton(
                 onPressed: () => changePath(context, "/genomics"),
                 icon: const Icon(
                   FontAwesomeIcons.dna,
-                  size: 20,
+                  size: 30,
                 )),
             const SizedBox(width: 12),
             IconButton(
                 onPressed: () => changePath(context, "/progress"),
                 icon: const Icon(
                   FontAwesomeIcons.clipboardQuestion,
-                  size: 20,
+                  size: 30,
                 )),
           ],
         ),
