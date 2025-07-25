@@ -121,4 +121,16 @@ class DatabaseService extends ChangeNotifier {
         // Notificar que se ha completado la survey
         notifyListeners();
   }
+
+  Future<Dieta> getDieta (String id) async{
+    var snap = await _firestore.collection('dietas').doc(id).get();
+
+    return Dieta.fromMap(snap.data());
+  }
+
+  Future<Plan> getLunes (String id) async{
+    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('lun').get();
+
+    return Plan.fromMap(snap.data());
+  }
 }
