@@ -25,6 +25,8 @@ class HomePage extends StatelessWidget {
             ? "Menú para hoy"
             : GoRouterState.of(context).uri.toString() == "/genomics"
                 ? "Mi perfil genético"
+                : GoRouterState.of(context).uri.toString() == "/exercise-registration"
+                ? "Registrar Actividad Física"
                 : "Exámenes faltantes"),
         foregroundColor: scheme.primary,
         centerTitle: true,
@@ -87,6 +89,13 @@ class HomePage extends StatelessWidget {
                   FontAwesomeIcons.clipboardQuestion,
                   size: 20,
                 )),
+            const SizedBox(width: 12), 
+            IconButton(
+                onPressed: () => changePath(context, "/exercise-registration"),
+                icon: const Icon(
+                  FontAwesomeIcons.personRunning,
+                  size: 20,
+                )),    
           ],
         ),
       ),
