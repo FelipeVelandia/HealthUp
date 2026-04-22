@@ -77,7 +77,7 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Registrar Actividad físca"),
+        title: const Text("Registrar Actividad Físca"),
         backgroundColor: greenPrimary,
         foregroundColor: Colors.white,
         centerTitle: true,
