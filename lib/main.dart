@@ -6,6 +6,9 @@ import 'package:nutrialg_life/services/database_service.dart';
 import 'package:nutrialg_life/themes.dart';
 import 'package:provider/provider.dart';
 
+// ignore: unused_import
+import 'package:nutrialg_life/screens/food_registration/food_registration_page.dart';
+
 import 'firebase_options.dart';
 
 Future<void> main() async {

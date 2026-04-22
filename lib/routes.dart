@@ -75,7 +75,11 @@ GoRouter getRouter(BuildContext context) {
       GoRoute(
         path: '/initial',
         builder: (context, state) => const InitialSurveyPage(),
-      )
+      ),
+      GoRoute(
+        path: '/food-registration',
+        builder: (context, state) => const FoodRegistrationScreen(),
+      ),
     ],
     redirect: (context, state) {
       // Obtén el estado de autenticación
