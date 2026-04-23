@@ -19,17 +19,20 @@ class HomePage extends StatelessWidget {
     final auth = Provider.of<DatabaseService>(context, listen: false);
 
     var scheme = Theme.of(context).colorScheme;
+    // Guardamos la ruta actual para la lógica del título y del botón
+    var currentPath = GoRouterState.of(context).uri.toString();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(GoRouterState.of(context).uri.toString() == "/diet"
+        title: Text(currentPath == "/diet"
             ? "Menú para hoy"
-            : GoRouterState.of(context).uri.toString() == "/genomics"
+            : currentPath == "/genomics"
                 ? "Mi perfil genético"
-                : GoRouterState.of(context).uri.toString() == "/exercise-registration"
-                ? "Registrar Actividad Física"
-                  : GoRouterState.of(context).uri.toString() == "/progress"
-                  ? "HealthUp"
-                  : "Por defecto"),
+                : currentPath == "/exercise-registration"
+                    ? "Registrar Actividad Física"
+                    : currentPath == "/progress"
+                        ? "HealthUp"
+                        : "Por defecto"),
         foregroundColor: scheme.primary,
         centerTitle: true,
         actions: [
@@ -59,38 +62,48 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: child,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
+
+      // --- BOTÓN FLOTANTE PERSONALIZADO ---
+      // Solo se muestra si estamos en la pantalla de progreso
+      floatingActionButton: currentPath == "/progress" 
+        ? FloatingActionButton(
+            onPressed: () => changePath(context, "/exercise-registration"),
+            backgroundColor: const Color(0xFF32A287), // Tu verde esmeralda
+            elevation: 4,
+            shape: const CircleBorder(), // Lo hace perfectamente circular
+            child: const Icon(
+              FontAwesomeIcons.personRunning, // El icono de ejercicio
+              color: Colors.white,
+              size: 24,
+            ),
+          )
+        : null,
+
+      // Ubicación flotante sobre el contenido, sin tocar la barra
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
       bottomNavigationBar: BottomAppBar(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
                 onPressed: () => changePath(context, "/progress"),
                 icon: const Icon(
                   FontAwesomeIcons.house,
-                  size: 30,
+                  size: 25,
                 )),
-                 const SizedBox(width: 12),
             IconButton(
                 onPressed: () => changePath(context, "/diet"),
                 icon: const Icon(
                   FontAwesomeIcons.appleWhole,
-                  size: 30,
+                  size: 25,
                 )),
-            const SizedBox(width: 12),
             IconButton(
                 onPressed: () => changePath(context, "/genomics"),
                 icon: const Icon(
                   FontAwesomeIcons.dna,
-                  size: 30,
+                  size: 25,
                 )),
-            const SizedBox(width: 12), 
-            IconButton(
-                onPressed: () => changePath(context, "/exercise-registration"),
-                icon: const Icon(
-                  FontAwesomeIcons.personRunning,
-                  size: 20,
-                )),    
           ],
         ),
       ),
