@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
+import "package:nutrialg_life/screens/exercise_registration/exercise_registration_page.dart";
 import "package:nutrialg_life/screens/diet/details_page.dart";
 import "package:nutrialg_life/screens/screens.dart";
 import "package:nutrialg_life/services/database_service.dart";
@@ -78,6 +79,13 @@ GoRouter getRouter(BuildContext context) {
         builder: (context, state) => const InitialSurveyPage(),
       ),
       GoRoute(
+        path: '/food-registration',
+        builder: (context, state) => const FoodRegistrationScreen(),
+      ),
+      GoRoute(
+        path: '/exercise-registration',
+        builder: (context, state) => const ExerciseRegistrationPage(),
+      ),
         path: '/details',
         builder: (context, state) => DetailsPage(),
       )
