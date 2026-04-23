@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
                 : GoRouterState.of(context).uri.toString() == "/exercise-registration"
                 ? "Registrar Actividad Física"
                   : GoRouterState.of(context).uri.toString() == "/progress"
-                  ? "Bienvenido"
+                  ? "HealthUp"
                   : "Por defecto"),
         foregroundColor: scheme.primary,
         centerTitle: true,
@@ -36,11 +36,7 @@ class HomePage extends StatelessWidget {
           MenuAnchor(
             menuChildren: [
               MenuItemButton(
-                onPressed: () {},
-                child: const Text('Mis datos'),
-              ),
-              MenuItemButton(
-                onPressed: () {},
+                onPressed: () => changePath(context, "/account"),
                 child: const Text('Mi cuenta'),
               ),
               MenuItemButton(

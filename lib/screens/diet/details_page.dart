@@ -80,21 +80,6 @@ class DetailsPage extends StatelessWidget {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              "# PUNTOS",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .primary),
-                                            ),
-                                          ),
-                                        )
                                       ],
                                     ),
                                     const SizedBox(height: 16),
@@ -118,7 +103,7 @@ class DetailsPage extends StatelessWidget {
                                             padding: const EdgeInsets.all(16.0),
                                             child: Column(
                                               children: [
-                                                const Text('Descripcion',
+                                                const Text('Calorias e Informacion',
                                                     style: TextStyle(
                                                         fontSize: 20,
                                                         fontWeight:
@@ -200,21 +185,6 @@ class DetailsPage extends StatelessWidget {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              "# PUNTOS",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .primary),
-                                            ),
-                                          ),
-                                        )
                                       ],
                                     ),
                                     const SizedBox(height: 16),
@@ -238,7 +208,7 @@ class DetailsPage extends StatelessWidget {
                                             padding: const EdgeInsets.all(16.0),
                                             child: Column(
                                               children: [
-                                                const Text('Descripcion',
+                                                const Text('Calorias e Informacion',
                                                     style: TextStyle(
                                                         fontSize: 20,
                                                         fontWeight:
@@ -320,21 +290,6 @@ class DetailsPage extends StatelessWidget {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              "# PUNTOS",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .primary),
-                                            ),
-                                          ),
-                                        )
                                       ],
                                     ),
                                     const SizedBox(height: 16),
@@ -358,7 +313,7 @@ class DetailsPage extends StatelessWidget {
                                             padding: const EdgeInsets.all(16.0),
                                             child: Column(
                                               children: [
-                                                const Text('Descripcion',
+                                                const Text('Calorias e Informacion',
                                                     style: TextStyle(
                                                         fontSize: 20,
                                                         fontWeight:
@@ -440,21 +395,6 @@ class DetailsPage extends StatelessWidget {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              "# PUNTOS",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .primary),
-                                            ),
-                                          ),
-                                        )
                                       ],
                                     ),
                                     const SizedBox(height: 16),
@@ -478,7 +418,7 @@ class DetailsPage extends StatelessWidget {
                                             padding: const EdgeInsets.all(16.0),
                                             child: Column(
                                               children: [
-                                                const Text('Descripcion',
+                                                const Text('Calorias e Informacion',
                                                     style: TextStyle(
                                                         fontSize: 20,
                                                         fontWeight:
@@ -560,21 +500,6 @@ class DetailsPage extends StatelessWidget {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              "# PUNTOS",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .primary),
-                                            ),
-                                          ),
-                                        )
                                       ],
                                     ),
                                     const SizedBox(height: 16),
@@ -598,7 +523,7 @@ class DetailsPage extends StatelessWidget {
                                             padding: const EdgeInsets.all(16.0),
                                             child: Column(
                                               children: [
-                                                const Text('Descripcion',
+                                                const Text('Calorias e Informacion',
                                                     style: TextStyle(
                                                         fontSize: 20,
                                                         fontWeight:

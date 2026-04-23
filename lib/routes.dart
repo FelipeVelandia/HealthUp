@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
+import "package:nutrialg_life/screens/account/account_page.dart";
 import "package:nutrialg_life/screens/exercise_registration/exercise_registration_page.dart";
 import "package:nutrialg_life/screens/diet/details_page.dart";
 import "package:nutrialg_life/screens/screens.dart";
@@ -89,6 +90,10 @@ GoRouter getRouter(BuildContext context) {
       GoRoute(
         path: '/details',
         builder: (context, state) => DetailsPage(),
+      ),
+      GoRoute(
+        path: '/account',
+        builder: (context, state) => AccountPage(),
       )
     ],
     redirect: (context, state) {

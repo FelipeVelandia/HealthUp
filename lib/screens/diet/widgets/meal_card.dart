@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 export 'meal_item.dart';
 
 class MealCard extends StatelessWidget {
-  const MealCard({
-    super.key,
-    required this.label,
-    required this.time,
-    required this.items,
-  });
+  const MealCard(
+      {super.key,
+      required this.label,
+      required this.time,
+      required this.items,
+      required this.state});
 
   final String label;
   final String time;
+  final String state;
   final List<Widget> items;
 
   @override
@@ -34,6 +35,30 @@ class MealCard extends StatelessWidget {
                   icon: const Icon(Icons.alarm),
                   label: Text(time),
                 ),
+                FilledButton.tonalIcon(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Completar Mision"),
+                          content: const Text("¿Quieres dar esta mision por completada?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text("Si"),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text("No"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  label: Text(state),
+                )
               ],
             ),
             ...items
