@@ -6,6 +6,7 @@ import "package:nutrialg_life/screens/diet/details_page.dart";
 import "package:nutrialg_life/screens/screens.dart";
 import "package:nutrialg_life/services/database_service.dart";
 import "package:provider/provider.dart";
+import 'package:nutrialg_life/screens/genomic/genomic_page.dart';
 
 GoRouter getRouter(BuildContext context) {
   return GoRouter(
@@ -14,59 +15,45 @@ GoRouter getRouter(BuildContext context) {
       ShellRoute(
         builder: (context, state, child) => HomePage(child: child),
         routes: [
+          // RUTA DIETA
           GoRoute(
             path: '/diet',
-            builder: (context, state) => DietPage(),
-            pageBuilder: (context, state) {
-              return CustomTransitionPage(
-                key: state.pageKey,
-                child: DietPage(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
-                },
-              );
-            },
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: DietPage(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
           ),
+          
+          // RUTA GENÓMICA (La que acabamos de crear)
           GoRoute(
             path: '/genomics',
-            builder: (context, state) => const GenomicPage(),
-            pageBuilder: (context, state) {
-              return CustomTransitionPage(
-                key: state.pageKey,
-                child: const GenomicPage(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
-                },
-              );
-            },
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const GenomicPage(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
           ),
+          
+          // RUTA PROGRESO (Home)
           GoRoute(
             path: '/progress',
-            builder: (context, state) => ProgressPage(),
-            pageBuilder: (context, state) {
-              return CustomTransitionPage(
-                key: state.pageKey,
-                child: ProgressPage(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
-                },
-              );
-            },
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: ProgressPage(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
           )
         ],
       ),
+
+      // Rutas fuera del Shell (sin barra inferior)
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginPage(),
@@ -96,29 +83,29 @@ GoRouter getRouter(BuildContext context) {
         builder: (context, state) => AccountPage(),
       )
     ],
+    
+    // Lógica de redirección (Auth Guard)
     redirect: (context, state) {
-      // Obtén el estado de autenticación
       final authService = Provider.of<DatabaseService>(context, listen: false);
       final isAuthenticated = authService.isAuthenticated;
       final onBoard = authService.onBoard;
+      
       final goingToLogin = state.fullPath == '/login';
       final goingToRegister = state.fullPath == '/register';
 
-      // Si no está autenticado y no está en la página de login, redirige a /login
       if (!isAuthenticated && !goingToLogin && !goingToRegister) {
         return '/login';
       }
 
-      // Si está autenticado y está tratando de ir a /login, redirige al home
       if (isAuthenticated && (goingToLogin || goingToRegister)) {
         return '/progress';
       }
 
-      if (!onBoard) {
+      // Si falta el survey inicial
+      if (isAuthenticated && !onBoard && state.fullPath != '/initial') {
         return '/initial';
       }
 
-      // No redirigir en otros casos
       return null;
     },
     refreshListenable: Provider.of<DatabaseService>(context, listen: false),
