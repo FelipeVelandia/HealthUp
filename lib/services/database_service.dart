@@ -133,4 +133,10 @@ class DatabaseService extends ChangeNotifier {
 
     return Plan.fromMap(snap.data());
   }
+
+  Future getPaciente (String id) async{
+    var snap = await _firestore.collection('pacientes').doc(id).get(); 
+
+    return Paciente.fromMap(snap.data());
+  }
 }

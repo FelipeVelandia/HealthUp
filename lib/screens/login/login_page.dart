@@ -33,17 +33,10 @@ class LoginPage extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                "NutriAlg",
+                "HealthUp",
                 style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                     color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "Life",
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge!
-                    .copyWith(color: Colors.teal, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
               Text(
@@ -92,12 +85,6 @@ class LoginPage extends StatelessWidget {
                   context.push('/register');
                 },
                 child: const Text("Crear cuenta"),
-              ),
-              const SizedBox(height: 40),
-              const Divider(indent: 20, endIndent: 20),
-              TextButton(
-                onPressed: () {},
-                child: const Text("¿Olvidaste tu contraseña?"),
               ),
               const Spacer()
             ],

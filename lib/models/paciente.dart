@@ -67,4 +67,15 @@ class Paciente {
         "email": TextEditingController(),
         "genero": TextEditingController(),
       };
+
+    factory Paciente.fromMap(Map<String,dynamic>? data) {
+    return Paciente(
+      nombre: data?['nombre'] as String,
+      documento: data?['documento'] as String,
+      fecha: DateTime.parse(data?["fecha"] as String),
+      telefono: data?['telefono'] as String,
+      email: data?['email'] as String,
+      genero: data?['genero'] as String,
+    );
+  }
 }

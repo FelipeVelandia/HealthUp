@@ -5,6 +5,7 @@ import 'package:nutrialg_life/widgets/select_input.dart';
 enum InputType {
   text,
   multiline,
+  multilineinit,
   numeric,
   phone,
   email,
@@ -112,6 +113,13 @@ class DynamicInputField extends StatelessWidget {
           decoration: decoration,
           controller: controller,
           validator: emptyValidator,
+          minLines: 2,
+          maxLines: 2,
+        );
+      case InputType.multilineinit:
+        return TextFormField(
+          decoration: decoration,
+          controller: controller,
           minLines: 2,
           maxLines: 2,
         );

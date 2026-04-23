@@ -48,11 +48,11 @@ GoRouter getRouter(BuildContext context) {
           ),
           GoRoute(
             path: '/progress',
-            builder: (context, state) => const ProgressPage(),
+            builder: (context, state) => ProgressPage(),
             pageBuilder: (context, state) {
               return CustomTransitionPage(
                 key: state.pageKey,
-                child: const ProgressPage(),
+                child: ProgressPage(),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
                   return FadeTransition(

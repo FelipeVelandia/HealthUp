@@ -19,7 +19,12 @@ class DietPage extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.data == null) {
-                return Text('no data');
+                return Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: const Center(
+                    child: Text("Sin datos de dieta"),
+                  ),
+                );
               } else {
                 return ListView(
                   children: [

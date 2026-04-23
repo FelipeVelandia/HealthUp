@@ -93,7 +93,7 @@ class _InitialSurveyPageState extends State<InitialSurveyPage> {
                 back: _prevPage,
                 children: [
                   SizedBox(
-                    height: 350,
+                    height: 650,
                     child: SingleChildScrollView(
                       child: CheckboxWithDescriptions(
                           selectedOptionsController:
@@ -107,7 +107,8 @@ class _InitialSurveyPageState extends State<InitialSurveyPage> {
                             "Quirúrgicos",
                             "Alérgicos",
                             "Traumáticos",
-                            "Tóxicos"
+                            "Tóxicos",
+                            "Otros"
                           ]),
                     ),
                   )
@@ -147,7 +148,7 @@ class _InitialSurveyPageState extends State<InitialSurveyPage> {
                   SelectInput(
                     label: "Hábitos intestinales",
                     controller: habitosController["habito_intestinal"]!,
-                    options: const ["Normal", "Estreñimiento", "Diarrea"],
+                    options: const ["Normal", "Estreñimiento", "Diarrea", "Sufrimiento de gases"],
                   ),
                   const SizedBox(height: 12),
                   SelectInput(

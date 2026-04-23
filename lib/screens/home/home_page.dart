@@ -25,7 +25,7 @@ class HomePage extends StatelessWidget {
             ? "Menú para hoy"
             : GoRouterState.of(context).uri.toString() == "/genomics"
                 ? "Mi perfil genético"
-                : "Exámenes faltantes"),
+                : "HealthUp"),
         foregroundColor: scheme.primary,
         centerTitle: true,
         actions: [
@@ -59,15 +59,18 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: child,
-      /*floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(FontAwesomeIcons.carrot),
-      ),*/
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            IconButton(
+                onPressed: () => changePath(context, "/progress"),
+                icon: const Icon(
+                  FontAwesomeIcons.house,
+                  size: 30,
+                )),
+                 const SizedBox(width: 12),
             IconButton(
                 onPressed: () => changePath(context, "/diet"),
                 icon: const Icon(
@@ -79,13 +82,6 @@ class HomePage extends StatelessWidget {
                 onPressed: () => changePath(context, "/genomics"),
                 icon: const Icon(
                   FontAwesomeIcons.dna,
-                  size: 30,
-                )),
-            const SizedBox(width: 12),
-            IconButton(
-                onPressed: () => changePath(context, "/progress"),
-                icon: const Icon(
-                  FontAwesomeIcons.clipboardQuestion,
                   size: 30,
                 )),
           ],
