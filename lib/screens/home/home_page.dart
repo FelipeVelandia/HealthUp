@@ -27,7 +27,9 @@ class HomePage extends StatelessWidget {
                 ? "Mi perfil genético"
                 : GoRouterState.of(context).uri.toString() == "/exercise-registration"
                 ? "Registrar Actividad Física"
-                : "Exámenes faltantes"),
+                  : GoRouterState.of(context).uri.toString() == "/progress"
+                  ? "Bienvenido"
+                  : "Por defecto"),
         foregroundColor: scheme.primary,
         centerTitle: true,
         actions: [
@@ -84,13 +86,6 @@ class HomePage extends StatelessWidget {
                 onPressed: () => changePath(context, "/genomics"),
                 icon: const Icon(
                   FontAwesomeIcons.dna,
-                  size: 30,
-                )),
-            const SizedBox(width: 12),
-            IconButton(
-                onPressed: () => changePath(context, "/progress"),
-                icon: const Icon(
-                  FontAwesomeIcons.clipboardQuestion,
                   size: 30,
                 )),
             const SizedBox(width: 12), 
