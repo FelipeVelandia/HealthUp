@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 import "package:nutrialg_life/screens/exercise_registration/exercise_registration_page.dart";
+import "package:nutrialg_life/screens/diet/details_page.dart";
 import "package:nutrialg_life/screens/screens.dart";
 import "package:nutrialg_life/services/database_service.dart";
 import "package:provider/provider.dart";
@@ -14,11 +15,11 @@ GoRouter getRouter(BuildContext context) {
         routes: [
           GoRoute(
             path: '/diet',
-            builder: (context, state) => const DietPage(),
+            builder: (context, state) => DietPage(),
             pageBuilder: (context, state) {
               return CustomTransitionPage(
                 key: state.pageKey,
-                child: const DietPage(),
+                child: DietPage(),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
                   return FadeTransition(
@@ -85,11 +86,15 @@ GoRouter getRouter(BuildContext context) {
         path: '/exercise-registration',
         builder: (context, state) => const ExerciseRegistrationPage(),
       ),
+        path: '/details',
+        builder: (context, state) => DetailsPage(),
+      )
     ],
     redirect: (context, state) {
       // Obtén el estado de autenticación
       final authService = Provider.of<DatabaseService>(context, listen: false);
       final isAuthenticated = authService.isAuthenticated;
+      final onBoard = authService.onBoard;
       final goingToLogin = state.fullPath == '/login';
       final goingToRegister = state.fullPath == '/register';
 
@@ -101,6 +106,10 @@ GoRouter getRouter(BuildContext context) {
       // Si está autenticado y está tratando de ir a /login, redirige al home
       if (isAuthenticated && (goingToLogin || goingToRegister)) {
         return '/progress';
+      }
+
+      if (!onBoard) {
+        return '/initial';
       }
 
       // No redirigir en otros casos

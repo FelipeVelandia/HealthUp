@@ -5,3 +5,4 @@ export 'paciente.dart';
 export 'medida.dart';
 export 'antecedente.dart';
 export 'habitos.dart';
+export 'dieta.dart';

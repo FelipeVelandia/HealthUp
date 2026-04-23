@@ -36,7 +36,7 @@ class DynamicInputField extends StatelessWidget {
         alignLabelWithHint: true,
         //isDense: true,
         filled: true,
-        fillColor: Theme.of(context).colorScheme.background);
+        fillColor: Theme.of(context).colorScheme.surface);
 
     switch (type) {
       case InputType.text:

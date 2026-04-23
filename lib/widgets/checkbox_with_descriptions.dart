@@ -62,6 +62,7 @@ class _CheckboxWithDescriptionsState extends State<CheckboxWithDescriptions> {
                     },
                     decoration: InputDecoration(
                       labelText: 'Descripción para "${widget.options[index]}"',
+                      // ignore: prefer_const_constructors
                       border: OutlineInputBorder(),
                     ),
                   ),
