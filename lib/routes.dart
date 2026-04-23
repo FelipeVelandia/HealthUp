@@ -86,6 +86,7 @@ GoRouter getRouter(BuildContext context) {
         path: '/exercise-registration',
         builder: (context, state) => const ExerciseRegistrationPage(),
       ),
+      GoRoute(
         path: '/details',
         builder: (context, state) => DetailsPage(),
       )
