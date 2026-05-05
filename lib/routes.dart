@@ -5,6 +5,7 @@ import "package:nutrialg_life/screens/exercise_registration/exercise_registratio
 import "package:nutrialg_life/screens/diet/details_page.dart";
 import "package:nutrialg_life/screens/screens.dart";
 import "package:nutrialg_life/services/database_service.dart";
+import 'package:nutrialg_life/screens/daily/daily_page.dart';
 import "package:provider/provider.dart";
 import 'package:nutrialg_life/screens/genomic/genomic_page.dart';
 
@@ -21,31 +22,34 @@ GoRouter getRouter(BuildContext context) {
             pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
               child: DietPage(),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return FadeTransition(opacity: animation, child: child);
               },
             ),
           ),
-          
+
           // RUTA GENÓMICA (La que acabamos de crear)
           GoRoute(
             path: '/genomics',
             pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
               child: const GenomicPage(),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return FadeTransition(opacity: animation, child: child);
               },
             ),
           ),
-          
+
           // RUTA PROGRESO (Home)
           GoRoute(
             path: '/progress',
             pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
               child: ProgressPage(),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return FadeTransition(opacity: animation, child: child);
               },
             ),
@@ -81,15 +85,19 @@ GoRouter getRouter(BuildContext context) {
       GoRoute(
         path: '/account',
         builder: (context, state) => AccountPage(),
+      ),
+      GoRoute(
+        path: '/daily',
+        builder: (context, state) => DailyPage(),
       )
     ],
-    
+
     // Lógica de redirección (Auth Guard)
     redirect: (context, state) {
       final authService = Provider.of<DatabaseService>(context, listen: false);
       final isAuthenticated = authService.isAuthenticated;
       final onBoard = authService.onBoard;
-      
+
       final goingToLogin = state.fullPath == '/login';
       final goingToRegister = state.fullPath == '/register';
 

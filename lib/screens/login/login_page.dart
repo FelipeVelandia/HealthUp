@@ -80,12 +80,12 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              FilledButton.tonal(
+              /*FilledButton.tonal(
                 onPressed: () {
                   context.push('/register');
                 },
                 child: const Text("Crear cuenta"),
-              ),
+              ),*/
               const Spacer()
             ],
           ),

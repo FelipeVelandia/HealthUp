@@ -42,8 +42,29 @@ class ProgressPage extends StatelessWidget {
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20.0)),
+                                const Text("Bienvenido de vuelta, revisa tu progreso",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0)),
                                 const SizedBox(height: 25),
-                                const LinearProgressIndicator(value: 0.7),
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 100,
+                                      height: 100,
+                                      child: CircularProgressIndicator(
+                                        value: 0.45,
+                                        strokeWidth: 8,
+                                        backgroundColor: Colors.grey[300],
+                                        valueColor:
+                                            const AlwaysStoppedAnimation<Color>(
+                                                Colors.blue),
+                                      ),
+                                    )
+                                  ],
+                                ),
                                 const SizedBox(height: 25),
                                 ExamCard(
                                   description: "Recomendaciones Universales",
@@ -56,25 +77,8 @@ class ProgressPage extends StatelessWidget {
                                   description: "Misiones Diarias",
                                   completed: false,
                                   onTap: () =>
-                                      GoRouter.of(context).push("/initial"),
+                                      GoRouter.of(context).push("/daily"),
                                 ),
-                                const SizedBox(height: 35),
-                                const Text(
-                                    "El ejercicio es muy importante, acá te recomiendo algunos ejercicios que puedes realizar:",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.0)),
-                                const SizedBox(height: 15),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .spaceEvenly,
-                                  children: [
-                                    Image.network('https://a.storyblok.com/f/97382/2000x1500/4c15e1224b/cover-benefits-of-yoga-and-meditation.png', width: 100),
-                                    Image.network('https://a.storyblok.com/f/97382/2000x1500/4c15e1224b/cover-benefits-of-yoga-and-meditation.png', width: 100),
-                                    Image.network('https://a.storyblok.com/f/97382/2000x1500/4c15e1224b/cover-benefits-of-yoga-and-meditation.png', width: 100),
-                                  ],
-                                )
                               ],
                             ),
                           ));
