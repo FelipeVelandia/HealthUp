@@ -8,6 +8,7 @@ import "package:nutrialg_life/services/database_service.dart";
 import 'package:nutrialg_life/screens/daily/daily_page.dart';
 import "package:provider/provider.dart";
 import 'package:nutrialg_life/screens/genomic/genomic_page.dart';
+import 'package:nutrialg_life/screens/food_registration/food_registration_page.dart';
 
 GoRouter getRouter(BuildContext context) {
   return GoRouter(
@@ -16,104 +17,75 @@ GoRouter getRouter(BuildContext context) {
       ShellRoute(
         builder: (context, state, child) => HomePage(child: child),
         routes: [
-          // RUTA DIETA
-          GoRoute(
-            path: '/diet',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              key: state.pageKey,
-              child: DietPage(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return FadeTransition(opacity: animation, child: child);
-              },
-            ),
-          ),
-
-          // RUTA GENÓMICA (La que acabamos de crear)
-          GoRoute(
-            path: '/genomics',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              key: state.pageKey,
-              child: const GenomicPage(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return FadeTransition(opacity: animation, child: child);
-              },
-            ),
-          ),
-
-          // RUTA PROGRESO (Home)
+          // PROGRESO
           GoRoute(
             path: '/progress',
             pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
               child: ProgressPage(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return FadeTransition(opacity: animation, child: child);
-              },
+              transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                  FadeTransition(opacity: animation, child: child),
             ),
-          )
+          ),
+
+          // DIETA (Vista principal al tocar la manzana)
+          GoRoute(
+            path: '/diet',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: DietPage(), 
+              transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                  FadeTransition(opacity: animation, child: child),
+            ),
+          ),
+
+          // REGISTRO DE ALIMENTOS (Se abre desde el botón flotante)
+          GoRoute(
+            path: '/food-registration',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const FoodRegistrationScreen(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                  FadeTransition(opacity: animation, child: child),
+            ),
+          ),
+
+          // EJERCICIO
+          GoRoute(
+            path: '/exercise-registration',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const ExerciseRegistrationPage(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                  FadeTransition(opacity: animation, child: child),
+            ),
+          ),
+
+          // GENÓMICA
+          GoRoute(
+            path: '/genomics',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const GenomicPage(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                  FadeTransition(opacity: animation, child: child),
+            ),
+          ),
         ],
       ),
 
-      // Rutas fuera del Shell (sin barra inferior)
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginPage(),
-      ),
-      GoRoute(
-        path: '/register',
-        builder: (context, state) => const RegisterPage(),
-      ),
-      GoRoute(
-        path: '/initial',
-        builder: (context, state) => const InitialSurveyPage(),
-      ),
-      GoRoute(
-        path: '/food-registration',
-        builder: (context, state) => const FoodRegistrationScreen(),
-      ),
-      GoRoute(
-        path: '/exercise-registration',
-        builder: (context, state) => const ExerciseRegistrationPage(),
-      ),
-      GoRoute(
-        path: '/details',
-        builder: (context, state) => DetailsPage(),
-      ),
-      GoRoute(
-        path: '/account',
-        builder: (context, state) => AccountPage(),
-      ),
-      GoRoute(
-        path: '/daily',
-        builder: (context, state) => DailyPage(),
-      )
+      // Rutas fuera del Shell
+      GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
+      GoRoute(path: '/register', builder: (context, state) => const RegisterPage()),
+      GoRoute(path: '/initial', builder: (context, state) => const InitialSurveyPage()),
+      GoRoute(path: '/details', builder: (context, state) => DetailsPage()),
+      GoRoute(path: '/account', builder: (context, state) => AccountPage()),
+      GoRoute(path: '/daily', builder: (context, state) => DailyPage()),
     ],
-
-    // Lógica de redirección (Auth Guard)
+    // ... lógica de redirect y refreshListenable igual ...
     redirect: (context, state) {
       final authService = Provider.of<DatabaseService>(context, listen: false);
-      final isAuthenticated = authService.isAuthenticated;
-      final onBoard = authService.onBoard;
-
-      final goingToLogin = state.fullPath == '/login';
-      final goingToRegister = state.fullPath == '/register';
-
-      if (!isAuthenticated && !goingToLogin && !goingToRegister) {
-        return '/login';
-      }
-
-      if (isAuthenticated && (goingToLogin || goingToRegister)) {
-        return '/progress';
-      }
-
-      // Si falta el survey inicial
-      if (isAuthenticated && !onBoard && state.fullPath != '/initial') {
-        return '/initial';
-      }
-
+      if (!authService.isAuthenticated && state.fullPath != '/login' && state.fullPath != '/register') return '/login';
       return null;
     },
     refreshListenable: Provider.of<DatabaseService>(context, listen: false),

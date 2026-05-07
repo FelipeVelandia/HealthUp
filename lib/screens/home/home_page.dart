@@ -10,31 +10,31 @@ class HomePage extends StatelessWidget {
 
   void changePath(BuildContext context, String path) {
     if (GoRouterState.of(context).uri.toString() != path) {
-      GoRouter.of(context).push(path);
+      GoRouter.of(context).go(path);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<DatabaseService>(context, listen: false);
-
-    var scheme = Theme.of(context).colorScheme;
-    // Guardamos la ruta actual para la lógica del título y del botón
     var currentPath = GoRouterState.of(context).uri.toString();
+    const Color activeColor = Color(0xFF32A287);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(currentPath == "/diet"
-            ? "Menú para hoy"
-            : currentPath == "/genomics"
-                ? "Mi perfil genético"
-                : currentPath == "/exercise-registration"
-                    ? "Registrar Actividad Física"
-                    : currentPath == "/progress"
-                        ? "HealthUp"
-                        : "Por defecto"),
-        foregroundColor: scheme.primary,
+        title: Text(
+          currentPath == "/diet" || currentPath == "/food-registration"
+              ? "Menú para hoy"
+              : currentPath == "/genomics"
+                  ? "Mi perfil genético"
+                  : currentPath == "/exercise-registration"
+                      ? "Actividad Física"
+                      : currentPath == "/progress"
+                          ? "HealthUp"
+                          : "NutriAlg Life",
+        ),
         centerTitle: true,
+        // RESTAURADO: Volvemos al menú de tres puntos verticales
         actions: [
           MenuAnchor(
             menuChildren: [
@@ -50,60 +50,76 @@ class HomePage extends StatelessWidget {
               )
             ],
             builder: (context, controller, child) => IconButton(
-                onPressed: () {
-                  if (controller.isOpen) {
-                    controller.close();
-                  } else {
-                    controller.open();
-                  }
-                },
-                icon: const Icon(Icons.more_vert_rounded)),
+              onPressed: () {
+                if (controller.isOpen) {
+                  controller.close();
+                } else {
+                  controller.open();
+                }
+              },
+              icon: const Icon(Icons.more_vert_rounded), // El icono de antes
+            ),
           )
         ],
       ),
       body: child,
 
-      // --- BOTÓN FLOTANTE PERSONALIZADO ---
-      // Solo se muestra si estamos en la pantalla de progreso
-      floatingActionButton: currentPath == "/progress" 
+      // BOTÓN FLOTANTE: Solo en Dieta, posición original a la derecha
+      floatingActionButton: currentPath == "/diet" 
         ? FloatingActionButton(
-            onPressed: () => changePath(context, "/exercise-registration"),
-            backgroundColor: const Color(0xFF32A287), // Tu verde esmeralda
+            onPressed: () => changePath(context, "/food-registration"),
+            backgroundColor: activeColor,
             elevation: 4,
-            shape: const CircleBorder(), // Lo hace perfectamente circular
+            shape: const CircleBorder(),
             child: const Icon(
-              FontAwesomeIcons.personRunning, // El icono de ejercicio
+              FontAwesomeIcons.utensils,
               color: Colors.white,
-              size: 24,
+              size: 20,
             ),
           )
         : null,
 
-      // Ubicación flotante sobre el contenido, sin tocar la barra
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
       bottomNavigationBar: BottomAppBar(
+        elevation: 10,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
-                onPressed: () => changePath(context, "/progress"),
-                icon: const Icon(
-                  FontAwesomeIcons.house,
-                  size: 25,
-                )),
+              onPressed: () => changePath(context, "/progress"),
+              icon: Icon(
+                FontAwesomeIcons.house,
+                size: 22,
+                color: currentPath == "/progress" ? activeColor : Colors.grey,
+              ),
+            ),
             IconButton(
-                onPressed: () => changePath(context, "/diet"),
-                icon: const Icon(
-                  FontAwesomeIcons.appleWhole,
-                  size: 25,
-                )),
+              onPressed: () => changePath(context, "/diet"),
+              icon: Icon(
+                FontAwesomeIcons.appleWhole,
+                size: 22,
+                color: (currentPath == "/diet" || currentPath == "/food-registration") 
+                    ? activeColor 
+                    : Colors.grey,
+              ),
+            ),
             IconButton(
-                onPressed: () => changePath(context, "/genomics"),
-                icon: const Icon(
-                  FontAwesomeIcons.dna,
-                  size: 25,
-                )),
+              onPressed: () => changePath(context, "/exercise-registration"),
+              icon: Icon(
+                FontAwesomeIcons.personRunning,
+                size: 22,
+                color: currentPath == "/exercise-registration" ? activeColor : Colors.grey,
+              ),
+            ),
+            IconButton(
+              onPressed: () => changePath(context, "/genomics"),
+              icon: Icon(
+                FontAwesomeIcons.dna,
+                size: 22,
+                color: currentPath == "/genomics" ? activeColor : Colors.grey,
+              ),
+            ),
           ],
         ),
       ),
