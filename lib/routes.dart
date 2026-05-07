@@ -8,6 +8,8 @@ import "package:nutrialg_life/services/database_service.dart";
 import 'package:nutrialg_life/screens/daily/daily_page.dart';
 import "package:provider/provider.dart";
 import 'package:nutrialg_life/screens/genomic/genomic_page.dart';
+// Asegúrate de importar el archivo de registro de comida si no está en screens.dart
+import 'package:nutrialg_life/screens/food_registration/food_registration_page.dart';
 
 GoRouter getRouter(BuildContext context) {
   return GoRouter(
@@ -29,7 +31,7 @@ GoRouter getRouter(BuildContext context) {
             ),
           ),
 
-          // RUTA GENÓMICA (La que acabamos de crear)
+          // RUTA GENÓMICA
           GoRoute(
             path: '/genomics',
             pageBuilder: (context, state) => CustomTransitionPage(
@@ -70,10 +72,12 @@ GoRouter getRouter(BuildContext context) {
         path: '/initial',
         builder: (context, state) => const InitialSurveyPage(),
       ),
+      // Registro de comida fuera del Shell para que sea pantalla completa
       GoRoute(
         path: '/food-registration',
         builder: (context, state) => const FoodRegistrationScreen(),
       ),
+      // Registro de ejercicio fuera del Shell para que sea pantalla completa
       GoRoute(
         path: '/exercise-registration',
         builder: (context, state) => const ExerciseRegistrationPage(),
@@ -109,7 +113,6 @@ GoRouter getRouter(BuildContext context) {
         return '/progress';
       }
 
-      // Si falta el survey inicial
       if (isAuthenticated && !onBoard && state.fullPath != '/initial') {
         return '/initial';
       }

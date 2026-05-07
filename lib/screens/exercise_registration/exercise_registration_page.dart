@@ -10,60 +10,74 @@ class ExerciseRegistrationPage extends StatefulWidget {
 }
 
 class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
-  // 1. Iniciamos en null para que aparezca el "Hint" (Selecciona actividad)
   String? selectedActivity; 
   final TextEditingController _durationController = TextEditingController();
+  final TextEditingController _otherActivityController = TextEditingController();
+  TimeOfDay _selectedTime = TimeOfDay.now();
 
-  // Lógica de puntos basada en tu diagrama
-  int _calcularPuntos(String actividad, int minutos) {
-    double factor = 0;
-    switch (actividad) {
-      case 'Yoga': factor = 0.5; break;
-      case 'Caminar': factor = 0.8; break;
-      case 'Pesas': factor = 1.2; break;
-      case 'Correr': factor = 2.0; break;
-      case 'Natación': factor = 2.0; break;
-      default: factor = 0.5;
-    }
-    return (minutos * factor).toInt();
+  final List<String> _activities = ['Caminar', 'Correr', 'Pesas', 'Yoga', 'Natación', 'Otros'];
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFF32A287),
+              onSurface: Color(0xFF3E302D),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) setState(() => _selectedTime = picked);
   }
 
   void _procesarRegistro() {
-    // Validación de Actividad
     if (selectedActivity == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("⚠️ Por favor, selecciona una actividad")),
-      );
+      _showError("⚠️ Selecciona una actividad");
       return;
     }
 
-    // Validación de Minutos
-    int? minutos = int.tryParse(_durationController.text);
-    if (minutos == null || minutos <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("⚠️ Ingresa un tiempo válido en minutos")),
-      );
+    if (selectedActivity == 'Otros' && _otherActivityController.text.isEmpty) {
+      _showError("⚠️ ¿Qué otra actividad hiciste?");
       return;
     }
 
-    // Si todo está bien, calculamos
-    int puntosGanados = _calcularPuntos(selectedActivity!, minutos);
-    bool ganoInsignia = puntosGanados >= 50; // Condición del rombo
+    if (_durationController.text.isEmpty) {
+      _showError("⚠️ Ingresa la duración");
+      return;
+    }
 
-    // Mostrar resultado al usuario (Feedback del sistema)
+    // Aquí simplemente guardamos los datos
+    _showConfirmacion();
+  }
+
+  void _showError(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+  }
+
+  void _showConfirmacion() {
+    String nombreActividad = selectedActivity == 'Otros' 
+        ? _otherActivityController.text 
+        : selectedActivity!;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: Text(ganoInsignia ? "¡Insignia Desbloqueada! 🏆" : "¡Buen trabajo!"),
-        content: Text("Has registrado $selectedActivity por $minutos min.\n\n¡Ganaste $puntosGanados puntos!"),
+        title: const Text("Registro Guardado"),
+        content: Text("Actividad: $nombreActividad\nDuración: ${_durationController.text} min\nHora: ${_selectedTime.format(context)}"),
         actions: [
           TextButton(
             onPressed: () {
-              context.pop(); // Cierra el diálogo
-              context.pop(); // Regresa a la pantalla anterior
+              Navigator.pop(context); // Cierra diálogo
+              context.pop(); // Regresa al Home
             },
-            child: const Text("CERRAR"),
+            child: const Text("ACEPTAR", style: TextStyle(color: Color(0xFF32A287))),
           ),
         ],
       ),
@@ -72,81 +86,108 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Usamos el verde que mencionamos para estas páginas de acción
     const Color greenPrimary = Color(0xFF32A287);
 
     return Scaffold(
+      backgroundColor: const Color(0xFFFDF8F5),
       appBar: AppBar(
-        title: const Text("Registrar Actividad Físca"),
-        backgroundColor: greenPrimary,
-        foregroundColor: Colors.white,
-        centerTitle: true,
+        title: const Text("Registrar Ejercicio", style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: const Color(0xFF3E302D),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () => context.pop(),
+        ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "¿Qué actividad realizaste?",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
+            const Text("¿Qué actividad realizaste?", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF3E302D))),
             const SizedBox(height: 12),
             
-            // DROPDOWN CON HINT
             DropdownButtonFormField<String>(
               value: selectedActivity,
               hint: const Text("Selecciona una actividad"),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(FontAwesomeIcons.personRunning, size: 18),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                prefixIcon: const Icon(FontAwesomeIcons.personRunning, size: 18, color: greenPrimary),
               ),
-              items: ['Caminar', 'Correr', 'Pesas', 'Yoga', 'Natación']
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
+              items: _activities.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
               onChanged: (val) => setState(() => selectedActivity = val),
             ),
 
-            const SizedBox(height: 30),
+            if (selectedActivity == 'Otros') ...[
+              const SizedBox(height: 15),
+              TextField(
+                controller: _otherActivityController,
+                decoration: InputDecoration(
+                  hintText: "¿Cuál actividad?",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                ),
+              ),
+            ],
 
-            const Text(
-              "¿Cuánto tiempo? (minutos)",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
+            const SizedBox(height: 25),
+            const Text("¿Cuánto tiempo? (minutos)", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF3E302D))),
             const SizedBox(height: 12),
             
             TextField(
               controller: _durationController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: "Ej: 30",
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(FontAwesomeIcons.clock, size: 18),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                prefixIcon: const Icon(FontAwesomeIcons.clock, size: 18, color: greenPrimary),
               ),
             ),
 
-            const Spacer(),
+            const SizedBox(height: 25),
+            const Text("¿A qué hora?", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF3E302D))),
+            const SizedBox(height: 12),
 
-            // BOTÓN DE GUARDAR
+            InkWell(
+              onTap: () => _selectTime(context),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.access_time, color: greenPrimary),
+                    const SizedBox(width: 12),
+                    Text(_selectedTime.format(context), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                    const Spacer(),
+                    const Icon(Icons.edit, size: 16, color: Colors.grey),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 40),
+
             SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: greenPrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  elevation: 0,
                 ),
                 onPressed: _procesarRegistro,
-                child: const Text(
-                  "GUARDAR REGISTRO",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
+                child: const Text("GUARDAR ACTIVIDAD", 
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
               ),
             ),
           ],
