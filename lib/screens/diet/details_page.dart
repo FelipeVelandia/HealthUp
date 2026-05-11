@@ -29,23 +29,6 @@ class DetailsPage extends StatelessWidget {
                       case 'desayuno':
                         return Column(
                           children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width - (24),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(30),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        offset: Offset(3, 3), blurRadius: 5)
-                                  ],
-                                  image: DecorationImage(
-                                      image: NetworkImage(snapshot
-                                                  .data[0].desayuno[
-                                              snapshot.data[1].getInt('Index')]
-                                          ['imagen']),
-                                      fit: BoxFit.fill)),
-                            ),
                             const SizedBox(
                               height: 30,
                             ),
@@ -134,23 +117,6 @@ class DetailsPage extends StatelessWidget {
                       case 'media':
                         return Column(
                           children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width - (24),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(30),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        offset: Offset(3, 3), blurRadius: 5)
-                                  ],
-                                  image: DecorationImage(
-                                      image: NetworkImage(snapshot
-                                                  .data[0].media[
-                                              snapshot.data[1].getInt('Index')]
-                                          ['imagen']),
-                                      fit: BoxFit.fill)),
-                            ),
                             const SizedBox(
                               height: 30,
                             ),
@@ -239,23 +205,6 @@ class DetailsPage extends StatelessWidget {
                       case 'almuerzo':
                         return Column(
                           children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width - (24),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(30),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        offset: Offset(3, 3), blurRadius: 5)
-                                  ],
-                                  image: DecorationImage(
-                                      image: NetworkImage(snapshot
-                                                  .data[0].almuerzo[
-                                              snapshot.data[1].getInt('Index')]
-                                          ['imagen']),
-                                      fit: BoxFit.fill)),
-                            ),
                             const SizedBox(
                               height: 30,
                             ),
@@ -344,23 +293,6 @@ class DetailsPage extends StatelessWidget {
                       case 'merienda':
                         return Column(
                           children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width - (24),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(30),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        offset: Offset(3, 3), blurRadius: 5)
-                                  ],
-                                  image: DecorationImage(
-                                      image: NetworkImage(snapshot
-                                                  .data[0].merienda[
-                                              snapshot.data[1].getInt('Index')]
-                                          ['imagen']),
-                                      fit: BoxFit.fill)),
-                            ),
                             const SizedBox(
                               height: 30,
                             ),
@@ -449,23 +381,6 @@ class DetailsPage extends StatelessWidget {
                       case 'cena':
                         return Column(
                           children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width - (24),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(30),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        offset: Offset(3, 3), blurRadius: 5)
-                                  ],
-                                  image: DecorationImage(
-                                      image: NetworkImage(snapshot
-                                                  .data[0].cena[
-                                              snapshot.data[1].getInt('Index')]
-                                          ['imagen']),
-                                      fit: BoxFit.fill)),
-                            ),
                             const SizedBox(
                               height: 30,
                             ),

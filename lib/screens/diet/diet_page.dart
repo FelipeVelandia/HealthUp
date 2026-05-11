@@ -35,77 +35,666 @@ class DietPage extends StatelessWidget {
                 } else {
                   return ListView(
                     children: [
-                      MealCard(
-                        label: 'Desayuno',
-                        time: snapshot.data.desayuno[0],
-                        state: snapshot.data.desayuno[3],
-                        items: [
-                          MealItem(
-                              mealType: Meal.bebida,
-                              mealTime: 'desayuno',
-                              label: snapshot.data.desayuno[1]['titulo'],
-                              index: 1),
-                          MealItem(
-                              mealType: Meal.comida,
-                              mealTime: 'desayuno',
-                              label: snapshot.data.desayuno[2]['titulo'],
-                              index: 2),
-                        ],
-                      ),
-                      MealCard(
-                          label: 'Media mañana',
-                          time: snapshot.data.media[0],
-                          state: snapshot.data.media[2],
-                          items: [
-                            MealItem(
-                                mealType: Meal.comida,
-                                mealTime: 'media',
-                                label: snapshot.data.media[1]['titulo'],
-                                index: 1)
-                          ]),
-                      MealCard(
-                          label: 'Almuerzo',
-                          time: snapshot.data.almuerzo[0],
-                          state: snapshot.data.almuerzo[3],
-                          items: [
-                            MealItem(
-                                mealType: Meal.comida,
-                                mealTime: 'almuerzo',
-                                label: snapshot.data.almuerzo[1]['titulo'],
-                                index: 1),
-                            MealItem(
-                                mealType: Meal.bebida,
-                                mealTime: 'almuerzo',
-                                label: snapshot.data.almuerzo[2]['titulo'],
-                                index: 2)
-                          ]),
-                      MealCard(
-                          label: 'Merienda',
-                          time: snapshot.data.merienda[0],
-                          state: snapshot.data.merienda[2],
-                          items: [
-                            MealItem(
-                                mealType: Meal.fruta,
-                                mealTime: 'merienda',
-                                label: snapshot.data.merienda[1]['titulo'],
-                                index: 1)
-                          ]),
-                      MealCard(
-                          label: 'Cena',
-                          time: snapshot.data.cena[0],
-                          state: snapshot.data.cena[3],
-                          items: [
-                            MealItem(
-                                mealType: Meal.comida,
-                                mealTime: 'cena',
-                                label: snapshot.data.cena[1]['titulo'],
-                                index: 1),
-                            MealItem(
-                                mealType: Meal.bebida,
-                                mealTime: 'cena',
-                                label: snapshot.data.cena[2]['titulo'],
-                                index: 2)
-                          ])
+                      if (snapshot.data?.desayuno != null &&
+                          snapshot.data.desayuno.isNotEmpty)
+                        MealCard(
+                            label: 'Desayuno',
+                            time: snapshot.data.desayuno[0],
+                            state: snapshot.data.desayuno[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'desayuno',
+                                  label: snapshot.data.desayuno[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'desayuno',
+                                  label: snapshot.data.desayuno[2]['titulo'],
+                                  index: 2),
+                            ]),
+                      if (snapshot.data?.media != null &&
+                          snapshot.data.media.isNotEmpty)
+                        MealCard(
+                            label: 'Media',
+                            time: snapshot.data.media[0],
+                            state: snapshot.data.media[2],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'media',
+                                  label: snapshot.data.media[1]['titulo'],
+                                  index: 1)
+                            ]),
+                      if (snapshot.data?.almuerzo != null &&
+                          snapshot.data.almuerzo.isNotEmpty)
+                        MealCard(
+                            label: 'Almuerzo',
+                            time: snapshot.data.almuerzo[0],
+                            state: snapshot.data.almuerzo[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'almuerzo',
+                                  label: snapshot.data.almuerzo[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'almuerzo',
+                                  label: snapshot.data.almuerzo[2]['titulo'],
+                                  index: 2)
+                            ]),
+                      if (snapshot.data?.merienda != null &&
+                          snapshot.data.merienda.isNotEmpty)
+                        MealCard(
+                            label: 'Merienda',
+                            time: snapshot.data.merienda[0],
+                            state: snapshot.data.merienda[2],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.fruta,
+                                  mealTime: 'merienda',
+                                  label: snapshot.data.merienda[1]['titulo'],
+                                  index: 1)
+                            ]),
+                      if (snapshot.data?.merienda != null &&
+                          snapshot.data.merienda.isNotEmpty)
+                        MealCard(
+                            label: 'Cena',
+                            time: snapshot.data.cena[0],
+                            state: snapshot.data.cena[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'cena',
+                                  label: snapshot.data.cena[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'cena',
+                                  label: snapshot.data.cena[2]['titulo'],
+                                  index: 2)
+                            ])
+                    ],
+                  );
+                }
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text('Loading');
+              } else {
+                return const Text('Error');
+              }
+            }),
+        // --- Boton flotante para registrar comidas ---
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color(0xFF32A287),
+          foregroundColor: Colors.white,
+          onPressed: () {
+            context.push("/food-registration");
+          },
+          child: const Icon(FontAwesomeIcons.utensils, size: 20),
+        ),
+      );
+    } else if (dayNumber == DateTime.tuesday) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: FutureBuilder(
+            future: firestore.getMartes(user!.uid),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.data == null) {
+                  return Container(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: const Center(
+                      child: Text("Sin datos de dieta"),
+                    ),
+                  );
+                } else {
+                  return ListView(
+                    children: [
+                      if (snapshot.data?.desayuno != null &&
+                          snapshot.data.desayuno.isNotEmpty)
+                        MealCard(
+                            label: 'Desayuno',
+                            time: snapshot.data.desayuno[0],
+                            state: snapshot.data.desayuno[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'desayuno',
+                                  label: snapshot.data.desayuno[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'desayuno',
+                                  label: snapshot.data.desayuno[2]['titulo'],
+                                  index: 2),
+                            ]),
+                      if (snapshot.data?.media != null &&
+                          snapshot.data.media.isNotEmpty)
+                        MealCard(
+                            label: 'Media',
+                            time: snapshot.data.media[0],
+                            state: snapshot.data.media[2],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'media',
+                                  label: snapshot.data.media[1]['titulo'],
+                                  index: 1)
+                            ]),
+                      if (snapshot.data?.almuerzo != null &&
+                          snapshot.data.almuerzo.isNotEmpty)
+                        MealCard(
+                            label: 'Almuerzo',
+                            time: snapshot.data.almuerzo[0],
+                            state: snapshot.data.almuerzo[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'almuerzo',
+                                  label: snapshot.data.almuerzo[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'almuerzo',
+                                  label: snapshot.data.almuerzo[2]['titulo'],
+                                  index: 2)
+                            ]),
+                      if (snapshot.data?.merienda != null &&
+                          snapshot.data.merienda.isNotEmpty)
+                        MealCard(
+                            label: 'Merienda',
+                            time: snapshot.data.merienda[0],
+                            state: snapshot.data.merienda[2],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.fruta,
+                                  mealTime: 'merienda',
+                                  label: snapshot.data.merienda[1]['titulo'],
+                                  index: 1)
+                            ]),
+                      if (snapshot.data?.merienda != null &&
+                          snapshot.data.merienda.isNotEmpty)
+                        MealCard(
+                            label: 'Cena',
+                            time: snapshot.data.cena[0],
+                            state: snapshot.data.cena[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'cena',
+                                  label: snapshot.data.cena[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'cena',
+                                  label: snapshot.data.cena[2]['titulo'],
+                                  index: 2)
+                            ])
+                    ],
+                  );
+                }
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text('Loading');
+              } else {
+                return const Text('Error');
+              }
+            }),
+        // --- Boton flotante para registrar comidas ---
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color(0xFF32A287),
+          foregroundColor: Colors.white,
+          onPressed: () {
+            context.push("/food-registration");
+          },
+          child: const Icon(FontAwesomeIcons.utensils, size: 20),
+        ),
+      );
+    } else if (dayNumber == DateTime.wednesday) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: FutureBuilder(
+            future: firestore.getMiercoles(user!.uid),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.data == null) {
+                  return Container(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: const Center(
+                      child: Text("Sin datos de dieta"),
+                    ),
+                  );
+                } else {
+                  return ListView(
+                    children: [
+                      if (snapshot.data?.desayuno != null &&
+                          snapshot.data.desayuno.isNotEmpty)
+                        MealCard(
+                            label: 'Desayuno',
+                            time: snapshot.data.desayuno[0],
+                            state: snapshot.data.desayuno[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'desayuno',
+                                  label: snapshot.data.desayuno[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'desayuno',
+                                  label: snapshot.data.desayuno[2]['titulo'],
+                                  index: 2),
+                            ]),
+                      if (snapshot.data?.media != null &&
+                          snapshot.data.media.isNotEmpty)
+                        MealCard(
+                            label: 'Media',
+                            time: snapshot.data.media[0],
+                            state: snapshot.data.media[2],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'media',
+                                  label: snapshot.data.media[1]['titulo'],
+                                  index: 1)
+                            ]),
+                      if (snapshot.data?.almuerzo != null &&
+                          snapshot.data.almuerzo.isNotEmpty)
+                        MealCard(
+                            label: 'Almuerzo',
+                            time: snapshot.data.almuerzo[0],
+                            state: snapshot.data.almuerzo[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'almuerzo',
+                                  label: snapshot.data.almuerzo[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'almuerzo',
+                                  label: snapshot.data.almuerzo[2]['titulo'],
+                                  index: 2)
+                            ]),
+                      if (snapshot.data?.merienda != null &&
+                          snapshot.data.merienda.isNotEmpty)
+                        MealCard(
+                            label: 'Merienda',
+                            time: snapshot.data.merienda[0],
+                            state: snapshot.data.merienda[2],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.fruta,
+                                  mealTime: 'merienda',
+                                  label: snapshot.data.merienda[1]['titulo'],
+                                  index: 1)
+                            ]),
+                      if (snapshot.data?.merienda != null &&
+                          snapshot.data.merienda.isNotEmpty)
+                        MealCard(
+                            label: 'Cena',
+                            time: snapshot.data.cena[0],
+                            state: snapshot.data.cena[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'cena',
+                                  label: snapshot.data.cena[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'cena',
+                                  label: snapshot.data.cena[2]['titulo'],
+                                  index: 2)
+                            ])
+                    ],
+                  );
+                }
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text('Loading');
+              } else {
+                return const Text('Error');
+              }
+            }),
+        // --- Boton flotante para registrar comidas ---
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color(0xFF32A287),
+          foregroundColor: Colors.white,
+          onPressed: () {
+            context.push("/food-registration");
+          },
+          child: const Icon(FontAwesomeIcons.utensils, size: 20),
+        ),
+      );
+    } else if (dayNumber == DateTime.thursday) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: FutureBuilder(
+            future: firestore.getJueves(user!.uid),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.data == null) {
+                  return Container(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: const Center(
+                      child: Text("Sin datos de dieta"),
+                    ),
+                  );
+                } else {
+                  return ListView(
+                    children: [
+                      if (snapshot.data?.desayuno != null &&
+                          snapshot.data.desayuno.isNotEmpty)
+                        MealCard(
+                            label: 'Desayuno',
+                            time: snapshot.data.desayuno[0],
+                            state: snapshot.data.desayuno[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'desayuno',
+                                  label: snapshot.data.desayuno[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'desayuno',
+                                  label: snapshot.data.desayuno[2]['titulo'],
+                                  index: 2),
+                            ]),
+                      if (snapshot.data?.media != null &&
+                          snapshot.data.media.isNotEmpty)
+                        MealCard(
+                            label: 'Media',
+                            time: snapshot.data.media[0],
+                            state: snapshot.data.media[2],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'media',
+                                  label: snapshot.data.media[1]['titulo'],
+                                  index: 1)
+                            ]),
+                      if (snapshot.data?.almuerzo != null &&
+                          snapshot.data.almuerzo.isNotEmpty)
+                        MealCard(
+                            label: 'Almuerzo',
+                            time: snapshot.data.almuerzo[0],
+                            state: snapshot.data.almuerzo[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'almuerzo',
+                                  label: snapshot.data.almuerzo[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'almuerzo',
+                                  label: snapshot.data.almuerzo[2]['titulo'],
+                                  index: 2)
+                            ]),
+                      if (snapshot.data?.merienda != null &&
+                          snapshot.data.merienda.isNotEmpty)
+                        MealCard(
+                            label: 'Merienda',
+                            time: snapshot.data.merienda[0],
+                            state: snapshot.data.merienda[2],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.fruta,
+                                  mealTime: 'merienda',
+                                  label: snapshot.data.merienda[1]['titulo'],
+                                  index: 1)
+                            ]),
+                      if (snapshot.data?.merienda != null &&
+                          snapshot.data.merienda.isNotEmpty)
+                        MealCard(
+                            label: 'Cena',
+                            time: snapshot.data.cena[0],
+                            state: snapshot.data.cena[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'cena',
+                                  label: snapshot.data.cena[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'cena',
+                                  label: snapshot.data.cena[2]['titulo'],
+                                  index: 2)
+                            ])
+                    ],
+                  );
+                }
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text('Loading');
+              } else {
+                return const Text('Error');
+              }
+            }),
+        // --- Boton flotante para registrar comidas ---
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color(0xFF32A287),
+          foregroundColor: Colors.white,
+          onPressed: () {
+            context.push("/food-registration");
+          },
+          child: const Icon(FontAwesomeIcons.utensils, size: 20),
+        ),
+      );
+    } else if (dayNumber == DateTime.friday) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: FutureBuilder(
+            future: firestore.getViernes(user!.uid),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.data == null) {
+                  return Container(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: const Center(
+                      child: Text("Sin datos de dieta"),
+                    ),
+                  );
+                } else {
+                  return ListView(
+                    children: [
+                      if (snapshot.data?.desayuno != null &&
+                          snapshot.data.desayuno.isNotEmpty)
+                        MealCard(
+                            label: 'Desayuno',
+                            time: snapshot.data.desayuno[0],
+                            state: snapshot.data.desayuno[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'desayuno',
+                                  label: snapshot.data.desayuno[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'desayuno',
+                                  label: snapshot.data.desayuno[2]['titulo'],
+                                  index: 2),
+                            ]),
+                      if (snapshot.data?.media != null &&
+                          snapshot.data.media.isNotEmpty)
+                        MealCard(
+                            label: 'Media',
+                            time: snapshot.data.media[0],
+                            state: snapshot.data.media[2],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'media',
+                                  label: snapshot.data.media[1]['titulo'],
+                                  index: 1)
+                            ]),
+                      if (snapshot.data?.almuerzo != null &&
+                          snapshot.data.almuerzo.isNotEmpty)
+                        MealCard(
+                            label: 'Almuerzo',
+                            time: snapshot.data.almuerzo[0],
+                            state: snapshot.data.almuerzo[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'almuerzo',
+                                  label: snapshot.data.almuerzo[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'almuerzo',
+                                  label: snapshot.data.almuerzo[2]['titulo'],
+                                  index: 2)
+                            ]),
+                      if (snapshot.data?.merienda != null &&
+                          snapshot.data.merienda.isNotEmpty)
+                        MealCard(
+                            label: 'Merienda',
+                            time: snapshot.data.merienda[0],
+                            state: snapshot.data.merienda[2],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.fruta,
+                                  mealTime: 'merienda',
+                                  label: snapshot.data.merienda[1]['titulo'],
+                                  index: 1)
+                            ]),
+                      if (snapshot.data?.merienda != null &&
+                          snapshot.data.merienda.isNotEmpty)
+                        MealCard(
+                            label: 'Cena',
+                            time: snapshot.data.cena[0],
+                            state: snapshot.data.cena[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'cena',
+                                  label: snapshot.data.cena[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'cena',
+                                  label: snapshot.data.cena[2]['titulo'],
+                                  index: 2)
+                            ])
+                    ],
+                  );
+                }
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text('Loading');
+              } else {
+                return const Text('Error');
+              }
+            }),
+        // --- Boton flotante para registrar comidas ---
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color(0xFF32A287),
+          foregroundColor: Colors.white,
+          onPressed: () {
+            context.push("/food-registration");
+          },
+          child: const Icon(FontAwesomeIcons.utensils, size: 20),
+        ),
+      );
+    } else if (dayNumber == DateTime.saturday) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: FutureBuilder(
+            future: firestore.getSabado(user!.uid),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.data == null) {
+                  return Container(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: const Center(
+                      child: Text("Sin datos de dieta"),
+                    ),
+                  );
+                } else {
+                  return ListView(
+                    children: [
+                      if (snapshot.data?.desayuno != null &&
+                          snapshot.data.desayuno.isNotEmpty)
+                        MealCard(
+                            label: 'Desayuno',
+                            time: snapshot.data.desayuno[0],
+                            state: snapshot.data.desayuno[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'desayuno',
+                                  label: snapshot.data.desayuno[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'desayuno',
+                                  label: snapshot.data.desayuno[2]['titulo'],
+                                  index: 2),
+                            ]),
+                      if (snapshot.data?.media != null &&
+                          snapshot.data.media.isNotEmpty)
+                        MealCard(
+                            label: 'Media',
+                            time: snapshot.data.media[0],
+                            state: snapshot.data.media[2],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'media',
+                                  label: snapshot.data.media[1]['titulo'],
+                                  index: 1)
+                            ]),
+                      if (snapshot.data?.almuerzo != null &&
+                          snapshot.data.almuerzo.isNotEmpty)
+                        MealCard(
+                            label: 'Almuerzo',
+                            time: snapshot.data.almuerzo[0],
+                            state: snapshot.data.almuerzo[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'almuerzo',
+                                  label: snapshot.data.almuerzo[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'almuerzo',
+                                  label: snapshot.data.almuerzo[2]['titulo'],
+                                  index: 2)
+                            ]),
+                      if (snapshot.data?.merienda != null &&
+                          snapshot.data.merienda.isNotEmpty)
+                        MealCard(
+                            label: 'Merienda',
+                            time: snapshot.data.merienda[0],
+                            state: snapshot.data.merienda[2],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.fruta,
+                                  mealTime: 'merienda',
+                                  label: snapshot.data.merienda[1]['titulo'],
+                                  index: 1)
+                            ]),
+                      if (snapshot.data?.merienda != null &&
+                          snapshot.data.merienda.isNotEmpty)
+                        MealCard(
+                            label: 'Cena',
+                            time: snapshot.data.cena[0],
+                            state: snapshot.data.cena[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'cena',
+                                  label: snapshot.data.cena[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'cena',
+                                  label: snapshot.data.cena[2]['titulo'],
+                                  index: 2)
+                            ])
                     ],
                   );
                 }
@@ -129,7 +718,7 @@ class DietPage extends StatelessWidget {
       return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: FutureBuilder(
-            future: firestore.getLunes(user!.uid),
+            future: firestore.getDomingo(user!.uid),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.data == null) {
@@ -142,77 +731,86 @@ class DietPage extends StatelessWidget {
                 } else {
                   return ListView(
                     children: [
-                      MealCard(
-                        label: 'Desayuno',
-                        time: snapshot.data.desayuno[0],
-                        state: snapshot.data.desayuno[3],
-                        items: [
-                          MealItem(
-                              mealType: Meal.bebida,
-                              mealTime: 'desayuno',
-                              label: snapshot.data.desayuno[1]['titulo'],
-                              index: 1),
-                          MealItem(
-                              mealType: Meal.comida,
-                              mealTime: 'desayuno',
-                              label: snapshot.data.desayuno[2]['titulo'],
-                              index: 2),
-                        ],
-                      ),
-                      MealCard(
-                          label: 'Media',
-                          time: snapshot.data.media[0],
-                          state: snapshot.data.media[2],
-                          items: [
-                            MealItem(
-                                mealType: Meal.comida,
-                                mealTime: 'media',
-                                label: snapshot.data.media[1]['titulo'],
-                                index: 1)
-                          ]),
-                      MealCard(
-                          label: 'Almuerzo',
-                          time: snapshot.data.almuerzo[0],
-                          state: snapshot.data.almuerzo[3],
-                          items: [
-                            MealItem(
-                                mealType: Meal.comida,
-                                mealTime: 'almuerzo',
-                                label: snapshot.data.almuerzo[1]['titulo'],
-                                index: 1),
-                            MealItem(
-                                mealType: Meal.bebida,
-                                mealTime: 'almuerzo',
-                                label: snapshot.data.almuerzo[2]['titulo'],
-                                index: 2)
-                          ]),
-                      MealCard(
-                          label: 'Merienda',
-                          time: snapshot.data.merienda[0],
-                          state: snapshot.data.merienda[2],
-                          items: [
-                            MealItem(
-                                mealType: Meal.fruta,
-                                mealTime: 'merienda',
-                                label: snapshot.data.merienda[1]['titulo'],
-                                index: 1)
-                          ]),
-                      MealCard(
-                          label: 'Cena',
-                          time: snapshot.data.cena[0],
-                          state: snapshot.data.cena[3],
-                          items: [
-                            MealItem(
-                                mealType: Meal.comida,
-                                mealTime: 'cena',
-                                label: snapshot.data.cena[1]['titulo'],
-                                index: 1),
-                            MealItem(
-                                mealType: Meal.bebida,
-                                mealTime: 'cena',
-                                label: snapshot.data.cena[2]['titulo'],
-                                index: 2)
-                          ])
+                      if (snapshot.data?.desayuno != null &&
+                          snapshot.data.desayuno.isNotEmpty)
+                        MealCard(
+                            label: 'Desayuno',
+                            time: snapshot.data.desayuno[0],
+                            state: snapshot.data.desayuno[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'desayuno',
+                                  label: snapshot.data.desayuno[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'desayuno',
+                                  label: snapshot.data.desayuno[2]['titulo'],
+                                  index: 2),
+                            ]),
+                      if (snapshot.data?.media != null &&
+                          snapshot.data.media.isNotEmpty)
+                        MealCard(
+                            label: 'Media',
+                            time: snapshot.data.media[0],
+                            state: snapshot.data.media[2],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'media',
+                                  label: snapshot.data.media[1]['titulo'],
+                                  index: 1)
+                            ]),
+                      if (snapshot.data?.almuerzo != null &&
+                          snapshot.data.almuerzo.isNotEmpty)
+                        MealCard(
+                            label: 'Almuerzo',
+                            time: snapshot.data.almuerzo[0],
+                            state: snapshot.data.almuerzo[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'almuerzo',
+                                  label: snapshot.data.almuerzo[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'almuerzo',
+                                  label: snapshot.data.almuerzo[2]['titulo'],
+                                  index: 2)
+                            ]),
+                      if (snapshot.data?.merienda != null &&
+                          snapshot.data.merienda.isNotEmpty)
+                        MealCard(
+                            label: 'Merienda',
+                            time: snapshot.data.merienda[0],
+                            state: snapshot.data.merienda[2],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.fruta,
+                                  mealTime: 'merienda',
+                                  label: snapshot.data.merienda[1]['titulo'],
+                                  index: 1)
+                            ]),
+                      if (snapshot.data?.merienda != null &&
+                          snapshot.data.merienda.isNotEmpty)
+                        MealCard(
+                            label: 'Cena',
+                            time: snapshot.data.cena[0],
+                            state: snapshot.data.cena[3],
+                            items: [
+                              MealItem(
+                                  mealType: Meal.comida,
+                                  mealTime: 'cena',
+                                  label: snapshot.data.cena[1]['titulo'],
+                                  index: 1),
+                              MealItem(
+                                  mealType: Meal.bebida,
+                                  mealTime: 'cena',
+                                  label: snapshot.data.cena[2]['titulo'],
+                                  index: 2)
+                            ])
                     ],
                   );
                 }

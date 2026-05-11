@@ -140,6 +140,36 @@ class DatabaseService extends ChangeNotifier {
     return Plan.fromMap(snap.data());
   }
 
+  Future<Plan> getMiercoles (String id) async{
+    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('mie').get();
+
+    return Plan.fromMap(snap.data());
+  }
+
+  Future<Plan> getJueves (String id) async{
+    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('jue').get();
+
+    return Plan.fromMap(snap.data());
+  }
+
+  Future<Plan> getViernes (String id) async{
+    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('vie').get();
+
+    return Plan.fromMap(snap.data());
+  }
+
+  Future<Plan> getSabado (String id) async{
+    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('sab').get();
+
+    return Plan.fromMap(snap.data());
+  }
+
+  Future<Plan> getDomingo (String id) async{
+    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('dom').get();
+
+    return Plan.fromMap(snap.data());
+  }
+
   Future getPaciente (String id) async{
     var snap = await _firestore.collection('pacientes').doc(id).get(); 
 

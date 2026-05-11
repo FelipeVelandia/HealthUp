@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
 import 'package:nutrialg_life/services/database_service.dart';
 import 'package:nutrialg_life/widgets/async_button.dart';
 import 'package:nutrialg_life/widgets/dynamic_input.dart';

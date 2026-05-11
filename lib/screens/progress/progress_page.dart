@@ -67,7 +67,7 @@ class ProgressPage extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 25),
                                 ExamCard(
-                                  description: "Recomendaciones Universales",
+                                  description: "Formulario de antecedentes",
                                   completed: false,
                                   onTap: () =>
                                       GoRouter.of(context).push("/initial"),
