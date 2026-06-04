@@ -3,6 +3,7 @@ import "package:go_router/go_router.dart";
 import "package:nutrialg_life/screens/account/account_page.dart";
 import "package:nutrialg_life/screens/exercise_registration/exercise_registration_page.dart";
 import "package:nutrialg_life/screens/diet/details_page.dart";
+import "package:nutrialg_life/screens/reports/report_page.dart";
 import "package:nutrialg_life/screens/screens.dart";
 import "package:nutrialg_life/services/database_service.dart";
 import 'package:nutrialg_life/screens/daily/daily_page.dart';
@@ -93,7 +94,11 @@ GoRouter getRouter(BuildContext context) {
       GoRoute(
         path: '/daily',
         builder: (context, state) => DailyPage(),
-      )
+      ),
+      GoRoute(
+        path: '/report',
+        builder: (context, state) => const ReportPage(),
+      ),
     ],
 
     // Lógica de redirección (Auth Guard)

@@ -32,7 +32,9 @@ class HomePage extends StatelessWidget {
                     ? "Registrar Actividad Física"
                     : currentPath == "/progress"
                         ? "HealthUp"
-                        : "Por defecto"),
+                        : currentPath == "/report"
+                            ? "Mi Informe" // <-- Agregamos el título dinámico para el informe
+                            : "Por defecto"),
         foregroundColor: scheme.primary,
         centerTitle: true,
         actions: [
@@ -88,21 +90,32 @@ class HomePage extends StatelessWidget {
           children: [
             IconButton(
                 onPressed: () => changePath(context, "/progress"),
-                icon: const Icon(
+                icon: Icon(
                   FontAwesomeIcons.house,
                   size: 25,
+                  color: currentPath == "/progress" ? const Color(0xFF32A287) : null, // Opcional: Ilumina si está activo
                 )),
             IconButton(
                 onPressed: () => changePath(context, "/diet"),
-                icon: const Icon(
+                icon: Icon(
                   FontAwesomeIcons.appleWhole,
                   size: 25,
+                  color: currentPath == "/diet" ? const Color(0xFF32A287) : null,
                 )),
             IconButton(
                 onPressed: () => changePath(context, "/genomics"),
-                icon: const Icon(
+                icon: Icon(
                   FontAwesomeIcons.dna,
                   size: 25,
+                  color: currentPath == "/genomics" ? const Color(0xFF32A287) : null,
+                )),
+            // --- NUEVO BOTÓN: INFORME NUTRIGENÉTICO ---
+            IconButton(
+                onPressed: () => changePath(context, "/report"),
+                icon: Icon(
+                  FontAwesomeIcons.fileLines, // Icono de informe/documento amigable
+                  size: 25,
+                  color: currentPath == "/report" ? const Color(0xFF32A287) : null,
                 )),
           ],
         ),
