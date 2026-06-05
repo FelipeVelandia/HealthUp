@@ -10,473 +10,1682 @@ class DetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<DatabaseService>(context).user;
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.surface),
-      body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: FutureBuilder(
-              future: Future.wait([
-                firestore.getLunes(user!.uid),
-                SharedPreferences.getInstance()
-              ]),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.data == null) {
-                    return const Text('no data');
-                  } else {
-                    switch (snapshot.data[1].getString('Label')) {
-                      case 'desayuno':
-                        return Column(
-                          children: [
-                            const SizedBox(
-                              height: 30,
+
+    DateTime now = DateTime.now();
+    int dayNumber = now.weekday;
+
+    if (dayNumber == DateTime.monday) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.surface),
+        body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: FutureBuilder(
+                future: Future.wait([
+                  firestore.getLunes(user!.uid),
+                  SharedPreferences.getInstance()
+                ]),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data == null) {
+                      return const Text('no data');
+                    } else {
+                      switch (snapshot.data[1].getString('Label')) {
+                        case 'desayuno':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].desayuno[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 255, 218, 215),
-                                borderRadius: BorderRadius.circular(30),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(3, 3),
-                                      blurRadius: 5)
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          flex: 2,
-                                          child: Text(
-                                            snapshot.data[0].desayuno[snapshot
-                                                .data[1]
-                                                .getInt('Index')]['titulo'],
-                                            softWrap: true,
-                                            style: const TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 16),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                            child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .surface,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                    color: Colors.grey,
-                                                    offset: Offset(3, 3),
-                                                    blurRadius: 5)
-                                              ]),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Column(
-                                              children: [
-                                                const Text('Calorias e Informacion',
-                                                    style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                                const SizedBox(
-                                                  height: 12,
-                                                ),
-                                                Text(
-                                                    "Cantidad: ${snapshot.data[0].desayuno[snapshot.data[1].getInt('Index')]['cantidad']}",
-                                                    style: const TextStyle(
-                                                        fontSize: 16)),
-                                                Text(
-                                                    "Calorias: ${snapshot.data[0].desayuno[snapshot.data[1].getInt('Index')]['calorias']}",
-                                                    style: const TextStyle(
-                                                        fontSize: 16))
-                                              ],
-                                            ),
-                                          ),
-                                        ))
-                                      ],
-                                    )
-                                  ],
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
                                 ),
-                              ),
-                            )
-                          ],
-                        );
-                      case 'media':
-                        return Column(
-                          children: [
-                            const SizedBox(
-                              height: 30,
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 255, 218, 215),
-                                borderRadius: BorderRadius.circular(30),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(3, 3),
-                                      blurRadius: 5)
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          flex: 2,
-                                          child: Text(
-                                            snapshot.data[0].media[snapshot
-                                                .data[1]
-                                                .getInt('Index')]['titulo'],
-                                            softWrap: true,
-                                            style: const TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 16),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                            child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .surface,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                    color: Colors.grey,
-                                                    offset: Offset(3, 3),
-                                                    blurRadius: 5)
-                                              ]),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Column(
-                                              children: [
-                                                const Text('Calorias e Informacion',
-                                                    style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                                const SizedBox(
-                                                  height: 12,
-                                                ),
-                                                Text(
-                                                    "Cantidad: ${snapshot.data[0].media[snapshot.data[1].getInt('Index')]['cantidad']}",
-                                                    style: const TextStyle(
-                                                        fontSize: 16)),
-                                                Text(
-                                                    "Calorias: ${snapshot.data[0].media[snapshot.data[1].getInt('Index')]['calorias']}",
-                                                    style: const TextStyle(
-                                                        fontSize: 16))
-                                              ],
-                                            ),
-                                          ),
-                                        ))
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
-                        );
-                      case 'almuerzo':
-                        return Column(
-                          children: [
-                            const SizedBox(
-                              height: 30,
+                          );
+                        case 'media':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].media[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 255, 218, 215),
-                                borderRadius: BorderRadius.circular(30),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(3, 3),
-                                      blurRadius: 5)
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          flex: 2,
-                                          child: Text(
-                                            snapshot.data[0].almuerzo[snapshot
-                                                .data[1]
-                                                .getInt('Index')]['titulo'],
-                                            softWrap: true,
-                                            style: const TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 16),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                            child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .surface,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                    color: Colors.grey,
-                                                    offset: Offset(3, 3),
-                                                    blurRadius: 5)
-                                              ]),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Column(
-                                              children: [
-                                                const Text('Calorias e Informacion',
-                                                    style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                                const SizedBox(
-                                                  height: 12,
-                                                ),
-                                                Text(
-                                                    "Cantidad: ${snapshot.data[0].almuerzo[snapshot.data[1].getInt('Index')]['cantidad']}",
-                                                    style: const TextStyle(
-                                                        fontSize: 16)),
-                                                Text(
-                                                    "Calorias: ${snapshot.data[0].almuerzo[snapshot.data[1].getInt('Index')]['calorias']}",
-                                                    style: const TextStyle(
-                                                        fontSize: 16))
-                                              ],
-                                            ),
-                                          ),
-                                        ))
-                                      ],
-                                    )
-                                  ],
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
                                 ),
-                              ),
-                            )
-                          ],
-                        );
-                      case 'merienda':
-                        return Column(
-                          children: [
-                            const SizedBox(
-                              height: 30,
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 255, 218, 215),
-                                borderRadius: BorderRadius.circular(30),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(3, 3),
-                                      blurRadius: 5)
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          flex: 2,
-                                          child: Text(
-                                            snapshot.data[0].merienda[snapshot
-                                                .data[1]
-                                                .getInt('Index')]['titulo'],
-                                            softWrap: true,
-                                            style: const TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 16),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                            child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .surface,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                    color: Colors.grey,
-                                                    offset: Offset(3, 3),
-                                                    blurRadius: 5)
-                                              ]),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Column(
-                                              children: [
-                                                const Text('Calorias e Informacion',
-                                                    style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                                const SizedBox(
-                                                  height: 12,
-                                                ),
-                                                Text(
-                                                    "Cantidad: ${snapshot.data[0].merienda[snapshot.data[1].getInt('Index')]['cantidad']}",
-                                                    style: const TextStyle(
-                                                        fontSize: 16)),
-                                                Text(
-                                                    "Calorias: ${snapshot.data[0].merienda[snapshot.data[1].getInt('Index')]['calorias']}",
-                                                    style: const TextStyle(
-                                                        fontSize: 16))
-                                              ],
-                                            ),
-                                          ),
-                                        ))
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
-                        );
-                      case 'cena':
-                        return Column(
-                          children: [
-                            const SizedBox(
-                              height: 30,
+                          );
+                        case 'almuerzo':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].almuerzo[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 255, 218, 215),
-                                borderRadius: BorderRadius.circular(30),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(3, 3),
-                                      blurRadius: 5)
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          flex: 2,
-                                          child: Text(
-                                            snapshot.data[0].cena[snapshot
-                                                .data[1]
-                                                .getInt('Index')]['titulo'],
-                                            softWrap: true,
-                                            style: const TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 16),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                            child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .surface,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                    color: Colors.grey,
-                                                    offset: Offset(3, 3),
-                                                    blurRadius: 5)
-                                              ]),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Column(
-                                              children: [
-                                                const Text('Calorias e Informacion',
-                                                    style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                                const SizedBox(
-                                                  height: 12,
-                                                ),
-                                                Text(
-                                                    "Cantidad: ${snapshot.data[0].cena[snapshot.data[1].getInt('Index')]['cantidad']}",
-                                                    style: const TextStyle(
-                                                        fontSize: 16)),
-                                                Text(
-                                                    "Calorias: ${snapshot.data[0].cena[snapshot.data[1].getInt('Index')]['calorias']}",
-                                                    style: const TextStyle(
-                                                        fontSize: 16))
-                                              ],
-                                            ),
-                                          ),
-                                        ))
-                                      ],
-                                    )
-                                  ],
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
                                 ),
-                              ),
-                            )
-                          ],
-                      );
-                      default:
-                        return const Text('Error');
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'merienda':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].merienda[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'cena':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].cena[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        default:
+                          return const Text('Error');
+                      }
                     }
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Text('Loading');
+                  } else {
+                    return const Text('Error');
                   }
-                } else if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return const Text('Loading');
-                } else {
-                  return const Text('Error');
-                }
-              })),
+                })),
+      );
+    } else if (dayNumber == DateTime.tuesday) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.surface),
+        body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: FutureBuilder(
+                future: Future.wait([
+                  firestore.getMartes(user!.uid),
+                  SharedPreferences.getInstance()
+                ]),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data == null) {
+                      return const Text('no data');
+                    } else {
+                      switch (snapshot.data[1].getString('Label')) {
+                        case 'desayuno':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].desayuno[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'media':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].media[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'almuerzo':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].almuerzo[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'merienda':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].merienda[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'cena':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].cena[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        default:
+                          return const Text('Error');
+                      }
+                    }
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Text('Loading');
+                  } else {
+                    return const Text('Error');
+                  }
+                })),
+      );
+    } else if (dayNumber == DateTime.wednesday) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.surface),
+        body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: FutureBuilder(
+                future: Future.wait([
+                  firestore.getMiercoles(user!.uid),
+                  SharedPreferences.getInstance()
+                ]),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data == null) {
+                      return const Text('no data');
+                    } else {
+                      switch (snapshot.data[1].getString('Label')) {
+                        case 'desayuno':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].desayuno[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'media':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].media[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'almuerzo':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].almuerzo[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'merienda':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].merienda[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'cena':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].cena[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        default:
+                          return const Text('Error');
+                      }
+                    }
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Text('Loading');
+                  } else {
+                    return const Text('Error');
+                  }
+                })),
+      );
+    } else if (dayNumber == DateTime.thursday) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.surface),
+        body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: FutureBuilder(
+                future: Future.wait([
+                  firestore.getJueves(user!.uid),
+                  SharedPreferences.getInstance()
+                ]),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data == null) {
+                      return const Text('no data');
+                    } else {
+                      switch (snapshot.data[1].getString('Label')) {
+                        case 'desayuno':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].desayuno[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'media':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].media[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'almuerzo':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].almuerzo[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'merienda':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].merienda[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'cena':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].cena[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        default:
+                          return const Text('Error');
+                      }
+                    }
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Text('Loading');
+                  } else {
+                    return const Text('Error');
+                  }
+                })),
+      );
+    } else if (dayNumber == DateTime.friday) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.surface),
+        body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: FutureBuilder(
+                future: Future.wait([
+                  firestore.getViernes(user!.uid),
+                  SharedPreferences.getInstance()
+                ]),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data == null) {
+                      return const Text('no data');
+                    } else {
+                      switch (snapshot.data[1].getString('Label')) {
+                        case 'desayuno':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].desayuno[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'media':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].media[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'almuerzo':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].almuerzo[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'merienda':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].merienda[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'cena':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].cena[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        default:
+                          return const Text('Error');
+                      }
+                    }
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Text('Loading');
+                  } else {
+                    return const Text('Error');
+                  }
+                })),
+      );
+    } else if (dayNumber == DateTime.saturday) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.surface),
+        body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: FutureBuilder(
+                future: Future.wait([
+                  firestore.getSabado(user!.uid),
+                  SharedPreferences.getInstance()
+                ]),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data == null) {
+                      return const Text('no data');
+                    } else {
+                      switch (snapshot.data[1].getString('Label')) {
+                        case 'desayuno':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].desayuno[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'media':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].media[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'almuerzo':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].almuerzo[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'merienda':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].merienda[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'cena':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].cena[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        default:
+                          return const Text('Error');
+                      }
+                    }
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Text('Loading');
+                  } else {
+                    return const Text('Error');
+                  }
+                })),
+      );
+    } else {
+      return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.surface),
+        body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: FutureBuilder(
+                future: Future.wait([
+                  firestore.getDomingo(user!.uid),
+                  SharedPreferences.getInstance()
+                ]),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data == null) {
+                      return const Text('no data');
+                    } else {
+                      switch (snapshot.data[1].getString('Label')) {
+                        case 'desayuno':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].desayuno[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'media':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].media[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'almuerzo':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].almuerzo[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'merienda':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].merienda[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        case 'cena':
+                          final index = snapshot.data[1].getInt('Index');
+                          final item = snapshot.data[0].cena[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Composición Nutricional',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                _buildNutrientRow(
+                                    'Humedad', '${item['humedad']} g'),
+                                _buildNutrientRow('Energía (Kcal)',
+                                    '${item['energiac']} Kcal'),
+                                _buildNutrientRow(
+                                    'Energía (Kj)', '${item['energiaj']} Kj'),
+                                _buildNutrientRow(
+                                    'Proteína', '${item['proteina']} g'),
+                                _buildNutrientRow(
+                                    'Lípidos', '${item['lipidos']} g'),
+                                _buildNutrientRow('Carbohidratos Totales',
+                                    '${item['carbohidratos']} g'),
+                              ],
+                            ),
+                          );
+                        default:
+                          return const Text('Error');
+                      }
+                    }
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Text('Loading');
+                  } else {
+                    return const Text('Error');
+                  }
+                })),
+      );
+    }
+  }
+
+  Widget _buildNutrientRow(String label, String value,
+      {bool isHighlight = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey[800],
+                    fontWeight:
+                        isHighlight ? FontWeight.bold : FontWeight.normal),
+              ),
+              Text(
+                value,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color:
+                        isHighlight ? const Color(0xFF32A287) : Colors.black),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Divider(color: Colors.grey[200], height: 1),
+        ],
+      ),
     );
   }
 }

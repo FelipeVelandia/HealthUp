@@ -228,8 +228,8 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
         Center(
           child: TextButton.icon(
             onPressed: _addFood,
-            icon: const Icon(Icons.add, color: Colors.orange),
-            label: const Text("Añadir a la lista", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+            icon: const Icon(Icons.add, color: Colors.green),
+            label: const Text("Añadir a la lista", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
           ),
         ),
       ],
