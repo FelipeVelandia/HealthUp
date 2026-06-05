@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Agregamos esto
-import 'package:go_router/go_router.dart'; // Agregamos esto
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nutrialg_life/services/database_service.dart';
 import 'package:provider/provider.dart';
 

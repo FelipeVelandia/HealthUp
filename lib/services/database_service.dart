@@ -135,7 +135,7 @@ class DatabaseService extends ChangeNotifier {
   }
 
   Future<Plan> getMartes (String id) async{
-    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('mar').get();
+    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('lun').get();
 
     return Plan.fromMap(snap.data());
   }
@@ -153,19 +153,19 @@ class DatabaseService extends ChangeNotifier {
   }
 
   Future<Plan> getViernes (String id) async{
-    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('vie').get();
+    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('lun').get();
 
     return Plan.fromMap(snap.data());
   }
 
   Future<Plan> getSabado (String id) async{
-    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('sab').get();
+    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('lun').get();
 
     return Plan.fromMap(snap.data());
   }
 
   Future<Plan> getDomingo (String id) async{
-    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('dom').get();
+    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('lun').get();
 
     return Plan.fromMap(snap.data());
   }

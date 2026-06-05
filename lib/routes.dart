@@ -8,8 +8,8 @@ import "package:nutrialg_life/services/database_service.dart";
 import 'package:nutrialg_life/screens/daily/daily_page.dart';
 import "package:provider/provider.dart";
 import 'package:nutrialg_life/screens/genomic/genomic_page.dart';
-// Asegúrate de importar el archivo de registro de comida si no está en screens.dart
 import 'package:nutrialg_life/screens/food_registration/food_registration_page.dart';
+import "package:nutrialg_life/screens/reports/report_page.dart";
 
 GoRouter getRouter(BuildContext context) {
   return GoRouter(
@@ -55,6 +55,18 @@ GoRouter getRouter(BuildContext context) {
                 return FadeTransition(opacity: animation, child: child);
               },
             ),
+          ),
+
+          GoRoute(
+            path: '/report',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const ReportPage(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
           )
         ],
       ),
@@ -93,7 +105,11 @@ GoRouter getRouter(BuildContext context) {
       GoRoute(
         path: '/daily',
         builder: (context, state) => DailyPage(),
-      )
+      ),
+      GoRoute(
+        path: '/report',
+        builder: (context, state) => const ReportPage(),
+      ),
     ],
 
     // Lógica de redirección (Auth Guard)

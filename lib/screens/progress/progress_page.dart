@@ -161,6 +161,7 @@ class ProgressPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
+        automaticallyImplyLeading: false, // This removes the back arrow
         title: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: const Text(

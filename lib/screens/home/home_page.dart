@@ -32,7 +32,9 @@ class HomePage extends StatelessWidget {
                     ? "Registrar Actividad Física"
                     : currentPath == "/progress"
                         ? "HealthUp"
-                        : "Por defecto"),
+                        : currentPath == "/report"
+                            ? "Mi Informe"
+                            : "Por defecto"),
         foregroundColor: scheme.primary,
         centerTitle: true,
         actions: [
@@ -63,21 +65,19 @@ class HomePage extends StatelessWidget {
       ),
       body: child,
 
-      // --- BOTÓN FLOTANTE PERSONALIZADO ---
-      // Solo se muestra si estamos en la pantalla de progreso
-      floatingActionButton: currentPath == "/progress" 
-        ? FloatingActionButton(
-            onPressed: () => changePath(context, "/exercise-registration"),
-            backgroundColor: const Color(0xFF32A287), // Tu verde esmeralda
-            elevation: 4,
-            shape: const CircleBorder(), // Lo hace perfectamente circular
-            child: const Icon(
-              FontAwesomeIcons.personRunning, // El icono de ejercicio
-              color: Colors.white,
-              size: 24,
-            ),
-          )
-        : null,
+      floatingActionButton: currentPath == "/progress"
+          ? FloatingActionButton(
+              onPressed: () => changePath(context, "/exercise-registration"),
+              backgroundColor: const Color(0xFF32A287),
+              elevation: 4,
+              shape: const CircleBorder(),
+              child: const Icon(
+                FontAwesomeIcons.personRunning,
+                color: Colors.white,
+                size: 24,
+              ),
+            )
+          : null,
 
       // Ubicación flotante sobre el contenido, sin tocar la barra
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -102,6 +102,13 @@ class HomePage extends StatelessWidget {
                 onPressed: () => changePath(context, "/genomics"),
                 icon: const Icon(
                   FontAwesomeIcons.dna,
+                  size: 25,
+                )),
+            IconButton(
+                onPressed: () => changePath(context, "/report"),
+                icon: const Icon(
+                  FontAwesomeIcons
+                      .fileLines,
                   size: 25,
                 )),
           ],

@@ -19,6 +19,7 @@ class _GenomicPageState extends State<GenomicPage> {
     return Scaffold(
       backgroundColor: bgCrema,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           "Perfil de riesgo calculado",
           style: TextStyle(color: txtColorPrincipal, fontWeight: FontWeight.bold, fontSize: 20),
@@ -83,14 +84,13 @@ class _GenomicPageState extends State<GenomicPage> {
     );
   }
 
-  // Títulos corregidos: Más grandes, con tu color de marca y mejor espaciados
   Widget _buildSeccionTitulo(String titulo) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0, left: 4.0),
       child: Text(
         titulo,
         style: const TextStyle(
-          color: Color(0xFF3E302D), // Tu color marrón oscuro
+          color: Color(0xFF3E302D),
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
