@@ -86,7 +86,8 @@ class DetailsPage extends StatelessWidget {
                                             padding: const EdgeInsets.all(16.0),
                                             child: Column(
                                               children: [
-                                                const Text('Calorias e Informacion',
+                                                const Text(
+                                                    'Composicion Nutricional',
                                                     style: TextStyle(
                                                         fontSize: 20,
                                                         fontWeight:
@@ -94,14 +95,144 @@ class DetailsPage extends StatelessWidget {
                                                 const SizedBox(
                                                   height: 12,
                                                 ),
-                                                Text(
-                                                    "Cantidad: ${snapshot.data[0].desayuno[snapshot.data[1].getInt('Index')]['cantidad']}",
+                                                RichText(
+                                                  text: TextSpan(
                                                     style: const TextStyle(
-                                                        fontSize: 16)),
-                                                Text(
-                                                    "Calorias: ${snapshot.data[0].desayuno[snapshot.data[1].getInt('Index')]['calorias']}",
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Humedad (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].desayuno[snapshot.data[1].getInt('Index')]['humedad']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
                                                     style: const TextStyle(
-                                                        fontSize: 16))
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Energia (Kcal) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].desayuno[snapshot.data[1].getInt('Index')]['energiac']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Energia (Kj) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].desayuno[snapshot.data[1].getInt('Index')]['energiaj']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Proteina (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].desayuno[snapshot.data[1].getInt('Index')]['proteina']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Lipidos (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].desayuno[snapshot.data[1].getInt('Index')]['lipidos']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Carbohidratos Totales (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].desayuno[snapshot.data[1].getInt('Index')]['carbohidratos']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           ),
@@ -174,7 +305,8 @@ class DetailsPage extends StatelessWidget {
                                             padding: const EdgeInsets.all(16.0),
                                             child: Column(
                                               children: [
-                                                const Text('Calorias e Informacion',
+                                                const Text(
+                                                    'Composicion Nutricional',
                                                     style: TextStyle(
                                                         fontSize: 20,
                                                         fontWeight:
@@ -182,14 +314,144 @@ class DetailsPage extends StatelessWidget {
                                                 const SizedBox(
                                                   height: 12,
                                                 ),
-                                                Text(
-                                                    "Cantidad: ${snapshot.data[0].media[snapshot.data[1].getInt('Index')]['cantidad']}",
+                                               RichText(
+                                                  text: TextSpan(
                                                     style: const TextStyle(
-                                                        fontSize: 16)),
-                                                Text(
-                                                    "Calorias: ${snapshot.data[0].media[snapshot.data[1].getInt('Index')]['calorias']}",
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Humedad (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].media[snapshot.data[1].getInt('Index')]['humedad']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
                                                     style: const TextStyle(
-                                                        fontSize: 16))
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Energia (Kcal) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].media[snapshot.data[1].getInt('Index')]['energiac']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Energia (Kj) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].media[snapshot.data[1].getInt('Index')]['energiaj']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Proteina (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].media[snapshot.data[1].getInt('Index')]['proteina']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Lipidos (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].media[snapshot.data[1].getInt('Index')]['lipidos']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Carbohidratos Totales (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].media[snapshot.data[1].getInt('Index')]['carbohidratos']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           ),
@@ -262,7 +524,8 @@ class DetailsPage extends StatelessWidget {
                                             padding: const EdgeInsets.all(16.0),
                                             child: Column(
                                               children: [
-                                                const Text('Calorias e Informacion',
+                                                const Text(
+                                                    'Composicion Nutricional',
                                                     style: TextStyle(
                                                         fontSize: 20,
                                                         fontWeight:
@@ -270,14 +533,144 @@ class DetailsPage extends StatelessWidget {
                                                 const SizedBox(
                                                   height: 12,
                                                 ),
-                                                Text(
-                                                    "Cantidad: ${snapshot.data[0].almuerzo[snapshot.data[1].getInt('Index')]['cantidad']}",
+                                                RichText(
+                                                  text: TextSpan(
                                                     style: const TextStyle(
-                                                        fontSize: 16)),
-                                                Text(
-                                                    "Calorias: ${snapshot.data[0].almuerzo[snapshot.data[1].getInt('Index')]['calorias']}",
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Humedad (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].almuerzo[snapshot.data[1].getInt('Index')]['humedad']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
                                                     style: const TextStyle(
-                                                        fontSize: 16))
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Energia (Kcal) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].almuerzo[snapshot.data[1].getInt('Index')]['energiac']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Energia (Kj) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].almuerzo[snapshot.data[1].getInt('Index')]['energiaj']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Proteina (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].almuerzo[snapshot.data[1].getInt('Index')]['proteina']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Lipidos (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].almuerzo[snapshot.data[1].getInt('Index')]['lipidos']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Carbohidratos Totales (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].almuerzo[snapshot.data[1].getInt('Index')]['carbohidratos']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           ),
@@ -350,7 +743,8 @@ class DetailsPage extends StatelessWidget {
                                             padding: const EdgeInsets.all(16.0),
                                             child: Column(
                                               children: [
-                                                const Text('Calorias e Informacion',
+                                                const Text(
+                                                    'Composicion Nutricional',
                                                     style: TextStyle(
                                                         fontSize: 20,
                                                         fontWeight:
@@ -358,14 +752,144 @@ class DetailsPage extends StatelessWidget {
                                                 const SizedBox(
                                                   height: 12,
                                                 ),
-                                                Text(
-                                                    "Cantidad: ${snapshot.data[0].merienda[snapshot.data[1].getInt('Index')]['cantidad']}",
+                                                RichText(
+                                                  text: TextSpan(
                                                     style: const TextStyle(
-                                                        fontSize: 16)),
-                                                Text(
-                                                    "Calorias: ${snapshot.data[0].merienda[snapshot.data[1].getInt('Index')]['calorias']}",
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Humedad (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].merienda[snapshot.data[1].getInt('Index')]['humedad']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
                                                     style: const TextStyle(
-                                                        fontSize: 16))
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Energia (Kcal) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].merienda[snapshot.data[1].getInt('Index')]['energiac']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Energia (Kj) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].merienda[snapshot.data[1].getInt('Index')]['energiaj']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Proteina (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].merienda[snapshot.data[1].getInt('Index')]['proteina']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Lipidos (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].merienda[snapshot.data[1].getInt('Index')]['lipidos']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Carbohidratos Totales (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].merienda[snapshot.data[1].getInt('Index')]['carbohidratos']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           ),
@@ -438,7 +962,8 @@ class DetailsPage extends StatelessWidget {
                                             padding: const EdgeInsets.all(16.0),
                                             child: Column(
                                               children: [
-                                                const Text('Calorias e Informacion',
+                                                const Text(
+                                                    'Composicion Nutricional',
                                                     style: TextStyle(
                                                         fontSize: 20,
                                                         fontWeight:
@@ -446,14 +971,144 @@ class DetailsPage extends StatelessWidget {
                                                 const SizedBox(
                                                   height: 12,
                                                 ),
-                                                Text(
-                                                    "Cantidad: ${snapshot.data[0].cena[snapshot.data[1].getInt('Index')]['cantidad']}",
+                                                RichText(
+                                                  text: TextSpan(
                                                     style: const TextStyle(
-                                                        fontSize: 16)),
-                                                Text(
-                                                    "Calorias: ${snapshot.data[0].cena[snapshot.data[1].getInt('Index')]['calorias']}",
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Humedad (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].cena[snapshot.data[1].getInt('Index')]['humedad']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
                                                     style: const TextStyle(
-                                                        fontSize: 16))
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Energia (Kcal) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].cena[snapshot.data[1].getInt('Index')]['energiac']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Energia (Kj) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].cena[snapshot.data[1].getInt('Index')]['energiaj']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Proteina (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].cena[snapshot.data[1].getInt('Index')]['proteina']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Lipidos (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].cena[snapshot.data[1].getInt('Index')]['lipidos']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                RichText(
+                                                  text: TextSpan(
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors
+                                                            .black),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: "Carbohidratos Totales (g) : ",
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .bold),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '${snapshot.data[0].cena[snapshot.data[1].getInt('Index')]['carbohidratos']}',
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight
+                                                                .normal),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           ),
@@ -465,7 +1120,7 @@ class DetailsPage extends StatelessWidget {
                               ),
                             )
                           ],
-                      );
+                        );
                       default:
                         return const Text('Error');
                     }

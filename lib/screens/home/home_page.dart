@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
         title: Text(currentPath == "/diet"
             ? "Menú para hoy"
             : currentPath == "/genomics"
-                ? "Mi perfil genético"
+                ? "Perfil de Riesgos"
                 : currentPath == "/exercise-registration"
                     ? "Registrar Actividad Física"
                     : currentPath == "/progress"

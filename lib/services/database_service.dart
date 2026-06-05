@@ -141,13 +141,13 @@ class DatabaseService extends ChangeNotifier {
   }
 
   Future<Plan> getMiercoles (String id) async{
-    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('mie').get();
+    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('lun').get();
 
     return Plan.fromMap(snap.data());
   }
 
   Future<Plan> getJueves (String id) async{
-    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('jue').get();
+    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('lun').get();
 
     return Plan.fromMap(snap.data());
   }

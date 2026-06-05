@@ -97,8 +97,8 @@ class DietPage extends StatelessWidget {
                                   label: snapshot.data.merienda[1]['titulo'],
                                   index: 1)
                             ]),
-                      if (snapshot.data?.merienda != null &&
-                          snapshot.data.merienda.isNotEmpty)
+                      if (snapshot.data?.cena != null &&
+                          snapshot.data.cena.isNotEmpty)
                         MealCard(
                             label: 'Cena',
                             time: snapshot.data.cena[0],
@@ -213,8 +213,8 @@ class DietPage extends StatelessWidget {
                                   label: snapshot.data.merienda[1]['titulo'],
                                   index: 1)
                             ]),
-                      if (snapshot.data?.merienda != null &&
-                          snapshot.data.merienda.isNotEmpty)
+                      if (snapshot.data?.cena != null &&
+                          snapshot.data.cena.isNotEmpty)
                         MealCard(
                             label: 'Cena',
                             time: snapshot.data.cena[0],
@@ -329,8 +329,8 @@ class DietPage extends StatelessWidget {
                                   label: snapshot.data.merienda[1]['titulo'],
                                   index: 1)
                             ]),
-                      if (snapshot.data?.merienda != null &&
-                          snapshot.data.merienda.isNotEmpty)
+                      if (snapshot.data?.cena != null &&
+                          snapshot.data.cena.isNotEmpty)
                         MealCard(
                             label: 'Cena',
                             time: snapshot.data.cena[0],
@@ -445,8 +445,8 @@ class DietPage extends StatelessWidget {
                                   label: snapshot.data.merienda[1]['titulo'],
                                   index: 1)
                             ]),
-                      if (snapshot.data?.merienda != null &&
-                          snapshot.data.merienda.isNotEmpty)
+                      if (snapshot.data?.cena != null &&
+                          snapshot.data.cena.isNotEmpty)
                         MealCard(
                             label: 'Cena',
                             time: snapshot.data.cena[0],
@@ -561,8 +561,8 @@ class DietPage extends StatelessWidget {
                                   label: snapshot.data.merienda[1]['titulo'],
                                   index: 1)
                             ]),
-                      if (snapshot.data?.merienda != null &&
-                          snapshot.data.merienda.isNotEmpty)
+                      if (snapshot.data?.cena != null &&
+                          snapshot.data.cena.isNotEmpty)
                         MealCard(
                             label: 'Cena',
                             time: snapshot.data.cena[0],
@@ -677,8 +677,8 @@ class DietPage extends StatelessWidget {
                                   label: snapshot.data.merienda[1]['titulo'],
                                   index: 1)
                             ]),
-                      if (snapshot.data?.merienda != null &&
-                          snapshot.data.merienda.isNotEmpty)
+                      if (snapshot.data?.cena != null &&
+                          snapshot.data.cena.isNotEmpty)
                         MealCard(
                             label: 'Cena',
                             time: snapshot.data.cena[0],
@@ -793,8 +793,8 @@ class DietPage extends StatelessWidget {
                                   label: snapshot.data.merienda[1]['titulo'],
                                   index: 1)
                             ]),
-                      if (snapshot.data?.merienda != null &&
-                          snapshot.data.merienda.isNotEmpty)
+                      if (snapshot.data?.cena != null &&
+                          snapshot.data.cena.isNotEmpty)
                         MealCard(
                             label: 'Cena',
                             time: snapshot.data.cena[0],
