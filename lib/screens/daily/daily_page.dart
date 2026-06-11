@@ -64,7 +64,7 @@ class _DailyQuestsScreenState extends State<DailyPage> {
       int recommendedMinutes = 30;
       if (_userWeight >= 80.0) recommendedMinutes = 45;
       exerciseSubtitle =
-          'Meta de hoy: Completa un bloque de $recommendedMinutes minutos de actividad cardiovascular';
+          'Meta de hoy: Completa un bloque de $recommendedMinutes minutos de actividad física';
 
       // 2. Lógica Misión 3 (Hidratación inteligente)
       final double totalMl = _userWeight * 35;

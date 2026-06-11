@@ -34,7 +34,7 @@ class _GenomicPageState extends State<GenomicPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "El motor calculó el nivel de riesgo en cada submódulo a partir de tus datos genotípicos. Toca cualquier tarjeta para ver recomendaciones personalizadas.",
+              "El motor calculó el nivel de riesgo en cada submódulo a partir de tus datos genotípicos.",
               style: TextStyle(color: Colors.grey, fontSize: 14, height: 1.4),
             ),
             const SizedBox(height: 35),
@@ -47,7 +47,6 @@ class _GenomicPageState extends State<GenomicPage> {
               nivelText: "Alto",
               barrasActivas: 4,
               colorNivel: const Color(0xFFFA5A4A),
-              detalles: "Este nivel de riesgo alto sugiere que tu cuerpo tiende a almacenar grasa con mayor facilidad. Se recomienda encarecidamente priorizar una dieta equilibrada rica en fibra y grasas saludables, junto con una rutina regular de ejercicio cardiovascular y de fuerza. Evita los picos de azúcar para acarrear o controlar los antojos. Además, considera registrar tus comidas para un mejor control calórico.",
             ),
 
             const SizedBox(height: 30),
@@ -60,7 +59,6 @@ class _GenomicPageState extends State<GenomicPage> {
               nivelText: "Moderado",
               barrasActivas: 3,
               colorNivel: const Color(0xFFFFA827),
-              detalles: "Tu cuerpo puede procesar los carbohidratos, pero con menor eficiencia. Es aconsejable optar por carbohidratos complejos y de bajo índice glucémico (como cereales integrales y legumbres) y limitar al máximo los azúcares refinados o añadidos. Una ingesta moderada y distribuida te ayudará a mantener niveles estables de energía durante el día.",
             ),
             _buildCardRiesgo(
               titulo: "Sensibilidad al Sodio",
@@ -68,7 +66,6 @@ class _GenomicPageState extends State<GenomicPage> {
               nivelText: "Alto",
               barrasActivas: 4,
               colorNivel: const Color(0xFFFA5A4A),
-              detalles: "Tu genética indica que eres muy sensible al sodio, lo que puede influir en tu presión arterial y retención de líquidos. Te aconsejamos sazonar tus comidas con especias naturales (limón, ajo, pimienta, orégano) en lugar de sal de mesa, y reducir drásticamente el consumo de productos empaquetados o embutidos.",
             ),
             _buildCardRiesgo(
               titulo: "Tolerancia a la Lactosa",
@@ -76,7 +73,6 @@ class _GenomicPageState extends State<GenomicPage> {
               nivelText: "Bajo",
               barrasActivas: 1,
               colorNivel: const Color(0xFF32A287),
-              detalles: "¡Buenas noticias! Tu organismo cuenta con una excelente producción de lactasa, lo que significa que digieres la leche, quesos y yogures de forma óptima sin inflamación. Puedes incluirlos en tu dieta habitual como fuente de calcio y proteína.",
             ),
           ],
         ),
@@ -104,7 +100,6 @@ class _GenomicPageState extends State<GenomicPage> {
     required String nivelText,
     required int barrasActivas,
     required Color colorNivel,
-    required String detalles,
   }) {
     final bool isExpanded = _expandedCardTitle == titulo;
 
@@ -201,45 +196,6 @@ class _GenomicPageState extends State<GenomicPage> {
                     ],
                   ),
                 ],
-              ),
-
-              // SECCIÓN DESPLEGABLE: Se muestra solo cuando isExpanded es verdadero
-              AnimatedSize(
-                duration: const Duration(milliseconds: 250),
-                curve: Curves.easeInOut,
-                child: isExpanded
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 16),
-                          const Divider(height: 1, color: Color(0xFFFDF8F5)),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Icon(Icons.lightbulb_outline, color: colorNivel, size: 20),
-                              const SizedBox(width: 8),
-                              const Text(
-                                "Recomendación para ti:",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF3E302D),
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            detalles,
-                            style: TextStyle(
-                              fontSize: 13.5,
-                              color: Colors.grey.shade700,
-                              height: 1.45,
-                            ),
-                          ),
-                        ],
-                      )
-                    : const SizedBox.shrink(),
               ),
             ],
           ),
