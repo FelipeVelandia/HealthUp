@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FoodRegistrationScreen extends StatefulWidget {
   const FoodRegistrationScreen({super.key});
@@ -28,6 +29,9 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
   // Lista local para mostrar lo que se va registrando antes de guardar
   List<Map<String, dynamic>> _tempRegistry = [];
 
+  // NUEVO: Variable para rastrear el agua acumulada en la sesión actual
+  int _waterAddedInSession = 0;
+
   void _addWater(int amount, String type) {
     setState(() {
       _tempRegistry.add({
@@ -37,10 +41,21 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
         'time': _selectedTime.format(context),
         'isWater': true,
       });
+      // Acumulamos el agua añadida temporalmente
+      _waterAddedInSession += amount;
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('¡+$amount mL de agua añadidos! 💧'), duration: const Duration(seconds: 1)),
     );
+  }
+
+  // NUEVO: Función para persistir el agua acumulada en el disco duro
+  Future<void> _saveWaterToStorage() async {
+    if (_waterAddedInSession <= 0) return;
+    final prefs = await SharedPreferences.getInstance();
+    // Leemos lo que ya existía hoy y le sumamos lo nuevo
+    final int currentSavedWater = prefs.getInt('user_consumed_water_key') ?? 0;
+    await prefs.setInt('user_consumed_water_key', currentSavedWater + _waterAddedInSession);
   }
 
   void _addFood() {
@@ -150,7 +165,7 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
 
             const SizedBox(height: 30),
             
-            SizedBox(
+             SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
@@ -158,7 +173,11 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
                   backgroundColor: greenPrimary,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                 ),
-                onPressed: () => context.pop(),
+                onPressed: () async {
+                  // NUEVO: Guardamos el agua antes de regresar
+                  await _saveWaterToStorage();
+                  if (mounted) context.pop();
+                },
                 child: const Text("GUARDAR TODO", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
               ),
             ),
