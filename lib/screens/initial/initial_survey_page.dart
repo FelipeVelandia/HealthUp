@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutrialg_life/models/models.dart';
 import 'package:nutrialg_life/widgets/checkbox_list.dart';
-import 'package:nutrialg_life/widgets/checkbox_with_descriptions.dart';
 import 'package:nutrialg_life/widgets/dynamic_input.dart';
 import 'package:nutrialg_life/widgets/form_step.dart';
 import 'package:nutrialg_life/widgets/select_input.dart';
@@ -86,35 +85,6 @@ class _InitialSurveyPageState extends State<InitialSurveyPage> {
                 ],
               ),
               FormStep(
-                title: "Antecedentes personales",
-                subtitle: "Marque todas las opciones correspondientes.",
-                type: StepType.middle,
-                next: _nextPage,
-                back: _prevPage,
-                children: [
-                  SizedBox(
-                    height: 650,
-                    child: SingleChildScrollView(
-                      child: CheckboxWithDescriptions(
-                          selectedOptionsController:
-                              antecedentesController["personales_claves"]!,
-                          descriptionsController: antecedentesController[
-                              "personales_descripciones"]!,
-                          options: const [
-                            "Patológicos",
-                            "Hospitalarios",
-                            "Farmacológicos",
-                            "Quirúrgicos",
-                            "Alérgicos",
-                            "Traumáticos",
-                            "Tóxicos",
-                            "Otros"
-                          ]),
-                    ),
-                  )
-                ],
-              ),
-              FormStep(
                 title: "Hábitos alimenticios",
                 subtitle: "Marque todas las opciones correspondientes.",
                 type: StepType.middle,
@@ -148,14 +118,14 @@ class _InitialSurveyPageState extends State<InitialSurveyPage> {
                   SelectInput(
                     label: "Hábitos intestinales",
                     controller: habitosController["habito_intestinal"]!,
-                    options: const ["Normal", "Estreñimiento", "Diarrea", "Sufrimiento de gases"],
+                    options: const ["Normal", "Estreñimiento", "Diarrea"],
                   ),
                   const SizedBox(height: 12),
                   SelectInput(
                       label: "Síntomas gastrointestinales",
                       controller:
                           habitosController["sintomas_gastrointestinales"]!,
-                      options: const ["Vómito", "Reflujo", "Ninguno"])
+                      options: const ["Vómito", "Reflujo", "Producción de gases", "Ninguno"])
                 ],
               ),
               FormStep(

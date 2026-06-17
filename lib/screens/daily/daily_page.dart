@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nutrialg_life/points_manager.dart';
-import 'package:nutrialg_life/models/quest.dart'; // Importa el notificador global
+import 'package:nutrialg_life/models/quest.dart'; // Importa tu modelo e infraestructura global
 
 class DailyPage extends StatefulWidget {
   const DailyPage({super.key});
@@ -18,6 +18,13 @@ class _DailyQuestsScreenState extends State<DailyPage> {
   Timer? _timer;
   String _timeRemaining = "00:00:00";
 
+  // Controladores y variables para gestionar el peso
+  final TextEditingController _weightController = TextEditingController();
+  double _userWeight = 0.0;
+
+  // Estado para rastrear si el valor actual del campo de texto ya fue confirmado
+  bool _isWeightConfirmed = true;
+
   @override
   void initState() {
     super.initState();
@@ -28,83 +35,203 @@ class _DailyQuestsScreenState extends State<DailyPage> {
   @override
   void dispose() {
     _timer?.cancel();
+    _weightController.dispose();
     super.dispose();
   }
 
-  Future<void> _loadDataFromStorage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final int savedPoints = prefs.getInt('user_accumulated_points_key') ?? 0;
+  // Variable en el estado de tu clase _DailyQuestsScreenState
+  int _consumedWater = 0;
+  bool _waterPointsAwardedToday =
+      false; // NUEVO: Evita sumas duplicadas involuntarias
 
-    // CORRECCIÓN CLAVE: Sincronizamos el Notificador Global con el disco duro
-    globalPointsNotifier.value = savedPoints;
-
-    final String? cachedData = prefs.getString('daily_quests_key');
+  // Helper unificado para construir la lista e inyectar puntos automáticos
+  List<QuestModel> _buildFreshQuestsList(Map<int, bool> completionMap) {
     final Map<int, Map<String, dynamic>> visualResources = {
       1: {'icon': Icons.directions_run, 'color': Colors.orange},
       2: {'icon': Icons.menu_book, 'color': Colors.purple},
       3: {'icon': Icons.water_drop, 'color': Colors.blue},
     };
 
-    // Misiones con textos corregidos e inteligentes del código
-    final List<QuestModel> hardcodedQuests = [
+    String exerciseSubtitle =
+        'Realiza actividad fisica diaria que te recomendo el nutricionisdta';
+    String hydrationSubtitle = 'Bebe agua para mantenerte hidratado';
+
+    // Leemos el estado nativo guardado previamente en el archivo JSON
+    bool hydrationCompleted = completionMap[3] ?? false;
+
+    if (_userWeight > 0) {
+      // 1. Lógica Misión 1 (Ejercicio)
+      int recommendedMinutes = 30;
+      if (_userWeight >= 80.0) recommendedMinutes = 45;
+      exerciseSubtitle =
+          'Meta de hoy: Completa un bloque de $recommendedMinutes minutos de actividad física';
+
+      // 2. Lógica Misión 3 (Hidratación inteligente)
+      final double totalMl = _userWeight * 35;
+      final double totalLiters = totalMl / 1000;
+
+      hydrationSubtitle =
+          'Progreso: $_consumedWater mL de ${totalMl.toStringAsFixed(0)} mL (${totalLiters.toStringAsFixed(1)}L)';
+
+      // 3. GATILLO DE AUTOMATIZACIÓN DE PUNTOS
+      // Si el agua supera la meta y detectamos que hoy todavía no se han otorgado los puntos de agua:
+      if (_consumedWater >= totalMl && !_waterPointsAwardedToday) {
+        hydrationCompleted = true;
+        _waterPointsAwardedToday = true; // Bloqueamos el gatillo localmente
+
+        // Usamos un microtask para alterar el ValueNotifier de forma segura fuera del renderizado
+        Future.microtask(() async {
+          globalPointsNotifier.value +=
+              20; // Inyecta +20 pts al progreso circular
+
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool(
+              'water_points_awarded_key', true); // Guarda bloqueo en disco
+          _saveDataToStorage(); // Guarda la lista con isCompleted = true
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                    '💧 ¡Meta de agua alcanzada! Ganaste +20 Pts automáticamente.'),
+                backgroundColor: Colors.green,
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
+        });
+      } else if (_consumedWater >= totalMl) {
+        // Si ya bebió lo suficiente y los puntos ya fueron cobrados en el pasado, se mantiene en verdadero
+        hydrationCompleted = true;
+      }
+    }
+
+    // Sincronizamos el mapa final que se usará para dibujar las misiones
+    completionMap[3] = hydrationCompleted;
+
+    return [
       QuestModel(
-          id: 1,
-          title: 'Ejercicio diario',
-          subtitle: 'Realiza actividad fisica hoy',
-          reward: '+20 Pts',
-          icon: visualResources[1]?['icon'],
-          color: visualResources[1]?['color']),
+        id: 1,
+        title: 'Ejercicio diario',
+        subtitle: exerciseSubtitle,
+        reward: '+20 Pts',
+        icon: visualResources[1]?['icon'],
+        color: visualResources[1]?['color'],
+        isCompleted: completionMap[1] ?? false,
+      ),
       QuestModel(
-          id: 2,
-          title: 'Hábito de nutricion',
-          subtitle: 'Alimentate durante las horas recomendadas',
-          reward: '+20 Pts',
-          icon: visualResources[2]?['icon'],
-          color: visualResources[2]?['color']),
+        id: 2,
+        title: 'Hábito de nutricion',
+        subtitle: 'Alimentate durante las horas recomendadas',
+        reward: '+20 Pts',
+        icon: visualResources[2]?['icon'],
+        color: visualResources[2]?['color'],
+        isCompleted: completionMap[2] ?? false,
+      ),
       QuestModel(
-          id: 3,
-          title: 'Hidratación óptima',
-          subtitle: 'Bebe agua para mantenerte hidratado',
-          reward: '+20 Pts',
-          icon: visualResources[3]?['icon'],
-          color: visualResources[3]?['color']),
+        id: 3,
+        title: 'Hidratación óptima',
+        subtitle: hydrationSubtitle,
+        reward: '+20 Pts',
+        icon: visualResources[3]?['icon'],
+        color: visualResources[3]?['color'],
+        isCompleted: completionMap[3] ?? false, // Vinculado a la automatización
+      ),
     ];
+  }
+
+  Future<void> _loadDataFromStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final int savedPoints = prefs.getInt('user_accumulated_points_key') ?? 0;
+
+    globalPointsNotifier.value = savedPoints;
+
+    _userWeight = prefs.getDouble('user_weight_key') ?? 0.0;
+    if (_userWeight > 0) {
+      _weightController.text = _userWeight.toStringAsFixed(1);
+    }
+
+    // Leemos el agua consumida y el estado de la recompensa desde disco duro
+    _consumedWater = prefs.getInt('user_consumed_water_key') ?? 0;
+    _waterPointsAwardedToday =
+        prefs.getBool('water_points_awarded_key') ?? false;
+
+    final String? cachedData = prefs.getString('daily_quests_key');
+    Map<int, bool> completionMap = {};
 
     if (cachedData != null) {
       final List<dynamic> decodedList = jsonDecode(cachedData);
-      final Map<int, bool> completionMap = {
+      completionMap = {
         for (var item in decodedList)
           item['id'] as int: item['isCompleted'] ?? false
       };
-
-      for (var quest in hardcodedQuests) {
-        if (completionMap.containsKey(quest.id)) {
-          quest.isCompleted = completionMap[quest.id]!;
-        }
-      }
-
-      setState(() {
-        _quests = hardcodedQuests;
-        _isLoading = false;
-      });
-      _saveDataToStorage();
-    } else {
-      setState(() {
-        _quests = hardcodedQuests;
-        _isLoading = false;
-      });
-      _saveDataToStorage();
     }
+
+    setState(() {
+      _quests = _buildFreshQuestsList(completionMap);
+      _isWeightConfirmed = true;
+      _isLoading = false;
+    });
+    _saveDataToStorage();
   }
 
   Future<void> _saveDataToStorage() async {
     final prefs = await SharedPreferences.getInstance();
-    // Guardamos el valor actual de los puntos del Notificador Global
     await prefs.setInt(
         'user_accumulated_points_key', globalPointsNotifier.value);
+    await prefs.setDouble('user_weight_key', _userWeight);
+
     final String encodedData =
         jsonEncode(_quests.map((q) => q.toJson()).toList());
     await prefs.setString('daily_quests_key', encodedData);
+  }
+
+  // Se ejecuta tras presionar de manera explícita el botón o dar Enter
+  void _confirmAndExecuteWeightUpdate() {
+    final String value = _weightController.text;
+    final double? parsedWeight = double.tryParse(value);
+
+    if (parsedWeight != null && parsedWeight > 0) {
+      FocusScope.of(context).unfocus();
+
+      final Map<int, bool> currentCompletionMap = {
+        for (var q in _quests) q.id: q.isCompleted
+      };
+
+      setState(() {
+        _userWeight = parsedWeight;
+        _quests = _buildFreshQuestsList(
+            currentCompletionMap); // Reconstruye misiones con el nuevo peso
+        _isWeightConfirmed = true;
+      });
+      _saveDataToStorage();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              '¡Peso registrado! Metas de ejercicio e hidratación actualizadas.'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, ingresa un peso válido numérico.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  // Detecta si el usuario alteró el texto para cambiar el botón a modo "pendiente"
+  void _onWeightInputChanged(String value) {
+    final double? parsed = double.tryParse(value);
+    if (parsed != _userWeight && _isWeightConfirmed) {
+      setState(() {
+        _isWeightConfirmed = false;
+      });
+    }
   }
 
   void _startCountdown() {
@@ -128,8 +255,15 @@ class _DailyQuestsScreenState extends State<DailyPage> {
     return "${twoDigits(duration.inHours)}:${twoDigits(duration.inMinutes.remainder(60))}:${twoDigits(duration.inSeconds.remainder(60))}";
   }
 
-  void _resetDailyQuests() {
+  Future<void> _resetDailyQuests() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('user_consumed_water_key', 0);
+    await prefs.setBool(
+        'water_points_awarded_key', false); // Liberamos el candado a medianoche
+
     setState(() {
+      _consumedWater = 0;
+      _waterPointsAwardedToday = false;
       for (var quest in _quests) {
         quest.isCompleted = false;
       }
@@ -160,9 +294,11 @@ class _DailyQuestsScreenState extends State<DailyPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [ // Integración reactiva en el balance superior
+          children: [
             const SizedBox(height: 12),
             _buildTimerCard(),
+            const SizedBox(height: 12),
+            _buildWeightInputCard(),
             const SizedBox(height: 12),
             _buildProgressBar(completedCount, progress),
             const SizedBox(height: 24),
@@ -175,6 +311,66 @@ class _DailyQuestsScreenState extends State<DailyPage> {
                 itemBuilder: (context, index) =>
                     _buildQuestCard(_quests[index]),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWeightInputCard() {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        child: Row(
+          children: [
+            const Icon(Icons.scale, color: Colors.blueGrey),
+            const SizedBox(width: 12),
+            const Text('Tu Peso Actual:',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            const Spacer(),
+            SizedBox(
+              width: 90, // Reducido ligeramente para dar espacio al nuevo botón
+              height: 40,
+              child: TextField(
+                controller: _weightController,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                textInputAction: TextInputAction.done,
+                onChanged: _onWeightInputChanged,
+                onSubmitted: (_) => _confirmAndExecuteWeightUpdate(),
+                decoration: InputDecoration(
+                  suffixText: ' kg',
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+            ),
+            const SizedBox(width: 4),
+            IconButton(
+              icon: Icon(
+                _isWeightConfirmed
+                    ? Icons.check_circle
+                    : Icons.arrow_circle_right,
+                color: _isWeightConfirmed ? Colors.green : Colors.blue,
+                size: 26,
+              ),
+              onPressed: _confirmAndExecuteWeightUpdate,
+              tooltip:
+                  _isWeightConfirmed ? 'Peso confirmado' : 'Confirmar Peso',
+            ),
+            // NUEVO: Botón pequeño para reiniciar el agua consumida
+            IconButton(
+              icon: const Icon(Icons.restart_alt,
+                  color: Colors.redAccent, size: 26),
+              onPressed: _resetConsumedWaterManually,
+              tooltip: 'Reiniciar agua del día',
             ),
           ],
         ),
@@ -254,10 +450,13 @@ class _DailyQuestsScreenState extends State<DailyPage> {
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: CircleAvatar(
-            backgroundColor:
-                quest.isCompleted ? Colors.green : quest.color.withOpacity(0.2),
-            child: Icon(quest.isCompleted ? Icons.check : quest.icon,
-                color: quest.isCompleted ? Colors.white : quest.color)),
+            backgroundColor: quest.isCompleted
+                ? Colors.green
+                : (quest.color as Color? ?? Colors.blue).withOpacity(0.2),
+            child: Icon(
+                quest.isCompleted ? Icons.check : quest.icon as IconData?,
+                color:
+                    quest.isCompleted ? Colors.white : quest.color as Color?)),
         title: Text(quest.title,
             style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -282,31 +481,80 @@ class _DailyQuestsScreenState extends State<DailyPage> {
               child: Checkbox(
                 value: quest.isCompleted,
                 activeColor: Colors.green,
-                onChanged: (bool? value) {
-                  setState(() {
-                    quest.isCompleted = value ?? false;
-                    if (quest.isCompleted) {
-                      globalPointsNotifier.value += 20;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content:
-                                Text('¡Misión completada! Ganaste +20 Pts'),
-                            backgroundColor: Colors.green,
-                            duration: Duration(seconds: 1)),
-                      );
-                    } else {
-                      globalPointsNotifier.value -= 20;
-                      if (globalPointsNotifier.value < 0)
-                        globalPointsNotifier.value = 0;
-                    }
-                  });
-                  _saveDataToStorage();
-                },
+                // Si es la misión de agua (ID 3), se desactiva manualmente porque se completa sola al beber agua
+                onChanged: quest.id == 3
+                    ? null
+                    : (bool? value) {
+                        setState(() {
+                          quest.isCompleted = value ?? false;
+                          if (quest.isCompleted) {
+                            globalPointsNotifier.value += 20;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      '¡Misión completada! Ganaste +20 Pts'),
+                                  backgroundColor: Colors.green,
+                                  duration: Duration(seconds: 1)),
+                            );
+                          } else {
+                            globalPointsNotifier.value -= 20;
+                            if (globalPointsNotifier.value < 0) {
+                              globalPointsNotifier.value = 0;
+                            }
+                          }
+                        });
+                        _saveDataToStorage();
+                      },
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  // NUEVO: Función para reiniciar manualmente el agua consumida del día
+  Future<void> _resetConsumedWaterManually() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // 1. Ponemos a cero el agua en el almacenamiento local
+    await prefs.setInt('user_consumed_water_key', 0);
+
+    // 2. Si ya se habían otorgado los puntos automáticos hoy, se los restamos
+    // para que el usuario pueda volver a ganarlos al registrar agua de nuevo.
+    if (_waterPointsAwardedToday) {
+      await prefs.setBool('water_points_awarded_key', false);
+      if (globalPointsNotifier.value >= 20) {
+        globalPointsNotifier.value -= 20;
+      } else {
+        globalPointsNotifier.value = 0;
+      }
+    }
+
+    // 3. Actualizamos la interfaz regenerando las misiones desde cero
+    final Map<int, bool> currentCompletionMap = {
+      for (var q in _quests) q.id: q.isCompleted
+    };
+    // Forzamos que la misión 3 vuelva a estar incompleta
+    currentCompletionMap[3] = false;
+
+    setState(() {
+      _consumedWater = 0;
+      _waterPointsAwardedToday = false;
+      _quests = _buildFreshQuestsList(currentCompletionMap);
+    });
+
+    _saveDataToStorage();
+
+    // Feedback visual
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('💧 Contador de agua reiniciado con éxito.'),
+          backgroundColor: Colors.blueGrey,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 }
