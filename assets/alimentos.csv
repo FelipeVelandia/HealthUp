@@ -1,0 +1,780 @@
+﻿;;;;;;
+codigo;Nombre del Alimento;Energia (Kcal) ;Proteina (g);Lipidos (g);Carbohidratos Totales (g);Fibra Dietaria (g)
+A001;Almidón de maíz, crudo;370;0,3;0,1;91,4;0,9
+A002;Almojabána, bogotana, horneada ;285;13,0;12,3;30,6;
+A003;Almojabána, Vallecaucana, horneada ;341;17,5;14,7;34,6;
+A004;Arepa de maíz precocido, con sal;163;3,3;0,9;35,0;0,9
+A005;Arepa de maíz precocido, sin sal;156;3,4;0,5;34,5;
+A006;Arepa de , asada;162;4,1;0,0;36,3;
+A007;Arepa de maíz, con queso, asada;211;4,8;8,4;29,0;
+A008;Arepa de maíz, frita;325;3,4;20,3;32,1;
+A009;Arroz blanco, pulido, cocido, sin sal;161;2,3;2,1;32,5;1,6
+A010;Arroz blanco, pulido, crudo;353;6,7;0,4;80,1;1,0
+A011;Arroz integral, cocido, sin sal;370;7,5;2,6;77,3;3,6
+A012;Avena en Hojuelas, Precocida;411;16,9;7,5;64,1;9,8
+A013;Brownie, de chocolate, horneado;427;4,8;16,3;64,2;2,1
+A014;Cebada, perlada, cruda;385;12,5;1,8;72,1;15,4
+A015;Cereal para el desayuno, Hojuelas de maíz, sin azúcar;383;8,1;0,4;85,0;3,3
+A016;Croissant, de queso, horneado;445;9,2;23,0;48,9;2,6
+A017;Cuchuco de cebada, crudo;358;8,4;0,7;79,4;
+A018;Cuchuco de trigo, crudo;358;12,8;1,2;74,0;
+A019;Envuelto de mazorca, precocido;185;4,8;7,9;23,5;0,8
+A020;Galletas dulces, con relleno;516;3,8;24,1;70,1;1,6
+A021;Galletas ducles, cucas;390;7,6;3,0;83,2;
+A022;Galletas dulces, de avena, con uvas pasas ;451;6,5;16,2;68,6;2,6
+A023;Galletas dulces, sin relleno;472;6,4;19,6;67,1;1,2
+A024;Galletas Ducles, tipo Polvorosas;448;7,6;12,0;76,4;2,1
+A025;Galletas ducles, tipo wafer;455;5,4;15,2;73,2;1,9
+A026;Galletas saladas, tipo cracker;466;8,4;17,2;68,2;2,3
+A027;Galletas saladas, tipo soda;424;9,6;9,7;72,9;3,0
+A028;Harina de arroz, cruda;361;6,0;1,4;80,0;2,4
+A029;Harina de avena, cruda;414;14,7;8,6;66,2;6,5
+A030;Harina de cebada, cruda;378;10,5;1,6;75,4;10,1
+A031;Harina de centeno, para panificación cruda;390;15,9;2,9;68,3;13,4
+A032;Harina de centeno, para reposteria, cruda;370;9,1;1,6;76,6;6,3
+A033;Harina de maíz amarillo, precocida;386;7,7;3,3;77,6;7,3
+A034;Harina de maíz blanco, precocida;380;9,1;3,7;73,9;7,5
+A035;Harina de maíz, extra cruda;396;8,8;4,9;74,3;9,6
+A036;Harina de maíz, extra tostada;385;9,9;3,4;77,9;1,4
+A037;Harina de quinua, cruda;360;11,0;4,1;69,0;1,5
+A038;Harina de trigo, fortificada, para panificación, cruda;363;13,2;1,9;72,1;2,4
+A039;Harina de trigo, fortificada, para reposteria, cruda;358;9,5;1,4;75,6;2,3
+A040;Harina de trigo, fortificada, todo propósito, cruda;360;12,5;1,7;72,3;2,6
+A041;Harina de trigo, integral, cruda;382;13,8;2,1;71,2;11,4
+A042;Hojaldre, regular, horneado;555;7,4;38,5;44,0;1,5
+A043;Maíz amarillo, crudo;393;9,4;4,7;74,5;7,3
+A044;Maíz amarillo, trillado;347;8,8;0,8;76,0;
+A045;Maíz blanco, crudo;363;9,4;3,8;72,2;1,4
+A046;Maíz blanco, trillado;357;8,7;0,9;77,9;1,4
+A047;Maíz maravilla, crudo;180;2,8;0,4;41,3;
+A048;Maíz mute, cocido, sin sal;98;2,5;0,5;21,0;
+A049;Maíz opaco 2, crudo;378;10,1;5,1;72,9;
+A050;Maíz opaco, crudo;366;9,6;3,8;73,3;
+A051;Maíz pira o reventon, crudo;392;10,9;4,3;71,1;12,7
+A052;Maíz porva, crudo;366;7,7;5,2;72,2;
+A053;Maíz tierno, crudo;152;3,4;1,2;30,5;2,6
+A054;Mantecada, horneada;405;7,9;24,2;38,7;0,4
+A055;Mezcla lista para preparar pancakes, en polvo;363;11,7;1,6;72,8;5,4
+A056;Mijo, crudo;381;11,0;4,2;70,5;8,5
+A057;Mogolla, integral, horneada;310;7,2;1,9;66,1;
+A058;Mojicón, horneado;310;9,3;1,9;63,7;0,6
+A059;Muffins dulces, con chips de chocolate;325;7,3;12,4;45,1;2,0
+A060;Pan blanco, regular, horneado;268;8,9;3,4;48,8;3,2
+A061;Pan blanco, tipo molde, horneado;278;8,9;1,6;56,8;0,7
+A062;Pan de centeno, horneado;257;9,3;1,2;52,3;
+A063;Pan de dulce, regular, horneado;328;8,9;4,3;63,1;0,6
+A064;Pan de leche, horneado;281;8,6;4,8;49,7;2,1
+A065;Pan de queso, horneado;367;10,4;20,8;33,5;2,1
+A066;Pan de sal regular, horenado;340;11,1;6,4;59,3;0,4
+A067;Pan de yuca, horneado;355;15,8;12,2;45,5;
+A068;Pan francés, horneado;308;10,1;2,1;61,1;2,3
+A069;Pan integral, regular, horneado;279;9,4;3,1;50,4;6,5
+A070;pandebono, horneado;357;15,8;10,1;50,7;
+A071;Pasta alimenticia, con huevo, sin enriquecer, cocida, sin sal;132;4,5;1,0;25,5;1,2
+A072;Pasta alimenticia, enriquecida, cruda;371;13,0;1,5;74,7;3,2
+A073;pasta alimentacia, sin enriquecer, cocida, sin sal;143;5,8;0,9;27,0;1,8
+A074;pasta alimentacia, sin enriquecer, cruda;371;13,0;1,4;74,8;3,2
+A075;Ponqué blanco, cubierto de chocolate, horneado;398;3,0;17,8;55,9;1,5
+A076;ponqué blanco, cubierto de crema blanca y chocolate horneado;398;3,0;17,8;55,9;1,5
+A077;ponqué blanco, regular, sin cubierta, horneado;403;5,3;19,2;51,7;1,0
+A078;Ponqué negro, cubierto de chocolate, horneado;417;3,5;20,1;54,4;2,2
+A079;Quinua, cruda;376;14,6;4,4;66,4;6,5
+A080;Roscas de harina de maíz y cuajada, horneadas;388;18,6;17,6;38,9;
+A081;Roscas de harina de maíz, horneadas;353;12,1;7,6;59,1;
+A082;Roscas de harina de trigo, horneadas;324;7,2;13,2;43,8;0,4
+A083;Roscón, relleno de arequipe, horneado;349;6,2;6,6;66,1;
+A084;Roscón, relleno de bocadillo, horneado;345;7,9;6,8;62,9;
+A085;Semolina, enriquecida, cruda;362;12,7;1,6;72,3;3,9
+A086;Semolina, sin enriquecer, cruda;362;12,7;1,8;71,9;3,9
+A087;Tostadas o calados, horneados;398;10,0;6,8;72,3;3,6
+A088;Trigo blando, crudo;373;10,1;1,6;73,3;12,5
+A089;Trigo duro, crudo;375;11,3;1,8;72,4;12,2
+B001;Aceituna, cruda;176;1,1;14,7;8,3;3,3
+B002;Aceitunas, encurtidas;153;1,2;13,6;4,8;3,3
+B003;Acelga, hojas, cruda;38;2,4;0,2;5,3;2,8
+B004;Acelga, tallos, cruda;19;0,8;0,1;3,0;1,4
+B005;Ahuyama, cocida, sin sal;48;0,7;0,7;8,4;2,5
+B006;Ahuyama, cruda;30;0,8;0,2;5,8;1,1
+B007;Ají dulce, crudo;42;1,0;1,6;5,1;1,8
+B008;Ají rojo, crudo;80;1,7;0,4;16,6;1,5
+B009;Ajo, crudo;144;4,7;0,3;29,3;2,8
+B010;Alcachofa, cruda;61;2,6;0,2;9,7;5,1
+B011;Alcaparras, encurtidas;39;2,3;0,9;3,8;3,2
+B012;Almidón de achira, crudo;331;0,4;0,1;82,1;0,0
+B013;Almidón de yuca, crudo;340;0,4;0,4;83,6;0,3
+B014;Apio, crudo;26;0,7;0,2;4,6;1,9
+B015;Arracacha amarilla, sin cáscara, cruda;111;0,9;0,1;26,3;0,6
+B016;Arracacha blanca, sin cáscara, cruda;109;0,8;0,1;25,2;2,1
+B017;Arracacha morada, sin cáscara, cruda;114;0,9;0,1;26,3;2,1
+B018;Arveja verde, cocida, sin sal;120;6,7;0,3;19,7;6,0
+B019;Arveja verde, cruda;99;5,9;0,3;15,5;5,3
+B020;Balú o chachafruto verde, crudo;74;4,0;0,1;14,3;
+B021;Batata, sin cáscara, cruda;99;1,2;0,1;21,9;2,8
+B022;Berenjena, con cáscara, cocida, sin sal;37;0,8;0,2;6,7;2,5
+B023;Berenjena, con cáscara, cruda;35;1,0;0,2;5,7;3,0
+B024;Berro, crudo;27;1,7;0,3;3,3;2,0
+B025;Brócoli, crudo;46;3,0;0,3;6,6;2,6
+B026;Calabaza, sin cáscara, cruda;31;0,8;0,4;4,5;2,9
+B027;Cebolla cabezona, cruda;40;1,4;0,1;7,7;1,7
+B028;Cebolla junca, hojas, cruda;41;1,6;0,2;7,1;2,1
+B029;Cebolla junca, tallos, cruda;37;1,2;0,1;6,8;2,0
+B030;Cebolla puerro, cruda ;69;1,6;0,1;14,4;1,8
+B031;Cebolla, deshidratada;391;8,6;0,5;83,6;9,2
+B032;Cebolla, pasta escaldada ;97;1,5;3,5;13,8;2,3
+B033;Champiñón, crudo;32;3,1;0,6;3,0;1,0
+B034;Champiñón, en conserva;43;1,9;0,4;6,6;2,5
+B035;Cilantro, crudo;44;2,3;0,6;5,9;2,8
+B036;Col o repollitas de bruselas, cruda ;60;3,4;0,3;9,1;3,8
+B037;Col silvestre, cruda;50;2,5;0,5;8,4;0,8
+B038;Coliflor, cocido sin sal;41;1,9;0,2;6,7;2,4
+B039;Coliflor, crudo;36;1,9;0,1;5,7;2,4
+B040;Colinabo, sin cáscara, crudo;35;1,7;0,1;5,7;2,4
+B041;Espárrago, cocido, sin sal ;35;2,6;0,3;4,4;2,0
+B042;Espárrago, crudo;32;2,0;0,2;4,4;2,1
+B043;Espinaca, cocida, sin sal;35;2,9;0,1;4,1;2,6
+B044;Espinaca, cruda;34;2,9;0,2;3,8;2,6
+B045;Fríjol verde, cocido con sal;147;9,3;0,4;25,5;2,2
+B046;Fríjol verde, crudo;166;10,5;0,4;29,0;2,0
+B047;Guascas, crudas;50;3,2;0,5;8,3;
+B048;Guatila, sin cáscara, cruda;27;0,8;0,0;5,2;1,7
+B049;Guisantes dulces, crudos;53;2,6;0,1;10,5;
+B050;Haba verde, cruda;144;9,9;0,6;22,5;4,2
+B051;Habichuela, cocida, sin sal;32;1,6;0,1;4,8;2,8
+B052;Habichuela, cruda;43;2,1;0,0;7,2;3,0
+B053;Harina de Ahuyama, cruda;357;6,6;2,5;77,0;
+B054;Harina de arracacha, cruda;368;0,6;0,8;89,7;
+B055;Harina de papa común, cruda;369;7,2;0,4;83,6;1,3
+B056;Harina de papa criolla, cruda;361;4,6;0,1;85,3;
+B057;Harina de plátano, cruda;340;3,3;0,3;80,5;0,9
+B058;Harina de yuca, cruda;351;1,1;0,3;85,9;0,3
+B059;Lechuga común, cruda;18;0,8;0,1;2,6;1,7
+B060;Lechuga, romana, cruda;23;1,1;0,1;3,3;2,1
+B061;Nabo, sin cáscara, crudo;30;0,7;0,0;5,9;1,6
+B062;Ocra, cruda;45;1,9;0,2;7,2;3,2
+B063;Palmito, crudo;67;1,6;0,2;13,9;1,5
+B064;Papa, variedad cerosa, sabanera, con cáscara, cocida, sin sal;99;2,3;0,1;21,0;2,3
+B065;Papa, variedad cerosa, sabanera, con cáscara, cruda;80;2,2;0,1;16,9;1,6
+B066;Papa, variedad cerosa, sabanera, con cáscara, frita, sin sal;274;5,9;5,6;49,9;
+B067;Papa, variedad cerosa, sabanera, sin cáscara, cocida, sin sal;98;2,1;0,1;21,4;1,7
+B068;Papa, variedad cerosa, sabanera, sin cáscara, cruda;74;1,9;0,1;15,3;2,1
+B069;Papa, variedad cerosa, sabanera, sin cáscara, frita, tipo francesa, sin sal;313;3,4;15,5;38,2;3,7
+B070;Papa, variedad harinosa, criolla, con cáscara, cocida, sin sal;85;1,4;0,0;18,1;3,0
+B071;Papa variedad harinosa, criolla, con cáscara, cruda;96;2,2;0,1;21,1;0,6
+B072;Papa, variedad harinosa, criolla, sin cáscara, cruda;106;2,0;0,4;23,3;0,4
+B073;Papa, variedad harinosa, pastusa, con cáscara, cocida, sin sal;85;2,4;0,1;17,2;2,7
+B074;Papa, variedad harinosa, pastusa, con cáscara, cruda;89;2,1;0,1;18,9;1,8
+B075;Papa, variedad harinosa, pastusa, sin cáscara, cocida, sin sal;96;2,0;0,1;20,9;1,8
+B076;Papa, variedad harinosa, pastusa, sin cáscara, cruda;97;2,0;0,2;20,9;1,9
+B077;Pepino Cohombro, crudo;14;0,5;0,1;2,3;0,7
+B078;Pepino de rellenar, crudo;21;0,6;0,2;3,8;0,8
+B079;Perejil, crudo;55;2,9;1,0;6,9;3,3
+B080;Pimentón rojo, crudo;35;1,0;0,3;6,3;1,7
+B081;Pimentón verde, crudo;28;0,9;0,1;4,9;1,9
+B082;Plátano áfrica, maduro, crudo;136;1,3;0,3;31,0;2,3
+B083;Plátano áfrica, verde, crudo;163;1,0;0,2;38,1;2,3
+B084;Plátano colí o guíneo, verde, crudo;128;1,3;0,1;30,3;0,4
+B085;Plátano dominico, maduro, crudo;136;1,1;0,3;31,1;2,4
+B086;Plátano dominico, verde, crudo;166;1,2;0,1;39,4;1,1
+B087;Plátano espermo, maduro, crudo;125;1,2;0,3;28,2;2,3
+B088;Plátano hartón, maduro, cocido, sin sal;130;0,8;0,2;30,1;2,3
+B089;plátano hartón, maduro, crudo;132;1,1;0,2;30,3;2,3
+B090;plátano hartón, maduro, frito, en tajadas, sin sal;312;1,2;10,2;52,6;2,5
+B091;Plátano hartón, verde, cocido, sin sal;133;0,9;0,3;30,6;2,3
+B092;Plátano hartón, verde, crudo;166;1,2;0,2;39,3;1,2
+B093;plátano hartón, verde, frito, en patacón, sin sal;353;1,6;19,2;41,8;3,5
+B094;Plátano, maritú, maduro, crudo;132;1,3;0,3;29,9;2,3
+B095;Plátano popocho, verde, crudo;123;1,0;0,2;29,0;0,5
+B096;Rábano, sin cáscara, crudo;22;0,8;0,1;3,7;1,6
+B097;Remolacha, sin cáscara, cocida, sin sal;53;1,5;0,2;10,1;2,7
+B098;Remolacha, sin cáscara, cruda;53;1,4;0,1;10,3;2,8
+B099;Repollo blanco, crudo;40;1,8;0,3;6,4;2,6
+B100;Repollo morado, cocido, sin sal;30;1,0;0,2;4,7;2,5
+B101;Repollo morado, crudo;39;1,4;0,3;6,5;2,1
+B102;Salsifí, sin cáscara crudo;103;3,3;0,3;20,1;3,3
+B103;Tomate, crudo;23;0,9;0,1;4,1;1,2
+B104;Tomate, escaldado, sin sal;25;0,9;0,1;4,3;1,5
+B105;Tomate, extracto, fresco;19;0,6;0,0;4,0;0,5
+B106;Yuca blanca, sin cáscara, cocida sin sal;157;0,7;0,2;36,6;2,7
+B107;Yuca blanca, sin cáscara, cruda;159;0,9;0,3;37,4;1,8
+B108;Yuca blanca, sin cáscara, dorada, sin sal;231;0,9;5,1;43,6;3,4
+B109;Zanahoria, sin cáscara, cocida sin sal;43;0,8;0,2;8,1;2,8
+B110;Zanahoria, sin cáscara, cruda;47;0,7;0,1;9,5;2,7
+B111;Zapallo, crudo;46;0,9;0,2;9,5;1,3
+C001;Aguacate Hass, Crudo;221;1,3;16,4;13,5;6,8
+C002;Aguacate Lorena, crudo;179;1,6;13,3;10,0;6,6
+C003;Almendra, seca;639;18,6;54,1;13,9;10,9
+C004;Anón, crudo;124;2,3;0,1;27,0;3,1
+C005;Babaco, maduro, crudo;32;0,9;0,2;6,5;0,5
+C006;Babaco, pintón, crudo;34;0,9;0,2;6,9;0,5
+C007;Babaco, verde, crudo;41;1,5;0,2;7,9;0,5
+C008;Badea, cruda;46;0,9;0,2;10,1;
+C009;Banano bocadillo, crudo;125;1,2;0,1;28,9;2,0
+C010;Banano común, crudo;101;1,5;0,1;22,3;2,6
+C011;Banano manzano, crudo;124;1,2;0,2;28,1;2,6
+C012;Breva, madura, cruda;48;0,9;0,2;9,2;2,8
+C013;Breva, verde, cruda;59;1,7;0,3;11,1;2,8
+C014;Cereza, cruda;104;1,2;0,1;23,7;1,8
+C015;Chirimoya, cruda;95;1,5;0,5;20,2;2,2
+C016;Chontaduro, crudo;358;6,3;25,7;19,0;12,7
+C017;Ciruela, común, cruda;53;0,6;0,1;11,1;2,4
+C018;Citrón, crudo;47;0,6;0,1;10,9;
+C019;Coco, crudo;402;3,6;35,5;12,6;9,0
+C020;Coco, Deshidratado;593;3,8;35,1;56,9;17,0
+C021;Curuba, cruda;38;0,6;0,1;8,5;0,1
+C022;Dátil, seco;325;2,4;0,2;74,7;7,4
+C023;Durazno, crudo;58;1,0;0,1;12,5;1,5
+C024;Feijoa, crudo;83;1,7;0,0;15,8;6,4
+C025;Fresa, madura, cruda;45;0,8;0,5;8,3;2,0
+C026;Fresa, pintona, cruda;38;0,8;0,3;7,0;1,9
+C027;Granada, cruda;70;1,0;1,2;12,9;1,8
+C028;Granadilla, cruda;95;2,1;1,6;14,9;5,9
+C029;Guama, cruda;59;0,9;0,1;13,1;0,9
+C030;Guanábana, cruda;33;0,6;0,2;6,8;0,8
+C031;Guayaba, madura, cruda;71;0,9;0,3;13,4;5,4
+C032;Guayaba, pintona, cruda;78;0,9;0,4;15,1;5,4
+C033;Gulupa, madura, cruda;74;0,9;0,1;17,2;0,2
+C034;Gulupa, pintona, cruda;66;0,7;0,0;15,6;0,2
+C035;Gulupa, verde, cruda;57;0,8;0,0;13,3;0,2
+C036;Harina de banano, cruda;340;3,0;0,4;80,7;0,9
+C037;Harina de chontaduro, cruda;375;6,4;0,6;83,9;4,2
+C038;Higo, maduro, crudo;48;0,7;0,1;9,7;2,8
+C039;Higo, pintón, crudo;72;1,4;1,1;12,5;2,9
+C040;Higo, verde, crudo;65;0,7;0,5;12,5;3,0
+C041;Icaco, crudo;57;0,3;0,1;13,8;
+C042;Kiwi, crudo;73;1,0;0,4;15,0;2,9
+C043;Lima, cruda;35;0,5;0,1;6,6;2,8
+C044;Limón, crudo;44;0,3;0,3;9,3;1,5
+C045;Lulo, crudo;48;0,9;0,1;8,9;3,6
+C046;Macadamia, seca;579;5,9;36,4;52,6;8,6
+C047;Madroño, crudo;47;0,5;0,1;10,9;
+C048;Mamey, crudo;62;0,4;0,1;13,4;3,0
+C049;Mamoncillo, crudo;90;1,0;0,2;21,0;
+C050;Mandarina, cruda;54;0,9;0,1;11,4;1,8
+C051;Mango común, crudo;79;0,6;0,0;17,1;3,9
+C052;Mango Tommy Atkins, crudo;194;0,4;0,1;46,9;2,1
+C053;Mangostino, crudo;75;0,8;0,1;16,8;1,8
+C054;Manzana común cruda;72;0,3;0,2;16,5;1,5
+C055;Manzana de agua, cruda;53;1,7;1,0;9,2;
+C056;Maracuyá, cruda;60;1,5;0,5;12,4;0,2
+C057;Marañón, frito, sin sal;623;16,1;48,2;29,6;3,3
+C058;Marañón, seco;56;0,7;0,4;11,5;1,7
+C059;Marañón, tostado, sin sal;620;15,3;46,4;33,9;3,0
+C060;Melón, crudo;25;0,7;0,0;5,0;1,0
+C061;Mora de castilla, cruda;74;1,0;0,1;14,6;5,3
+C062;Naranja, cruda;41;0,7;0,3;8,8;0,2
+C063;Noni, crudo;36;0,6;0,2;8,0;
+C064;Nuez de Brasil, seca;721;14,3;66,8;11,8;7,5
+C065;Papaya, madura, cruda;40;0,5;0,1;8,2;2,0
+C066;Papaya, pintona, cruda;47;0,5;0,1;9,9;1,9
+C067;Papayuela, cruda;27;0,7;0,1;5,1;1,3
+C068;Pepino dulce, maduro, crudo;33;0,3;0,0;7,4;0,8
+C069;Pepino dulce, pintón, crudo;34;0,3;0,2;7,4;0,8
+C070;Pepino dulce, verde, crudo;36;0,2;0,4;7,5;0,8
+C071;Pera, cruda;63;0,3;0,2;12,9;4,4
+C072;Piña, cruda;56;0,6;0,1;12,4;1,7
+C073;Piñuela, cruda;54;0,2;1,1;10,8;
+C074;Pistacho, tostado, sin sal;666;14,9;52,8;27,6;10,3
+C075;Pitahaya amarilla, cruda;63;0,4;0,1;13,6;3,3
+C076;Pitahaya roja, cruda;56;0,5;0,1;11,6;3,3
+C077;Pomarrosa, cruda;85;0,6;0,2;17,7;5,1
+C078;Ruibarbo, crudo;22;0,9;0,1;3,4;1,8
+C079;Sandía, cruda;17;0,4;0,0;3,7;0,4
+C080;Tamarindo, crudo;329;5,4;0,5;73,2;5,1
+C081;Tomate de árbol amarillo, crudo;58;1,7;0,1;12,5;
+C082;Tomate de árbol rojo, crudo;55;2,0;0,2;10,2;2,0
+C083;Toronja, cruda;53;0,7;0,1;11,4;1,6
+C084;Uchuva, cruda;77;1,5;0,5;14,2;5,1
+C085;Uva blanca, cruda;38;0,5;0,0;8,6;0,9
+C086;Uva Isabella, cruda;51;0,4;0,0;12,1;0,4
+C087;Uva, deshidratada;327;2,5;0,3;75,2;6,7
+C088;Zapote blanco, crudo;102;1,2;2,6;18,5;
+C089;Zapote común, crudo;59;1,1;0,0;11,7;3,5
+D001;Aceite de ajonjolí o sésamo;900;0,0;100,0;0,0;0,0
+D002;Aceite de algodón;900;0,0;100,0;0,0;0,0
+D003;Aceite de canola o colza;900;0,0;100,0;0,0;0,0
+D004;Aceite de girasol;900;0,0;100,0;0,0;0,0
+D005;Aceite de linaza o lino;900;0,0;100,0;0,0;0,0
+D006;Aceite de maíz;900;0,0;100,0;0,0;0,0
+D007;Aceite de maní;900;0,0;100,0;0,0;0,0
+D008;Aceite de oliva;900;0,0;100,0;0,0;0,0
+D009;Aceite de palma;900;0,0;100,0;0,0;0,0
+D010;Aceite de palma africana;900;0,0;100,0;0,0;0,0
+D011;Aceite de sacha inchi;900;0,0;100,0;0,0;0,0
+D012;Aceite de soya;900;0,0;100,0;0,0;0,0
+D013;Aceite, mezcla vegetal;900;0,0;100,0;0,0;0,0
+D014;Manteca o grasa de cerdo;891;0,0;99,0;0,0;0,0
+D015;Mantequilla;743;0,8;82,2;0,0;0,0
+D016;Mantequilla de maní;643;24,6;50,0;20,7;5,8
+D017;Margarina de canola;731;0,5;81,0;0,0;0,0
+D018;Margarina, con sal;732;0,6;81,1;0,0;0,0
+D019;Margarina, esparcible;731;0,6;81,0;0,0;0,0
+D020;Mayonesa, con sal;326;0,9;33,4;5,4;0,0
+E001;Almeja, de agua dule, cruda;66;14,0;1,0;0,3;0,0
+E002;Arenque, entero, crudo;156;17,9;9,0;0,7;0,0
+E003;Atún, enlatado en aceite;211;25,5;12,1;0,0;0,0
+E004;Atún, enlatado en agua;127;24,2;3,0;0,9;0,0
+E005;Bagre, graso, sin cabeza, crudo;165;15,5;11,4;0,0;0,0
+E006;Bagre, magro, entero, cocido, sin sal;138;18,2;7,2;0,0;0,0
+E007;Bagre, magro, sin cabeza, crudo;93;17,5;2,4;0,2;0,0
+E008;Bagre, semigraso, sin cabeza, crudo;118;15,5;5,9;0,7;0,0
+E009;Bocachico, entero, cocido, sin sal;138;20,1;6,4;0,0;0,0
+E010;Bocachico, sin cabeza, crudo;96;20,2;1,5;0,5;0,0
+E011;Bocachico, sin cabeza, salado, crudo;126;17,0;6,4;0,0;0,0
+E012;Bonito, sin cabeza, crudo;134;24,0;4,2;0,0;0,0
+E013;Cachama, entera, frita, con sal;254;27,0;16,2;0,0;0,0
+E014;Cachama, sin cabeza, cruda;106;18,1;3,8;0,0;0,0
+E015;Calamar, crudo;79;16,4;1,5;0,1;0,0
+E016;Camarón, cocido, sin sal;103;23,5;1,0;0,0;0,0
+E017;Camarón, crudo;94;20,3;1,2;0,5;0,0
+E018;Cangrejo, crudo;84;17,3;1,6;0,0;0,0
+E019;Caracol de mar, crudo;123;23,8;1,4;3,7;0,0
+E020;Carite, entero, crudo;106;18,6;3,5;0,1;0,0
+E021;Corvina, de mar, filete, crudo;100;17,8;3,2;0,0;0,0
+E022;Jaiba o cangrejo azul, cocida, sin sal;87;19,1;1,1;0,1;0,0
+E023;Langosta, cruda;82;16,2;1,9;0,0;0,0
+E024;Langostino, crudo;71;14,6;1,4;0,0;0,0
+E025;Lenguado, entero, crudo;81;16,7;1,4;0,3;0,0
+E026;Lisa, sin cabeza, cruda;105;18,0;3,4;0,6;0,0
+E027;Lisam sin cabeza, salada, cruda;125;21,8;4,0;0,4;0,0
+E028;Macabí o machete, entero crudo;132;20,5;5,4;0,4;0,0
+E029;Machuelo o nomcholo, sin cabeza, crudo;118;19,0;4,7;0,0;0,0
+E030;Merluza, filete, crudo;85;18,3;1,3;0,1;0,0
+E031;Mero, entero, crudo;89;19,4;1,2;0,2;0,0
+E032;Ostra, cruda;43;5,4;2,2;0,4;0,0
+E033;Pescado seco, crudo;273;62,8;2,4;0,0;0,0
+E034;Pulpo, crudo;69;14,9;1,0;0,1;0,0
+E035;Raya, filete, asado;133;31,1;0,5;1,1;0,0
+E036;Róbalo o gualajo, entero, crudo;92;18,4;2,0;0,0;0,0
+E037;Salmón, enlatado en aceite;2122;21,7;13,9;0,1;0,0
+E038;Salmón, filete, crudo;181;20,2;11,0;0,3;0,0
+E039;Sardinas, enlatadas en aceite;225;24,6;14,1;0,0;0,0
+E040;Sardinas, enlatadas en salsa de tomate;177;20,9;10,3;0,1;0,0
+E041;Sierra, entera, cruda;129;21,8;4,6;0,0;0,0
+E042;Tiburón, filete, crudo;122;20,5;4,5;0,0;0,0
+E043;Tilapia o mojarra, entera, cruda;96;20,1;1,7;0,0;0,0
+E044;Tilapia o mojarra, frita, sin sal;227;26,3;13,5;0,0;0,0
+E045;Tilapia o mojarra, recortes, crudos;312;16,2;27,5;0,0;0,0
+E046;Trucha, de mar, entera, cruda;142;20,8;6,6;0,0;0,0
+E047;Trucha, entera, cruda;135;19,9;6,2;0,0;0,0
+E048;Trucha, recortes, crudos;211;16,3;16,1;0,2;0,0
+F001;Armadillo, carne, cruda;165;29,0;5,4;0,0;0,0
+F002;Babilla, carne, cruda;126;30,8;0,4;0,0;0,0
+F003;Butifarra, precocida;256;15,2;20,2;3,3;0,0
+F004;Cabra o chivo, carne, cocida, sin sal;137;27,1;3,0;0,4;0,0
+F005;Cabra o chivo, carne, cruda;104;20,6;2,3;0,2;0,0
+F006;Caracol terrestre, carne, cruda;66;11,8;0,1;4,5;0,0
+F007;Cerdo, brazom cocido, sin sal;184;26,8;8,5;0,0;0,0
+F008;Cerdo, brazo, crudo;115;20,3;3,8;0,0;0,0
+F009;Cerdo, brazo, horneado, sin sal;220;26,7;12,6;0,0;0,0
+F010;Cerdo, carne gorda, cruda;278;17,1;23,0;0,7;0,0
+F011;Cerdo, carne magra, cruda;140;21,4;6,0;0,2;0,0
+F012;Cerdo, carne muy gorda, cruda;522;9,3;53,7;0,5;0,0
+F013;Cerdo, carne semigorda, cruda;245;17,2;19,4;0,3;0,0
+F014;Cerdo, costilla, cocida sin sal;258;29,5;15,6;0,0;0,0
+F015;Cerdo, costilla, cruda;277;18,7;22,5;0,0;0,0
+F016;Cerdo, costilla, horneada, sin sal;341;24,4;27,0;0,0;0,0
+F017;Cerdo, hígado, crudo;123;21,4;3,7;1,1;0,0
+F018;Cerdo, lomo, cocido, sin sal;170;35,1;3,2;0,0;0,0
+F019;Cerdo, lomo, crudo;110;21,6;2,5;0,3;0,0
+F020;Cerdo, lomo, horneado, sin sal;170;35,1;3,2;0,2;0,0
+F021;Cerdo, panceta o tocineta, cocida sin sal;465;39,0;34,1;0,5;0,0
+F022;Cerdo, panceta o tocineta, cruda;413;13,1;39,7;0,8;0,0
+F023;Cerdo, panceta o tocineta, salteada, sin sal;354;22,4;29,4;0,0;0,0
+F024;Cerdo, Pierna o pernil, cocida, sin sal;148;27,1;4,3;0,0;0,0
+F025;Cerdo, Pierna o pernil, cruda;131;20,5;5,4;0,2;0,0
+F026;Cerdo, Pierna o pernil, horneada, sin sal;202;29,4;9,4;0,0;0,0
+F027;Cerdo, riñon, crudo;89;16,2;2,7;0,0;0,0
+F028;Cerdo, tocino, cocido, sin sal;751;10,4;78,8;0,0;0,0
+F029;Cerdo, tocino, crudo;784;2,9;85,8;0,0;0,0
+F030;Cerdo, tocino, frito en su propia grasa (chicharrón), con sal;599;20,8;56,1;2,8;0,0
+F031;Cerdo, tocino, salteado, sin sal;754;10,2;79,2;0,1;0,0
+F032;Chiguiro, carne, salada, cruda;134;22,1;4,5;1,2;0,0
+F033;Chiguiro, pierna o pernil, cruda;95;22,0;0,7;0,0;0,0
+F034;Chorizo de cerdo y res, crudo;321;24,1;23,1;4,0;0,0
+F035;Chorizo de pollo, crudo;217;31,3;10,2;0,1;0,0
+F036;Codorniz o perdiz, entera sin piel, cruda;133;22,4;4,5;0,8;0,0
+F037;Conejo, carne, cocida, sin sal;198;30,4;8,4;0,3;0,0
+F038;Conejo, carne, cruda;134;20,1;5,8;0,2;0,0
+F039;Conejo, hígado, crudo;118;17,9;4,3;2,0;0,0
+F040;Conejo, riñón, crudo;120;16,9;5,5;0,6;0,0
+F041;Cordero, carne gorda, cruda;252;16,8;20,5;0,1;0,0
+F042;Cordero, carne magra, cruda;143;21,3;5,9;1,1;0,0
+F043;Cordero, carne muy gorda, cruda;357;15,6;32,7;0,0;0,0
+F044;Cordero, carne semigorda, cruda;247;18,2;19,4;0,0;0,0
+F045;Cordero, corazón, crudo;135;16,0;7,8;0,2;0,0
+F046;Cordero, hígado, crudo;130;20,3;4,9;1,1;0,0
+F047;Cordero, riñón, crudo;104;18,0;3,2;0,8;0,0
+F048;Gallina, entera con piel, cruda;256;18,9;10,0;0,0;0,0
+F049;Hamurguesa de carne de res, cruda;276;16,2;23,3;0,2;0,0
+F050;Iguana, carne, cruda;106;24,4;0,9;0,0;0,0
+F051;Jamón de cerdo y res, tipo sánduche, precocido;215;11,4;15,5;7,4;0,0
+F052;Jamón de cerdo, crudo;162;23,7;6,6;2,0;0,0
+F053;Jamón tipo york, precocido;143;14,6;5,7;8,3;0,0
+F054;Mortadela de cerdo y res, precocida;298;16,7;23,8;4,3;0,0
+F055;Mortadela de pollo, precocida;291;16,4;21,6;7,8;0,0
+F056;Pato, carne, cruda;131;18,3;6,3;0,4;0,0
+F057;Paco, ala sin piel, cruda;111;22,7;2,2;0,0;0,0
+F058;Pavo, costillar con piel, crudo;102;15,0;0,9;8,4;0,0
+F059;Pavo, entero con piel, crudo;156;20,9;8,0;0,0;0,0
+F060;pavo, enterocon piel, horneado, sin sal;181;28,2;7,3;0,6;0,0
+F061;Pavo, pechuga sin piel, cruda;108;24,3;1,0;0,5;0,0
+F062;Pavo, pechuga sin piel, horneada, sin sal;144;30,1;2,6;0,0;0,0
+F063;Pavo, pescuezo o cuello, sin piel, crudo;132;16,5;6,0;0,4;0,0
+F064;Pavo, pierna o pernil sin piel, cruda;133;21,8;4,8;0,8;0,0
+F065;Pavo, pierna o pernil sin piel, horneada sin sal;151;29,2;3,8;0,0;0,0
+F066;Pavo, rabadilla con piel, cruda;158;16,7;9,5;1,5;0,0
+F067;Pollo, ala con piel, asada, sin sal;247;23,8;16,9;0,0;0,0
+F068;Pollo, ala con piel, cocida, sin sal;198;22,5;12,0;0,0;0,0
+F069;Pollo, ala con piel, cruda;214;17,5;16,0;0,1;0,0
+F070;Pollo, ala con piel, frita, con sal;313;26,1;22,2;2,2;0,0
+F071;Pollo, ala sin piel, cocida, sin sal;164;26,9;6,3;0,0;0,0
+F072;Pollo, contramuslo con piel, cocido, sin sal;221;22,9;14,4;0,0;0,0
+F073;Pollo, contramuslo con piel, crudo;205;17,1;15,1;0,0;0,0
+F074;Pollo, contramuslo sin piel, cocido sin sal;186;24,7;9,7;0,0;0,0
+F075;Pollo, contramuslo sin piel, crudo;139;18,9;7,0;0,0;0,0
+F076;Pollo, corazón, crudo;151;15,6;9,3;1,3;0,0
+F077;Pollo, entero con piel, crudo;167;18,1;10,3;0,4;0,0
+F078;Pollo, hígado cocido, sin sal;160;24,4;6,5;0,9;0,0
+F079;Pollo, hígado, crudo;109;17,2;3,9;1,2;0,0
+F080;Pollo, menudencias, cocidas sin sal;145;26,1;4,5;0,0;0,0
+F081;Pollo, Menudencias, crudas;139;17,4;7,0;1,5;0,0
+F082;Pollo, molleja, cocida sin sal;138;27,1;2,7;1,4;0,0
+F083;Pollo, molleja, cruda;89;17,7;2,1;0,0;0,0
+F084;Pollo, pechuga con piel, cocida, sin sal;174;26,9;7,4;0,0;0,0
+F085;Pollo, pechuga con piel, cruda;166;20,7;9,2;0,1;0,0
+F086;Pollo, pechuga sin piel, asada sin sal;164;29,7;4,9;0,2;0,0
+F087;Pollo, pechuga sin piel, cocida, sin sal;141;28,4;3,0;0,3;0,0
+F088;Pollo, pechuga sin piel, frita sin sal;178;33,4;4,7;0,5;0,0
+F089;Pollo, pierna o colombina con piel, asada, sin sal;183;24,0;9,4;0,6;0,0
+F090;Pollo, pierna o colombina con piel, cocida, sin sal;208;22,9;12,9;0,0;0,0
+F091;Pollo, pierna o colombina con piel, cruda;182;18,1;12,1;0,1;0,0
+F092;Pollo, pierna o colombina con piel, frita, sin sal;265;17,1;18,2;8,2;0,0
+F093;Pollo, pierna o colombina sin piel, cocida, sin sal;173;25,0;8,1;0,0;0,0
+F094;Res, bofe o pulmón, crudo;90;16,6;2,5;0,3;0,0
+F095;Res, cadera, frita, sin sal;176;28,7;6,6;0,5;0,0
+F096;Res, callo o menudo, cocido, sin sal;102;15,0;4,1;1,1;0,0
+F097;Res, callo o menudo, crudo;95;14,6;4,1;0,0;0,0
+F098;Res, carne gorda, cruda;257;18,4;20,3;0,2;0,0
+F099;Res, carne magra, cruda;139;21,8;5,7;0,0;0,0
+F100;Res, carne semigorda, cruda;223;21,6;15,1;0,3;0,0
+F101;Res, carne semigorda, molida, cruda;194;19,6;12,7;0,2;0,0
+F102;Res, chunchullo, dorado, sin sal;216;11,0;19,1;0,0;0,0
+F103;Res, chunchullo, dorado, sin sal;341;24,5;26,2;1,7;0,0
+F104;Res, churrasco, asado, sin sal;175;33,2;4,5;0,4;0,0
+F105;Res, corazón, crudo;106;16,8;3,7;1,4;0,0
+F106;Res, corazón, dorado, sin sal;260;28,3;15,5;1,7;0,0
+F107;Res, costilla, cruda;287;17,1;23,3;2,3;0,0
+F108;Res, hígado, asado, sin sal;184;29,1;5,3;5,1;0,0
+F109;Res, hígado, crudo;138;20,4;4,5;3,9;0,0
+F110;Res, hígado, dorado, sin sal;211;25,9;11,0;2,1;0,0
+F111;Res, hígado, frito, sin sal;169;26,7;4,7;4,9;0,0
+F112;Res, hueso carnudo, crudo;164;21,2;8,8;0,0;0,0
+F113;Res, Lengua, cruda;219;16,5;16,1;1,9;0,0
+F114;Res, lomo, cocido, sin sal;218;36,1;7,9;0,5;0,0
+F115;Res, pajarilla o bazo, cruda;102;18,4;3,2;0,0;0,0
+F116;Res, pajarrilla o bazo, dorada, sin sal;156;26,1;5,7;0,0;0,0
+F117;Res, pata, cruda;125;28,2;1,4;0,0;0,0
+F118;Res, pierna, cruda;121;21,8;3,8;0,0;0,0
+F119;Res, riñón, crudo;87;15,3;2,8;0,1;0,0
+F120;Res, riñón, dorado, sin sal;182;27,2;7,3;2,0;0,0
+F121;Res, sesos, cocidos, sin sal;147;11,7;10,5;1,5;0,0
+F122;Res, sesos, crudos;130;10,8;9,7;0,0;0,0
+F123;Res, sobrebarriga, cocida, sin sal;331;24,2;26,0;0,0;0,0
+F124;Res, ubre, cruda;230;15,4;18,7;0,0;0,0
+F125;Salchicha de cerdo y res, precocida;266;13,8;20,7;6,1;0,0
+F126;Salchicha de cerdo, tipo frankfurt, precocida;271;13,5;23,1;2,2;0,0
+F127;Salchicha de pollo, precocida;248;13,8;21,4;0,0;0,0
+F128;Salchicha de ternera, precocida;199;14,0;15,3;1,4;0,0
+F129;Salchichón de cerdo y pollo, cervecero, precocido;243;15,3;19,9;0,7;0,0
+F130;Salchichón de cerdo y pollo, tradicional, precocido;243;15,5;19,9;0,7;0,0
+F131;Ternera, carne magra, cruda;110;21,9;2,5;0,0;0,0
+F132;Tortuga, carne, cruda;86;19,8;0,5;0,5;0,0
+G001;Crema de leche;330;2,1;35,0;1,7;0,0
+G002;Kumis, entero, con azúcar;88;2,9;2,5;13,5;0,0
+G003;Lactosuero;24;0,8;0,1;5,1;0,0
+G004;Leche de cabra, entera, líquida, cruda;74;3,9;4,5;4,4;0,0
+G005;Leche de vaca, condensada, con azúcar;327;8,3;8,4;54,6;0,0
+G006;Leche de vaca, descremada, en polvo;358;36,2;0,5;52,2;0,0
+G007;Leche de vaca, descremada, líquida, pasteurizada;34;3,3;0,1;4,9;0,0
+G008;Leche de vaca, entera, en polvo;499;26,3;26,6;38,4;0,0
+G009;Leche de vaca, entera, evaporada;139;7,1;7,9;9,8;0,0
+G010;Leche de vaca, entera, líquida, cruda;65;3,3;3,7;4,6;0,0
+G011;Leche de vaca, entera, líquida, hervida;62;3,1;3,3;4,8;0,0
+G012;Leche de vaca, entera, líquida, pasteurizada;55;3,2;3,2;3,4;0,0
+G013;Leche humana, madura, líquida;71;1,1;4,3;7,0;0,0
+G014;Queso crema, amarillo;293;16,4;25,1;0,4;0,0
+G015;Queso fresco, blando, magro, tipo suero costeño;83;11,0;1,5;6,4;0,0
+G016;Queso fresco, semiblando, semimagro, tipo cuajada;207;15,2;15,4;2,0;0,0
+G017;Queso fresco, semiduro, semigraso, tipo campesino;301;17,5;25,5;0,3;0,0
+G018;Queso fresco, semiduro, semigraso, tipo costeño;303;17,5;25,5;0,9;0,0
+G019;Queso fresco, semiduro, semigraso, tipo mozzarella;296;22,9;21,4;3,1;0,0
+G020;Queso fresco, semiduro, semimagro, de pasta hilada;249;24,3;15,9;2,3;0,0
+G021;Queso fresco, semiduro, semimagro, tipo doble crema;286;23,4;18,7;5,9;0,0
+G022;Queso madurado, blando, magro, tipo cottage, con crema;101;12,5;4,5;2,6;0,0
+G023;Queso madurado, blando, magro, tipo cottage, sin crema;75;13,7;1,9;0,7;0,0
+G024;Queso madurado, duro, semigraso, tipo parmesano;389;35,8;26,0;3,1;0,0
+G025;Queso madurado, duro, semigraso, tipo roquefort;372;22,2;30,9;1,2;0,0
+G026;Queso madurado, semiduro, semigraso, tipo camembert;300;19,8;24,3;0,4;0,0
+G027;Queso madurado, semiduro, semigraso, tipo holandés;348;24,9;26,0;3,5;0,0
+G028;yogurt, bebible, entero, con azúcar;81;2,9;2,8;11,2;0,0
+H001;Agua de cebada perlada, sin azúcar;12;0,1;0,0;2,9;
+H002;Agua de coco, sin azúcar;14;0,3;0,0;3,2;0,0
+H003;Bebida de avena en hojuelas, en agua, sin azúcar;59;1,9;1,0;9,8;1,6
+H004;Bebida de harina de avena, en agua, sin azúcar;69;2,9;1,4;10,3;1,8
+H005;Café, tostado y molido, infusión al 6%, sin azúcar;5;0,1;0,1;1,0;0,0
+H006;Cerveza, regular, 4% de alcohol;38;0,4;0,0;2,1;0,0
+H007;Chicha de maíz, 4% de alcohol;78;0,6;0,0;12,0;
+H008;Gaseosa o bebida carbonatada, regular, con azúcar;44;0,0;0,0;10,9;0,0
+H009;Guarapo de caña de azúcar, 3% de alcohol;33;0,1;0,0;3,0;
+H010;Néctar de albaricoque, con azúcar;62;0,4;0,0;14,7;0,6
+H011;Néctar de durazno, con azúcar;44;0,2;0,0;10,4;0,6
+H012;Néctar de guayaba, con azúcar;48;0,1;0,0;11,3;1,0
+H013;Néctar de mango, con azúcar;47;0,2;0,0;11,3;0,3
+H014;Néctar de manzana, con azúcar;44;0,2;0,0;10,9;
+H015;Néctar de pera, con azúcar;50;0,2;0,0;12,1;0,5
+H016;Sabajón de tomate de árbol amarillo, 14% de alcohol;221;3,5;1,1;24,2;1,5
+H017;Sabajón de tomate de árbol rojo, 14% de alcohol;212;3,1;0,9;22,7;1,3
+H018;Té, infusiónal 2%, soin azúcar;4;0,1;0,0;1,0;0,0
+J001;Huevo de codorniz, entero, crudo;154;13,0;11,1;0,5;0,0
+J002;Huevo de gallina, clara, crudo;47;10,8;0,2;0,6;0,0
+J003;Huevo de gallina, entero, cocido, sin sal;145;13,0;10,4;0,0;0,0
+J004;Huevo de gallina, entero, crudo;149;12,6;10,8;0,3;0,0
+J005;Huevo de gallina, entero, en polvo;579;48,2;41,8;2,5;0,0
+J006;Huevo de gallina, entero, frito, sin sal;208;17,1;14,6;2,0;0,0
+J007;Huevo de gallina, entero, revuelto, con sal;152;10,2;11,4;2,3;0,0
+J008;Huevo de gallina, entero, tibio, sin sal;143;13,0;10,1;0,0;0,0
+J009;Huevo de gallina, yema, crudo;355;16,3;31,9;0,7;0,0
+J010;Huevo de iguana, entero, crudo;214;14,9;15,2;4,3;0,0
+J011;Huevo de pata, entero, crudo;188;13,0;13,8;3,1;0,0
+J012;Huevo de pata, entero, crudo;166;13,7;11,9;1,1;0,0
+J013;Huevo de tortuga, entero, crudo;111;12,6;6,3;0,9;0,0
+K001;Arequipe o dulce de leche;320;6,4;7,5;56,7;0,0
+K002;Arroz con leche;89;3,3;1,5;15,5;0,1
+K003;Azúcar blanco, granulado;397;0,0;0,0;99,3;0,0
+K004;Azúcar morena, granulado;390;0,0;0,0;97,5;0,0
+K005;Bocadillo o dulce de guayaba, tradicional;332;0,4;0,5;79,6;3,7
+K006;Bocadillo o dulce de guayaba, veleño;318;0,3;0,1;79,0;
+K007;Caramelos o confites, blandos;371;0,0;0,0;92,7;0,0
+K008;Caramelos o confites, duros;369;0,0;0,0;92,3;0,0
+K009;Chocolate, en bolas, con panela;419;4,2;10,2;77,5;
+K010;Chocolate, en pastilla, con azúcar;466;3,6;16,6;75,5;
+K011;Chocolate, en pastilla, con azúcar y leche;466;7,5;15,8;73,4;
+K012;Chocolatina, o chocolate de leche;550;5,5;31,8;60,0;0,8
+K013;Chucula o chocolate, en bolas, con harina de cereales y leguminosas;438;9,1;12,0;73,4;
+K014;Cocadas, con panela;417;1,6;8,2;82,4;3,6
+K015;Dulce de coco, con almendras;405;1,9;1,7;93,9;3,3
+K016;Dulce de jengibre, cristalizado;355;0,4;0,5;87,0;0,2
+K017;Dulce de lulo;385;1,1;1,8;90,3;1,5
+K018;Gelatina con azúcar, en polvo;392;8,3;0,0;89,8;0,0
+K019;Gelatina con azúcar, líquida;67;1,4;0,0;15,4;0,0
+K020;Gelatina de pata;324;7,4;0,0;73,5;
+K021;Goma de mascar, con azúcar;390;0,0;0,3;96,7;0,0
+K022;Helados de agua, con azúcar;44;0,0;0,0;10,9;0,0
+K023;Helado de crema;196;3,2;10,3;22,8;0,0
+K024;Helado de leche;63;0,4;0,2;14,8;0,0
+K025;Manjar blanco;330;6,1;0,3;75,7;
+K026;Manjar del valle;362;7,1;7,3;67,0;
+K027;Masmelos;334;1,8;0,2;81,3;0,1
+K028;Melaza o miel negra;264;0,0;0,1;65,7;0,0
+K029;Melocotón, en almibar;85;0,0;0,1;20,4;1,3
+K030;Mermelada, regular, con zaúcar;272;0,5;0,0;66,5;1,9
+K031;Miel de abejas, líquida;332;0,6;0,0;82,4;0,0
+K032;Miel de caña de azúcar, líquida;295;0,3;0,2;73,0;0,0
+K033;Panela;364;0,6;0,1;90,2;0,0
+K034;Panelita de leche de vaca, con azúcar;361;2,9;1,8;83,3;
+K035;Uchuva, en almíbar;165;5,4;0,4;35,1;
+L001;Achiote, seco;392;4,4;5,3;81,8;0,0
+L002;Aloe vera, crudo;7;0,0;0,2;0,9;0,6
+L003;Cacao, tostado y molido;468;14,4;22,5;51,9;0,0
+L004;Café soluble, descafeinado, en polvo;371;11,6;0,2;80,7;0,0
+L005;Café soluble, en polvo;355;13,0;0,4;74,7;0,0
+L006;Café, tostado y molido, en polvo;479;14,2;12,3;67,5;20,5
+L007;Caldo de carne de res, deshidratado;259;16,9;20,3;2,2;0,0
+L008;Chocolate amargo o negro;622;4,9;42,6;49,3;10,9
+L009;Cocoa, en polvo, sin azúcar;488;19,5;10,8;59,7;37,0
+L010;Jengibre, crudo;391;9,0;4,2;72,3;14,1
+L011;Levadura biológica para pan, fresca, prensada;137;8,4;1,8;17,8;8,1
+L012;Moringa, en polvo;424;13,6;8,0;68,2;12,5
+L013;Polen, húmedo;361;16,3;5,4;56,8;9,9
+L014;Polen, seco;426;22,5;5,8;63,8;14,4
+L015;Sal;0;0,0;0,0;0,0;0,0
+L016;Salsa de mostaza;107;3,6;3,3;14,1;3,2
+L017;Salsa de tomate;109;1,3;0,3;25,0;0,8
+L018;Vinagre;24;0,0;0,0;6,0;0,0
+N001;Margarina, baja en calorías, esparcible;425;1,6;40,0;14,7;0,0
+N002;Mayonesa, baja en grasa;308;1,0;32,0;4,1;0,0
+N003;Mermelada, baja en calorías;222;0,5;0,3;53,2;2,4
+N004;Salchicha de cerdo, baja en grasa;153;16,6;8,1;3,3;0,0
+N005;Yogurt, bebible, descremado, sin azúcar;49;3,7;0,3;7,9;0,0
+N006;Yogurt, bebible, semidescremado, con azúcar;99;4,0;1,1;18,1;0,3
+P001;Achira, sin cáscara, cocida, sin sal;244;3,4;0,2;54,4;5,9
+P002;Achira, sin cáscara, cruda;58;0,9;0,2;13,0;1,5
+P003;Ackee, crudo;153;2,9;9,0;15,0;
+P004;Almidón de arracacha, crudo;371;0,5;0,5;91,0;0,5
+P005;Almidón de malanga, crudo;348;1,8;1,3;82,2;0,0
+P006;Almidón de ñame, crudo;395;0,8;6,7;82,3;1,0
+P007;Arazá, crudo;42;1,1;1,1;6,5;0,9
+P008;Árbol del pan, cocido;150;5,2;0,8;30,5;
+P009;Árbol del pan, crudo;115;2,8;0,6;22,3;4,9
+P010;Árbol del pan, semilla, crudo;242;7,4;5,6;37,8;5,2
+P011;Asaí, cocido, sin sal;378;4,6;25,9;22,4;18,6
+P012;Asaí, cocido, crudo;385;3,8;30,6;17,5;12,5
+P013;Asaí, deshidratado;391;0,1;1,4;93,9;1,1
+P014;Asaí, liofilizado;691;1,6;51,6;43,7;22,3
+P015;Banano chiro, crudo;126;1,5;0,1;28,9;2,0
+P016;Banano pacífico, crudo;112;1,1;0,2;26,4;
+P017;Borojó, crudo;140;3,0;0,6;30,5;
+P018;Cacao silvestre, crudo;60;1,0;1,1;10,3;2,2
+P019;Cacao silvestre, semilla, crudo;604;13,0;46,0;34,4;0,0
+P020;Cactus, crudo;8;0,5;0,1;1,1;0,3
+P021;Caimo morado, crudo;70;1,0;1,4;12,9;1,1
+P022;Camu-camu, crudo;32;0,5;0,1;7,1;0,3
+P023;Carambolo, maduro, crudo;25;0,4;0,1;4,2;2,8
+P024;Carambolo, maduro, deshidratado;379;0,7;2,4;88,8;
+P025;Carambolo, pintón, crudo;25;0,4;0,1;4,2;2,8
+P026;Carambolo, pintón, deshidratado;378;0,7;2,2;88,8;
+P027;Carambolo, verde, crudo;24;0,3;0,1;4,1;2,8
+P028;Carambolo, verde, deshidratado;375;0,7;1,7;89,3;
+P029;Cardo, crudo;51;1,3;0,2;8,3;5,4
+P030;Cardón guajiro, asado, sin sal;22;0,8;0,1;3,2;2,5
+P031;Carurú, cocido, sin sal;44;2,7;0,6;5,2;3,7
+P032;Carurú, crudo;39;2,6;0,3;4,8;3,2
+P033;Casabe de yuca, asado, con sal;341;1,6;0,2;83,3;
+P034;Cedro macho, crudo;68;0,7;0,1;15,4;1,4
+P035;Champa, cruda;77;0,4;0,1;15,4;1,4
+P036;Chicozapote, crudo;102;0,6;1,1;19,9;5,3
+P037;Chigua, cruda;249;9,2;2,0;48,5;
+P038;Chontaduro amazónico, crudo;255;7,9;16,6;18,5;
+P039;Chupa, cruda;231;4,4;10,0;30,8;
+P040;Ciruela joba, cruda;74;0,7;0,1;16,2;2,3
+P041;Cocona, cruda;85;0,7;0,1;19,5;1,6
+P042;Coconilla, cocida, sin sal;78;1,9;0,7;14,7;3,1
+P043;Coconilla, cruda;92;2,2;0,9;14,9;7,7
+P044;Concha de caimán, cruda;105;4,3;0,2;19,1;5,2
+P045;Copoazú, crudo;50;1,2;1,0;7,5;3,1
+P046;Corozo, crudo;381;3,9;29,5;25,0;
+P047;Cucurito, cocido, sin sal;337;2,9;20,4;29,4;12,5
+P048;Cucurito, crudo;334;2,6;19,4;30,6;13,2
+P049;Cucurito, semilla, cocido sin sal;425;4,1;36,1;13,9;13,9
+P050;Cucurito, semilla, crudo;376;5,4;23,6;25,2;20,8
+P051;Ductu simple, sin cáscara, cocido, sin sal;94;0,8;0,1;20,2;4,4
+P052;Ductú simple, sin cáscara, crudo;93;0,9;0,1;20,1;4,0
+P053;Dulce de borojo;383;0,9;2,2;89,1;1,4
+P054;Duri, crudo;252;3,4;6,7;44,6;
+P055;Emi, crudo;143;2,6;0,1;26,4;13,1
+P056;Guáimaro o ramón, cocido, sin sal;168;6,7;2,2;29,3;2,3
+P057;Guayaba de morrocoy, cruda;42;1,3;0,2;6,9;4,1
+P058;harina de achira, cruda;361;0,2;0,0;90,1;
+P059;Harina de semillas de calabazo o totumo, cruda;605;27,7;48,8;12,9;1,7
+P060;Harina de yuca brava, fariña o mandioca, cruda;355;1,7;0,2;83,3;6,4
+P061;Iguaraya, cruda;72;1,0;0,4;13,5;5,4
+P062;Jute de papa criolla;123;2,3;0,0;28,5;
+P063;Majua o cubio, con cáscara, cruda;135;5,8;2,4;22,6;
+P064;Malanga, sin cáscara, cruda;120;1,5;0,3;25,8;4,1
+P065;Mamo, crudo;82;1,2;0,4;18,5;
+P066;Maputo, crudo;304;6,4;4,3;59,9;
+P067;Milpesos, cocida, sin sal;319;3,3;23,7;19,4;7,7
+P068;Milpesos, cruda;403;3,2;29,4;24,7;13,4
+P069;Moriche, crudo;296;2,3;25,1;11,8;7,0
+P070;Níspero del japón, crudo;51;0,4;0,2;11,0;2,0
+P071;Nuez caldereña o nuez de barinas, seca, en polvo;582;29,9;42,8;19,4;
+P072;Ñame, con cáscara, crudo;131;2,2;0,4;27,6;4,1
+P073;Ñame, sin cáscara, cocido;125;1,5;0,1;27,6;3,9
+P074;Ñame, sin cáscara, crudo;121;2,0;0,2;25,9;4,1
+P075;Oca o ibia, con cáscara, cruda;77;1,1;0,1;13,3;9,2
+P076;Oca o ibia, sin cáscara, cruda;52;1,4;0,4;10,7;
+P077;Olloco o chugua, con cáscara, cruda;50;1,4;0,5;9,7;0,3
+P078;Olloco o chugua, sin cáscara, cruda;60;1,5;0,0;13,6;
+P079;Ortiga, cruda;60;0,7;0,0;10,8;6,9
+P080;Paja toquilla, cruda;42;3,4;2,0;2,6;
+P081;Pepinillo, crudo;17;0,8;0,1;2,9;0,7
+P082;Perico, crudo;124;2,3;0,1;28,5;
+P083;Piña india, cruda;54;0,5;0,2;12,0;1,3
+P084;Piña uva hartón, cruda;82;3,6;0,1;16,7;
+P085;Salchicha inchi, cruda;667;15,8;60,2;15,5;
+P086;Termita, cocida, con sal;237;33,1;1,3;16,0;14,4
+P087;Termita, cruda;247;35,0;0,6;17,6;15,4
+P088;Trigo amazónico, crudo;344;11,4;1,7;70,7;
+P089;Trupillo, seco, crudo;390;14,4;1,9;68,8;20,1
+P090;Tuna, cruda;72;1,2;0,2;13,9;5,0
+P091;Umuy, crudo;152;3,4;0,7;33,0;
+P092;Weya, crudo;139;4,0;0,6;29,5;
+P093;Wuapo, crudo;160;1,4;5,2;26,8;
+P094;Yuca brava, sin cáscara, cruda;147;0,5;0,1;36,0;
+P095;Yuca colorada, sin cáscara, cruda;143;0,4;0,2;34,9;
+R001;Alimento para mujer gestante y madre en periodo de lactancia, en polvo;395;21,5;11,0;52,0;1,0
+R002;Bienestarina Más®, precocida, en polvo, sabor a fresa natural;354;24,0;3,0;57,0;1,4
+R003;Bienestarina Más®, precocida, en polvo, sabor a vainilla natural;354;24,0;3,0;57,0;1,4
+R004;Bienestarina Más®, precocida, en polvo, sabor natural;354;21,0;3,0;60,0;1,3
+R005;Bienestarina®, líquida, con arroz, avena y quinua;79;3,5;2,5;10,2;1,0
+R005;Bienestarina®, líquida, sabor a vainilla natural;79;3,5;2,5;10,2;1,0
+S001;Ajiaco santafereño;82;6,4;0,8;11,3;2,2
+S002;Arroz atollado;119;10,1;4,3;9,2;1,7
+S003;Arroz clavado;182;6,4;5,5;26,4;0,5
+S004;Bandeja paisa;212;11,7;11,0;15,3;2,3
+S005;Bollo limpio, precocido;178;3,3;4,8;29,1;2,4
+S006;Carimañola, con queso, precocida;295;5,8;17,4;28,6;
+S007;Chicharrón de pirarucú, frito;217;22,0;10,3;8,7;0,8
+S008;Chili con carne, precocido;129;6,6;3,4;16,4;3,3
+S009;Chocolate, en agua (50%) y Leche de vaca entera (50%);89;3,4;3,6;10,3;1,0
+S010;Cuy asado;229;24,4;7,8;14,8;1,1
+S011;Empanada de pipián, frita;396;4,7;26,3;34,6;1,1
+S012;Envuelto de maíz mute, precocido;163;3,2;4,8;25,5;2,4
+S013;Envuelto de plátano maduro, precocido;158;1,6;0,1;37,6;0,3
+S014;Envuelto de yuca, precocido;141;0,6;0,1;34,3;
+S015;Friche de chivo;243;29,7;12,9;1,6;0,8
+S016;Guacamole, crudo;184;0,1;12,7;16,3;1,7
+S017;Hamburguesa de carne de res, regular, con vegetales y condimentos;252;11,7;12,3;23,1;1,1
+S018;Lechona tolimense, horneada;242;21,8;12,0;10,2;2,9
+S019;Mazamorra chiquita;115;9,8;5,0;6,1;3,0
+S020;Mote de queso;102;5,4;3,9;10,2;2,2
+S021;Mute santandereano;113;8,1;6,1;5,4;1,9
+S022;Pisillo de chiguiro;218;26,0;9,3;6,9;1,1
+S023;Rundown;136;8,2;2,1;20,2;1,7
+S024;Sancocho de bagre;134;16,9;6,3;1,6;1,5
+S025;Sancocho valluno de gallina;121;16,4;4,0;4,2;1,3
+S026;Sopa de arroz;68;3,7;2,2;8,4;
+S027;Sopa de tortillas;56;1,7;1,1;9,3;1,2
+S028;Sudado de piangua;182;18,4;10,6;2,7;1,1
+S029;Tamal de maíz y guiso, cocido;170;3,5;8,8;17,7;3,2
+S030;Tamal de maíz, cocido;181;3,8;7,2;23,8;2,8
+S031;Tamal de pipián, cocido;84;2,2;0,8;17,1;
+S032;Tamal tolimense, cocido;132;5,7;3,8;16,7;4,0
+S033;Viudo de bocachico;123;13,2;4,1;7,8;1,1
+T001;Ajonjolí o sésamo, crudo;648;20,4;52,2;18,2;11,8
+T002;Arveja seca, cocida sin sal;138;8,1;0,4;22,4;6,0
+T003;Arveja seca, cruda;374;23,9;1,1;60,2;13,9
+T004;Bebida vegetal, de soya, líquida, sin azúcar;40;2,6;1,7;3,2;1,1
+T005;Frijol blanco, crudo;373;21,3;1,1;61,8;15,1
+T006;Frijol bola roja, crudo;371;21,4;1,2;58,7;20,0
+T007;Frijol cabecita negra, crudo;391;21,5;1,4;60,5;24,9
+T008;Frijol canavalia, crudo;365;20,6;1,4;59,4;16,5
+T009;Frijol caraota o negro, crudo;386;22,8;1,7;59,0;21,6
+T010;Frijol cargamanto rojo, cocido, sin sal;161;8,1;0,6;26,9;7,6
+T011;Frijol cargamanto rojo, crudo;386;22,8;1,5;60,4;19,8
+T012;Frijol cargamanto rosado, crudo;370;21,0;1,2;62,4;12,7
+T013;Frijol guandul, crudo;366;19,5;1,4;61,4;15,0
+T014;Frijol mungo, crudo;375;23,9;1,1;59,2;16,3
+T015;Frijol nima, crudo;370;19,4;1,2;61,1;18,4
+T016;Frijol radical, crudo;392;22,9;1,3;59,7;24,8
+T017;Frijol sangretoro, crudo;370;23,5;1,3;57,9;16,4
+T018;Garbanzo, cocido, sin sal;187;8,6;2,3;26,0;13,6
+T019;Garbanzo, crudo;393;19,9;5,5;58,8;14,3
+T020;Haba seca, cruda;391;25,8;1,8;55,5;25,0
+T021;Harina de algarrobo, cruda;456;4,6;1,6;85,8;39,8
+T022;Harina de frijol mungo, cruda;371;29,0;0,8;61,7;
+T023;Harina de garbanzo, cruda;403;22,4;6,7;57,9;10,8
+T024;Harina de soya, con grasa, cruda;476;36,6;22,3;27,5;9,6
+T025;Lenteja común, cocida, sin sal ;122;7,7;0,5;18,5;6,5
+T026;Lenteja común, cruda;387;23,1;0,9;61,0;21,3
+T027;Lenteja real, cruda;391;25,3;1,1;59,5;21,5
+T028;Maní, con piel, crudo;619;27,3;47,8;15,8;8,3
+T029;Maní, con piel, tostado, sin sal;650;27,3;47,8;15,8;8,3
+T030;Soya, cruda;479;36,5;20,7;28,8;15,7
+T031;Soya, tostada;539;38,5;25,4;30,2;17,7
+T032;Tofu, crudo;142;17,4;7,7;0,5;0,3
+;;;;;;
+;;;;;;
+;;;;;;
+;;;;;;
+;;;;;;
