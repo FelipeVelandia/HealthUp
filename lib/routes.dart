@@ -87,7 +87,7 @@ GoRouter getRouter(BuildContext context) {
       // Registro de comida fuera del Shell para que sea pantalla completa
       GoRoute(
         path: '/food-registration',
-        builder: (context, state) => const FoodRegistrationScreen(),
+        builder: (context, state) => FoodRegistrationScreen(),
       ),
       // Registro de ejercicio fuera del Shell para que sea pantalla completa
       GoRoute(

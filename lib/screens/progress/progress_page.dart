@@ -230,7 +230,7 @@ class ProgressPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 5),
 
                       // PANEL PRINCIPAL DE PROGRESO
                       Card(
