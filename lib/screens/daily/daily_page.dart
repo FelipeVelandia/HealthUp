@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nutrialg_life/points_manager.dart';
-import 'package:nutrialg_life/models/quest.dart'; // Importa tu modelo e infraestructura global
+import 'package:nutrialg_life/models/quest.dart';
 
 class DailyPage extends StatefulWidget {
   const DailyPage({super.key});
@@ -25,6 +25,10 @@ class _DailyQuestsScreenState extends State<DailyPage> {
   // Estado para rastrear si el valor actual del campo de texto ya fue confirmado
   bool _isWeightConfirmed = true;
 
+  // Variable en el estado de tu clase
+  int _consumedWater = 0;
+  bool _waterPointsAwardedToday = false;
+
   @override
   void initState() {
     super.initState();
@@ -39,11 +43,6 @@ class _DailyQuestsScreenState extends State<DailyPage> {
     super.dispose();
   }
 
-  // Variable en el estado de tu clase _DailyQuestsScreenState
-  int _consumedWater = 0;
-  bool _waterPointsAwardedToday =
-      false; // NUEVO: Evita sumas duplicadas involuntarias
-
   // Helper unificado para construir la lista e inyectar puntos automáticos
   List<QuestModel> _buildFreshQuestsList(Map<int, bool> completionMap) {
     final Map<int, Map<String, dynamic>> visualResources = {
@@ -52,42 +51,36 @@ class _DailyQuestsScreenState extends State<DailyPage> {
       3: {'icon': Icons.water_drop, 'color': Colors.blue},
     };
 
+    // 1. Lógica Misión 1 (Ejercicio) - FIJA, ya no depende de _userWeight
+    const int recommendedMinutes = 30;
     String exerciseSubtitle =
-        'Realiza actividad fisica diaria que te recomendo el nutricionisdta';
+        'Meta de hoy: Completa un bloque de $recommendedMinutes minutos de actividad física';
+
     String hydrationSubtitle = 'Bebe agua para mantenerte hidratado';
 
-    // Leemos el estado nativo guardado previamente en el archivo JSON
+    // Leemos el estado guardado previamente
     bool hydrationCompleted = completionMap[3] ?? false;
 
     if (_userWeight > 0) {
-      // 1. Lógica Misión 1 (Ejercicio)
-      int recommendedMinutes = 30;
-      if (_userWeight >= 80.0) recommendedMinutes = 45;
-      exerciseSubtitle =
-          'Meta de hoy: Completa un bloque de $recommendedMinutes minutos de actividad física';
-
       // 2. Lógica Misión 3 (Hidratación inteligente)
-      final double totalMl = _userWeight * 35;
+      // NUEVA FÓRMULA: 10 kg = 220 mL -> (Peso * 220) / 10 -> Peso * 22
+      final double totalMl = _userWeight * 22;
       final double totalLiters = totalMl / 1000;
 
       hydrationSubtitle =
           'Progreso: $_consumedWater mL de ${totalMl.toStringAsFixed(0)} mL (${totalLiters.toStringAsFixed(1)}L)';
 
       // 3. GATILLO DE AUTOMATIZACIÓN DE PUNTOS
-      // Si el agua supera la meta y detectamos que hoy todavía no se han otorgado los puntos de agua:
       if (_consumedWater >= totalMl && !_waterPointsAwardedToday) {
         hydrationCompleted = true;
-        _waterPointsAwardedToday = true; // Bloqueamos el gatillo localmente
+        _waterPointsAwardedToday = true;
 
-        // Usamos un microtask para alterar el ValueNotifier de forma segura fuera del renderizado
         Future.microtask(() async {
-          globalPointsNotifier.value +=
-              20; // Inyecta +20 pts al progreso circular
+          globalPointsNotifier.value += 20;
 
           final prefs = await SharedPreferences.getInstance();
-          await prefs.setBool(
-              'water_points_awarded_key', true); // Guarda bloqueo en disco
-          _saveDataToStorage(); // Guarda la lista con isCompleted = true
+          await prefs.setBool('water_points_awarded_key', true);
+          _saveDataToStorage();
 
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -101,12 +94,10 @@ class _DailyQuestsScreenState extends State<DailyPage> {
           }
         });
       } else if (_consumedWater >= totalMl) {
-        // Si ya bebió lo suficiente y los puntos ya fueron cobrados en el pasado, se mantiene en verdadero
         hydrationCompleted = true;
       }
     }
 
-    // Sincronizamos el mapa final que se usará para dibujar las misiones
     completionMap[3] = hydrationCompleted;
 
     return [
@@ -122,7 +113,7 @@ class _DailyQuestsScreenState extends State<DailyPage> {
       QuestModel(
         id: 2,
         title: 'Hábito de nutricion',
-        subtitle: 'Alimentate durante las horas recomendadas',
+        subtitle: 'Alimentate durante las horas y siguiendo las cantidades recomendadas',
         reward: '+20 Pts',
         icon: visualResources[2]?['icon'],
         color: visualResources[2]?['color'],
@@ -135,7 +126,7 @@ class _DailyQuestsScreenState extends State<DailyPage> {
         reward: '+20 Pts',
         icon: visualResources[3]?['icon'],
         color: visualResources[3]?['color'],
-        isCompleted: completionMap[3] ?? false, // Vinculado a la automatización
+        isCompleted: completionMap[3] ?? false,
       ),
     ];
   }
@@ -151,7 +142,6 @@ class _DailyQuestsScreenState extends State<DailyPage> {
       _weightController.text = _userWeight.toStringAsFixed(1);
     }
 
-    // Leemos el agua consumida y el estado de la recompensa desde disco duro
     _consumedWater = prefs.getInt('user_consumed_water_key') ?? 0;
     _waterPointsAwardedToday =
         prefs.getBool('water_points_awarded_key') ?? false;
@@ -186,7 +176,6 @@ class _DailyQuestsScreenState extends State<DailyPage> {
     await prefs.setString('daily_quests_key', encodedData);
   }
 
-  // Se ejecuta tras presionar de manera explícita el botón o dar Enter
   void _confirmAndExecuteWeightUpdate() {
     final String value = _weightController.text;
     final double? parsedWeight = double.tryParse(value);
@@ -200,16 +189,14 @@ class _DailyQuestsScreenState extends State<DailyPage> {
 
       setState(() {
         _userWeight = parsedWeight;
-        _quests = _buildFreshQuestsList(
-            currentCompletionMap); // Reconstruye misiones con el nuevo peso
+        _quests = _buildFreshQuestsList(currentCompletionMap);
         _isWeightConfirmed = true;
       });
       _saveDataToStorage();
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-              '¡Peso registrado! Metas de ejercicio e hidratación actualizadas.'),
+          content: Text('¡Peso registrado! Meta de hidratación actualizada.'),
           backgroundColor: Colors.green,
           duration: Duration(seconds: 2),
         ),
@@ -224,7 +211,6 @@ class _DailyQuestsScreenState extends State<DailyPage> {
     }
   }
 
-  // Detecta si el usuario alteró el texto para cambiar el botón a modo "pendiente"
   void _onWeightInputChanged(String value) {
     final double? parsed = double.tryParse(value);
     if (parsed != _userWeight && _isWeightConfirmed) {
@@ -258,8 +244,7 @@ class _DailyQuestsScreenState extends State<DailyPage> {
   Future<void> _resetDailyQuests() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('user_consumed_water_key', 0);
-    await prefs.setBool(
-        'water_points_awarded_key', false); // Liberamos el candado a medianoche
+    await prefs.setBool('water_points_awarded_key', false);
 
     setState(() {
       _consumedWater = 0;
@@ -332,7 +317,7 @@ class _DailyQuestsScreenState extends State<DailyPage> {
                 style: TextStyle(fontWeight: FontWeight.bold)),
             const Spacer(),
             SizedBox(
-              width: 90, // Reducido ligeramente para dar espacio al nuevo botón
+              width: 90,
               height: 40,
               child: TextField(
                 controller: _weightController,
@@ -365,7 +350,6 @@ class _DailyQuestsScreenState extends State<DailyPage> {
               tooltip:
                   _isWeightConfirmed ? 'Peso confirmado' : 'Confirmar Peso',
             ),
-            // NUEVO: Botón pequeño para reiniciar el agua consumida
             IconButton(
               icon: const Icon(Icons.restart_alt,
                   color: Colors.redAccent, size: 26),
@@ -481,7 +465,6 @@ class _DailyQuestsScreenState extends State<DailyPage> {
               child: Checkbox(
                 value: quest.isCompleted,
                 activeColor: Colors.green,
-                // Si es la misión de agua (ID 3), se desactiva manualmente porque se completa sola al beber agua
                 onChanged: quest.id == 3
                     ? null
                     : (bool? value) {
@@ -513,15 +496,9 @@ class _DailyQuestsScreenState extends State<DailyPage> {
     );
   }
 
-  // NUEVO: Función para reiniciar manualmente el agua consumida del día
-  Future<void> _resetConsumedWaterManually() async {
+  Future _resetConsumedWaterManually() async {
     final prefs = await SharedPreferences.getInstance();
-
-    // 1. Ponemos a cero el agua en el almacenamiento local
     await prefs.setInt('user_consumed_water_key', 0);
-
-    // 2. Si ya se habían otorgado los puntos automáticos hoy, se los restamos
-    // para que el usuario pueda volver a ganarlos al registrar agua de nuevo.
     if (_waterPointsAwardedToday) {
       await prefs.setBool('water_points_awarded_key', false);
       if (globalPointsNotifier.value >= 20) {
@@ -530,23 +507,16 @@ class _DailyQuestsScreenState extends State<DailyPage> {
         globalPointsNotifier.value = 0;
       }
     }
-
-    // 3. Actualizamos la interfaz regenerando las misiones desde cero
     final Map<int, bool> currentCompletionMap = {
       for (var q in _quests) q.id: q.isCompleted
     };
-    // Forzamos que la misión 3 vuelva a estar incompleta
     currentCompletionMap[3] = false;
-
     setState(() {
       _consumedWater = 0;
       _waterPointsAwardedToday = false;
       _quests = _buildFreshQuestsList(currentCompletionMap);
     });
-
     _saveDataToStorage();
-
-    // Feedback visual
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

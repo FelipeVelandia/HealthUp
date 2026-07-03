@@ -16,7 +16,7 @@ class FoodRegistrationScreen extends StatefulWidget {
 }
 
 class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
-  final Color customColor = const Color(0xFF32A287);
+  final Color customColor = const Color(0xFFE57373);
   bool _isSubmitting = false;
 
   List<FoodItem> _allFoods = [];
@@ -198,7 +198,7 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const Color greenPrimary = Color(0xFF32A287);
+    const Color greenPrimary = Color(0xFFE57373);
     String category = _categories[_selectedTab];
     bool isWater = category == 'Agua';
 
@@ -520,7 +520,7 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _waterBtn(FontAwesomeIcons.glassWater, "Vaso", 250),
+            _waterBtn(FontAwesomeIcons.glassWater, "Vaso", 220),
             _waterBtn(FontAwesomeIcons.bottleWater, "Botella", 500),
             _waterBtn(FontAwesomeIcons.faucetDrip, "Jarra", 1000),
           ],

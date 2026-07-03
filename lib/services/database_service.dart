@@ -97,82 +97,151 @@ class DatabaseService extends ChangeNotifier {
 
   Future<void> initial(
       BuildContext context, Antecedentes antecedentes, Habito habitos) async {
+    Map<String, dynamic> dataAnt = antecedentes.toJson();
+    Map<String, dynamic> dataHab = habitos.toJson();
 
-        Map<String, dynamic> dataAnt = antecedentes.toJson();
-        Map<String, dynamic> dataHab = habitos.toJson();
+    // Obtener ID Usuario
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-        // Obtener ID Usuario
-        SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString("UserID");
 
-        String? userId = prefs.getString("UserID");
+    // Insertar los datos del usuario en Firestore
+    await _firestore.collection('antecedentes').doc(userId).set(dataAnt);
+    await _firestore.collection('habitos').doc(userId).set(dataHab);
 
-        // Insertar los datos del usuario en Firestore
-        await _firestore.collection('antecedentes').doc(userId).set(dataAnt);
-        await _firestore.collection('habitos').doc(userId).set(dataHab);
+    // Comlpetar Initial Survey
+    _onBoard = true;
 
-        // Comlpetar Initial Survey
-        _onBoard = true;
+    // Regresando a la página principal
+    if (context.mounted) {
+      context.go("/progress");
+    }
 
-        // Regresando a la página principal
-        if (context.mounted) {
-          context.go("/progress");
-        }
-
-        // Notificar que se ha completado la survey
-        notifyListeners();
+    // Notificar que se ha completado la survey
+    notifyListeners();
   }
 
-  Future<Dieta> getDieta (String id) async{
+  Future<Dieta> getDieta(String id) async {
     var snap = await _firestore.collection('dietas').doc(id).get();
 
     return Dieta.fromMap(snap.data());
   }
 
-  Future<Plan> getLunes (String id) async{
-    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('lun').get();
+  Future<Plan> getLunes(String id) async {
+    var snap = await _firestore
+        .collection('dietas')
+        .doc(id)
+        .collection('plan')
+        .doc('lun')
+        .get();
 
     return Plan.fromMap(snap.data());
   }
 
-  Future<Plan> getMartes (String id) async{
-    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('lun').get();
+  Future<Plan> getMartes(String id) async {
+    var snap = await _firestore
+        .collection('dietas')
+        .doc(id)
+        .collection('plan')
+        .doc('mar')
+        .get();
 
     return Plan.fromMap(snap.data());
   }
 
-  Future<Plan> getMiercoles (String id) async{
-    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('lun').get();
+  Future<Plan> getMiercoles(String id) async {
+    var snap = await _firestore
+        .collection('dietas')
+        .doc(id)
+        .collection('plan')
+        .doc('lun')
+        .get();
 
     return Plan.fromMap(snap.data());
   }
 
-  Future<Plan> getJueves (String id) async{
-    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('lun').get();
+  Future<Plan> getJueves(String id) async {
+    var snap = await _firestore
+        .collection('dietas')
+        .doc(id)
+        .collection('plan')
+        .doc('lun')
+        .get();
 
     return Plan.fromMap(snap.data());
   }
 
-  Future<Plan> getViernes (String id) async{
-    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('lun').get();
+  Future<Plan> getViernes(String id) async {
+    var snap = await _firestore
+        .collection('dietas')
+        .doc(id)
+        .collection('plan')
+        .doc('lun')
+        .get();
 
     return Plan.fromMap(snap.data());
   }
 
-  Future<Plan> getSabado (String id) async{
-    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('lun').get();
+  Future<Plan> getSabado(String id) async {
+    var snap = await _firestore
+        .collection('dietas')
+        .doc(id)
+        .collection('plan')
+        .doc('lun')
+        .get();
 
     return Plan.fromMap(snap.data());
   }
 
-  Future<Plan> getDomingo (String id) async{
-    var snap = await _firestore.collection('dietas').doc(id).collection('plan').doc('lun').get();
+  Future<Plan> getDomingo(String id) async {
+    var snap = await _firestore
+        .collection('dietas')
+        .doc(id)
+        .collection('plan')
+        .doc('lun')
+        .get();
 
     return Plan.fromMap(snap.data());
   }
 
-  Future getPaciente (String id) async{
-    var snap = await _firestore.collection('pacientes').doc(id).get(); 
+  Future getPaciente(String id) async {
+    var snap = await _firestore.collection('pacientes').doc(id).get();
 
     return Paciente.fromMap(snap.data());
+  }
+
+  // Dentro de tu DatabaseService class
+  Future<dynamic> getDietaPorDia(String uid, String dia) async {
+    // Retorna el documento del día correspondiente (lunes, martes, miercoles, etc.)
+    final doc = await FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(uid)
+        .collection('dietas')
+        .doc(dia)
+        .get();
+    return doc.data();
+  }
+
+  // Dentro de tu clase DatabaseService:
+  Future<Map<String, dynamic>?> getDatosGenomicos(String uid) async {
+    try {
+      final doc = await _firestore.collection('genomics').doc(uid).get();
+      return doc.data();
+    } catch (e) {
+      print("Error al obtener datos genómicos: $e");
+      return null;
+    }
+  }
+
+  // Añadir dentro de tu clase DatabaseService:
+  Future<Map<String, dynamic>?> getInformeNutrigenetico(String uid) async {
+    try {
+      final doc =
+          await _firestore.collection('informes').doc(uid).get();
+      return doc.data();
+    } catch (e) {
+      print("Error al obtener el informe nutrigenético: $e");
+      return null;
+    }
   }
 }

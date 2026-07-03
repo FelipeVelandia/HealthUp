@@ -65,7 +65,7 @@ class ProgressPage extends StatelessWidget {
           SnackBar(
             content: Text(
                 '📋 ¡Premio #${indiceAleatorio + 1} copiado! Pégalo en tu navegador.'),
-            backgroundColor: Colors.purple,
+            backgroundColor: Color(0xFFB71C1C),
             duration: const Duration(seconds: 3),
           ),
         );
@@ -82,7 +82,7 @@ class ProgressPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20.0)),
             icon: const CircleAvatar(
               radius: 32,
-              backgroundColor: Colors.purple,
+              backgroundColor: Color(0xFFB71C1C),
               child: Icon(Icons.card_giftcard, color: Colors.white, size: 40),
             ),
             title: const Text(
@@ -99,7 +99,7 @@ class ProgressPage extends StatelessWidget {
                   style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.purple),
+                      color: Color(0xFFB71C1C)),
                 ),
                 const SizedBox(height: 12),
                 const Text(
@@ -122,7 +122,7 @@ class ProgressPage extends StatelessWidget {
                       label: const Text('Copiar Enlace',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purple,
+                        backgroundColor: Color(0xFFB71C1C),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
@@ -190,8 +190,8 @@ class ProgressPage extends StatelessWidget {
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
                             colors: [
-                              Color(0xFF32A287),
-                              Color(0xFF4AC2A5)
+                              Color(0xFFB71C1C),
+                              Color(0xFFE57373)
                             ], // Tonos verdes de tu app
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -199,7 +199,7 @@ class ProgressPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF32A287).withOpacity(0.3),
+                              color: const Color(0xFFE57373).withOpacity(0.3),
                               blurRadius: 12,
                               offset: const Offset(0, 6),
                             )

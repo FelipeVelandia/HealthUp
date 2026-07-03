@@ -94,31 +94,31 @@ class _InitialSurveyPageState extends State<InitialSurveyPage> {
                   SelectInput(
                     label: "Apetito",
                     controller: habitosController["apetito"]!,
-                    options: const ["Bueno", "Regular", "Malo"],
+                    options: const ["Bueno (Consume 3 o más comidas al día)", "Regular (Consume menos de 3 comidas al día)", "Malo (Consume menos de 2 comidas al día)"],
                   ),
                   const SizedBox(height: 12),
                   SelectInput(
                     label: "Ingesta",
                     controller: habitosController["ingesta"]!,
-                    options: const ["Rápida", "Despacio", "Normal"],
+                    options: const ["Rápida (Come en menos de 20 minutos)", "Despacio (Come en menos de 30 minutos)", "Normal (Come entre 20 y 30 minutos)"],
                   ),
                   const SizedBox(height: 12),
                   SelectInput(
                     label: "Deglución",
                     controller: habitosController["deglucion"]!,
-                    options: const ["Normal", "Deficiente"],
+                    options: const ["Normal (Mastica lo suficiente los alimentos antes de tragar)", "Deficiente (No mastica lo suficiente y los trozos de alimento pasan enteros)"],
                   ),
                   const SizedBox(height: 12),
                   SelectInput(
                     label: "¿Mastica bien los alimentos?",
                     controller: habitosController["mastica_bien"]!,
-                    options: const ["Si", "No"],
+                    options: const ["Si (El alimento esta completamente macerado antes de tragar)", "No (Traga los alimentos sin que esten completamente macerados)"],
                   ),
                   const SizedBox(height: 12),
                   SelectInput(
                     label: "Hábitos intestinales",
                     controller: habitosController["habito_intestinal"]!,
-                    options: const ["Normal", "Estreñimiento", "Diarrea"],
+                    options: const ["Normal (1 deposición al día blanda)", "Estreñimiento (1 deposición al dia realizada con esfuerzo)", "Diarrea (Realiza deposiciones acuosas)"],
                   ),
                   const SizedBox(height: 12),
                   SelectInput(
