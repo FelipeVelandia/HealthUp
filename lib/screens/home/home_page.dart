@@ -34,7 +34,9 @@ class HomePage extends StatelessWidget {
                         ? "HealthUp"
                         : currentPath == "/report"
                             ? "Mi Informe"
-                            : "Por defecto"),
+                            : currentPath == "/achievement"
+                                ? "Mis medallas"
+                                : "Por defecto"),
         foregroundColor: scheme.primary,
         centerTitle: true,
         actions: [
@@ -68,7 +70,7 @@ class HomePage extends StatelessWidget {
       floatingActionButton: currentPath == "/progress"
           ? FloatingActionButton(
               onPressed: () => changePath(context, "/exercise-registration"),
-              backgroundColor: const Color(0xFF32A287),
+              backgroundColor: const Color(0xFFE57373),
               elevation: 4,
               shape: const CircleBorder(),
               child: const Icon(
@@ -99,6 +101,12 @@ class HomePage extends StatelessWidget {
                   size: 25,
                 )),
             IconButton(
+                onPressed: () => changePath(context, "/achievement"),
+                icon: const Icon(
+                  FontAwesomeIcons.medal,
+                  size: 25,
+                )),
+            IconButton(
                 onPressed: () => changePath(context, "/genomics"),
                 icon: const Icon(
                   FontAwesomeIcons.dna,
@@ -107,8 +115,7 @@ class HomePage extends StatelessWidget {
             IconButton(
                 onPressed: () => changePath(context, "/report"),
                 icon: const Icon(
-                  FontAwesomeIcons
-                      .fileLines,
+                  FontAwesomeIcons.fileLines,
                   size: 25,
                 )),
           ],
