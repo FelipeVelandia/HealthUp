@@ -82,9 +82,18 @@ class _DietPageState extends State<DietPage> {
         'user_accumulated_points_key', globalPointsNotifier.value);
   }
 
-  void _completeMealLocal(String mealLabel) {
+  void _completeMealLocal(String mealLabel) async {
+    // Convertido a async para SharedPreferences
     if (_mealsCompletionMap[mealLabel] == true) return;
 
+    // 1. Obtener instancia de SharedPreferences e incrementar el contador histórico
+    final prefs = await SharedPreferences.getInstance();
+    int currentMealsCount =
+        prefs.getInt('historic_meals_completed_count_key') ?? 0;
+    currentMealsCount += 1;
+    await prefs.setInt('historic_meals_completed_count_key', currentMealsCount);
+
+    // 2. Actualizar el estado local y los puntos globales
     setState(() {
       _mealsCompletionMap[mealLabel] = true;
       globalPointsNotifier.value += 20;
@@ -102,7 +111,6 @@ class _DietPageState extends State<DietPage> {
       );
     }
   }
-
 
   // Mapeador opcional si prefieres conservar tus funciones individuales en lugar de cambiar tu DatabaseService
   Future<dynamic> _fetchDietaDinamica(String uid, int weekday) {

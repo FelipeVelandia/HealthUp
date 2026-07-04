@@ -80,6 +80,15 @@ class _DailyQuestsScreenState extends State<DailyPage> {
 
           final prefs = await SharedPreferences.getInstance();
           await prefs.setBool('water_points_awarded_key', true);
+
+          // --- NUEVA LÓGICA: ACTUALIZAR LOGROS DE HIDRATACIÓN ---
+          int currentWaterDays =
+              prefs.getInt('historic_water_days_completed_key') ?? 0;
+          currentWaterDays += 1;
+          await prefs.setInt(
+              'historic_water_days_completed_key', currentWaterDays);
+          // ------------------------------------------------------
+
           _saveDataToStorage();
 
           if (mounted) {
@@ -113,7 +122,8 @@ class _DailyQuestsScreenState extends State<DailyPage> {
       QuestModel(
         id: 2,
         title: 'Hábito de nutricion',
-        subtitle: 'Alimentate durante las horas y siguiendo las cantidades recomendadas',
+        subtitle:
+            'Alimentate durante las horas y siguiendo las cantidades recomendadas',
         reward: '+20 Pts',
         icon: visualResources[2]?['icon'],
         color: visualResources[2]?['color'],
@@ -141,6 +151,35 @@ class _DailyQuestsScreenState extends State<DailyPage> {
     if (_userWeight > 0) {
       _weightController.text = _userWeight.toStringAsFixed(1);
     }
+
+    // --- NUEVA LÓGICA DE CONTROL DE CAMBIO DE DÍA ---
+    final String todayDateStr = DateTime.now().toString().split(' ')[0];
+    final String lastOpenedDate =
+        prefs.getString('last_daily_opened_date_key') ?? "";
+
+    if (todayDateStr != lastOpenedDate) {
+      // Si el día del celular cambió, reiniciamos el progreso diario en SharedPreferences
+      await prefs.setInt('user_consumed_water_key', 0);
+      await prefs.setBool('water_points_awarded_key', false);
+      await prefs.remove('daily_quests_key');
+      // Actualizamos la fecha de control
+      await prefs.setString('last_daily_opened_date_key', todayDateStr);
+
+      _consumedWater = 0;
+      _waterPointsAwardedToday = false;
+
+      // Creamos un mapa limpio con todas las misiones falsas (completadas = false)
+      Map<int, bool> resetMap = {1: false, 2: false, 3: false};
+
+      setState(() {
+        _quests = _buildFreshQuestsList(resetMap);
+        _isWeightConfirmed = true;
+        _isLoading = false;
+      });
+      _saveDataToStorage();
+      return; // Interrumpimos la ejecución normal ya que se reseteó con éxito
+    }
+    // ------------------------------------------------
 
     _consumedWater = prefs.getInt('user_consumed_water_key') ?? 0;
     _waterPointsAwardedToday =
@@ -223,10 +262,12 @@ class _DailyQuestsScreenState extends State<DailyPage> {
   void _startCountdown() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       final now = DateTime.now();
+      // Recalcular la medianoche dinámicamente según la hora actual del dispositivo en este segundo
       final midnight = DateTime(now.year, now.month, now.day + 1);
       final duration = midnight.difference(now);
 
-      if (duration.isNegative) {
+      // Si por cambio manual de hora o transición real la duración se desfasa o es negativa
+      if (duration.isNegative || duration.inHours >= 24) {
         _resetDailyQuests();
       } else {
         setState(() {
@@ -243,8 +284,12 @@ class _DailyQuestsScreenState extends State<DailyPage> {
 
   Future<void> _resetDailyQuests() async {
     final prefs = await SharedPreferences.getInstance();
+    final String todayDateStr = DateTime.now().toString().split(' ')[0];
+
     await prefs.setInt('user_consumed_water_key', 0);
     await prefs.setBool('water_points_awarded_key', false);
+    await prefs.setString(
+        'last_daily_opened_date_key', todayDateStr); // Guardar el nuevo día
 
     setState(() {
       _consumedWater = 0;
@@ -465,13 +510,31 @@ class _DailyQuestsScreenState extends State<DailyPage> {
               child: Checkbox(
                 value: quest.isCompleted,
                 activeColor: Colors.green,
-                onChanged: quest.id == 3
+                onChanged: (quest.id == 3 || quest.isCompleted)
                     ? null
-                    : (bool? value) {
+                    : (bool? value) async {
+                        // Convertido a async para manejar SharedPreferences
                         setState(() {
                           quest.isCompleted = value ?? false;
-                          if (quest.isCompleted) {
-                            globalPointsNotifier.value += 20;
+                        });
+
+                        if (quest.isCompleted) {
+                          globalPointsNotifier.value += 20;
+
+                          // --- NUEVA LÓGICA: ACTUALIZAR LOGROS DE EJERCICIO ---
+                          if (quest.id == 1) {
+                            final prefs = await SharedPreferences.getInstance();
+                            int currentExerciseDays = prefs.getInt(
+                                    'historic_exercise_days_completed_key') ??
+                                0;
+                            currentExerciseDays += 1;
+                            await prefs.setInt(
+                                'historic_exercise_days_completed_key',
+                                currentExerciseDays);
+                          }
+                          // ----------------------------------------------------
+
+                          if (mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content: Text(
@@ -479,13 +542,15 @@ class _DailyQuestsScreenState extends State<DailyPage> {
                                   backgroundColor: Colors.green,
                                   duration: Duration(seconds: 1)),
                             );
-                          } else {
+                          }
+                        } else {
+                          setState(() {
                             globalPointsNotifier.value -= 20;
                             if (globalPointsNotifier.value < 0) {
                               globalPointsNotifier.value = 0;
                             }
-                          }
-                        });
+                          });
+                        }
                         _saveDataToStorage();
                       },
               ),
