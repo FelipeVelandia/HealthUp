@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "288959745869",
+    "project_id": "nutri-alg",
+    "storage_bucket": "nutri-alg.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:288959745869:android:ed300998fc4083cecd7104",
+        "android_client_info": {
+          "package_name": "com.example.nutrialg_life"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO2tmUNkEd5JWRCM1ekL331YqqUXSV1dg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:288959745869:android:8217f1eda67e09c4cd7104",
+        "android_client_info": {
+          "package_name": "com.example.nutrialg_med"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO2tmUNkEd5JWRCM1ekL331YqqUXSV1dg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

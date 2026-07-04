@@ -25,6 +25,7 @@ class LoginPage extends StatelessWidget {
             backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(80),
+              // CORREGIDO: Se añade la ruta completa del asset ("assets/logo.svg")
               child: SvgPicture.asset("assets/logo.svg", height: 120),
             )),
         body: Padding(
