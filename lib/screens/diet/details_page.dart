@@ -31,7 +31,6 @@ class DetailsPage extends StatelessWidget {
                       return const Text('no data');
                     } else {
                       switch (snapshot.data[1].getString('Label')) {
-                        // ... dentro de tu bloque switch u operación condicional
                         case 'desayuno':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.desayuno;
@@ -43,8 +42,7 @@ class DetailsPage extends StatelessWidget {
 
                         case 'media':
                           final index = snapshot.data[1].getInt('Index');
-                          final listaComida = snapshot.data[0]
-                              ?.media; // Ajusta según el nombre real en tu modelo (ej: mediaManana)
+                          final listaComida = snapshot.data[0]?.media;
                           final item = (listaComida != null &&
                                   index < listaComida.length)
                               ? listaComida[index]
@@ -107,7 +105,6 @@ class DetailsPage extends StatelessWidget {
                       return const Text('no data');
                     } else {
                       switch (snapshot.data[1].getString('Label')) {
-                        // ... dentro de tu bloque switch u operación condicional
                         case 'desayuno':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.desayuno;
@@ -119,8 +116,7 @@ class DetailsPage extends StatelessWidget {
 
                         case 'media':
                           final index = snapshot.data[1].getInt('Index');
-                          final listaComida = snapshot.data[0]
-                              ?.media; // Ajusta según el nombre real en tu modelo (ej: mediaManana)
+                          final listaComida = snapshot.data[0]?.media;
                           final item = (listaComida != null &&
                                   index < listaComida.length)
                               ? listaComida[index]
@@ -183,7 +179,6 @@ class DetailsPage extends StatelessWidget {
                       return const Text('no data');
                     } else {
                       switch (snapshot.data[1].getString('Label')) {
-                        // ... dentro de tu bloque switch u operación condicional
                         case 'desayuno':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.desayuno;
@@ -195,8 +190,7 @@ class DetailsPage extends StatelessWidget {
 
                         case 'media':
                           final index = snapshot.data[1].getInt('Index');
-                          final listaComida = snapshot.data[0]
-                              ?.media; // Ajusta según el nombre real en tu modelo (ej: mediaManana)
+                          final listaComida = snapshot.data[0]?.media;
                           final item = (listaComida != null &&
                                   index < listaComida.length)
                               ? listaComida[index]
@@ -220,7 +214,6 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'cena':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.cena;
@@ -229,7 +222,6 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         default:
                           return const Text('Error');
                       }
@@ -259,7 +251,6 @@ class DetailsPage extends StatelessWidget {
                       return const Text('no data');
                     } else {
                       switch (snapshot.data[1].getString('Label')) {
-                        // ... dentro de tu bloque switch u operación condicional
                         case 'desayuno':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.desayuno;
@@ -268,17 +259,14 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'media':
                           final index = snapshot.data[1].getInt('Index');
-                          final listaComida = snapshot.data[0]
-                              ?.media; // Ajusta según el nombre real en tu modelo (ej: mediaManana)
+                          final listaComida = snapshot.data[0]?.media;
                           final item = (listaComida != null &&
                                   index < listaComida.length)
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'almuerzo':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.almuerzo;
@@ -287,7 +275,6 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'merienda':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.merienda;
@@ -296,7 +283,6 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'cena':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.cena;
@@ -305,7 +291,6 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         default:
                           return const Text('Error');
                       }
@@ -335,7 +320,6 @@ class DetailsPage extends StatelessWidget {
                       return const Text('no data');
                     } else {
                       switch (snapshot.data[1].getString('Label')) {
-                        // ... dentro de tu bloque switch u operación condicional
                         case 'desayuno':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.desayuno;
@@ -344,17 +328,14 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'media':
                           final index = snapshot.data[1].getInt('Index');
-                          final listaComida = snapshot.data[0]
-                              ?.media; // Ajusta según el nombre real en tu modelo (ej: mediaManana)
+                          final listaComida = snapshot.data[0]?.media;
                           final item = (listaComida != null &&
                                   index < listaComida.length)
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'almuerzo':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.almuerzo;
@@ -363,7 +344,6 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'merienda':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.merienda;
@@ -372,7 +352,6 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'cena':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.cena;
@@ -381,7 +360,6 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         default:
                           return const Text('Error');
                       }
@@ -411,7 +389,6 @@ class DetailsPage extends StatelessWidget {
                       return const Text('no data');
                     } else {
                       switch (snapshot.data[1].getString('Label')) {
-                        // ... dentro de tu bloque switch u operación condicional
                         case 'desayuno':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.desayuno;
@@ -420,17 +397,14 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'media':
                           final index = snapshot.data[1].getInt('Index');
-                          final listaComida = snapshot.data[0]
-                              ?.media; // Ajusta según el nombre real en tu modelo (ej: mediaManana)
+                          final listaComida = snapshot.data[0]?.media;
                           final item = (listaComida != null &&
                                   index < listaComida.length)
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'almuerzo':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.almuerzo;
@@ -439,7 +413,6 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'merienda':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.merienda;
@@ -448,7 +421,6 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'cena':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.cena;
@@ -457,7 +429,6 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         default:
                           return const Text('Error');
                       }
@@ -487,7 +458,6 @@ class DetailsPage extends StatelessWidget {
                       return const Text('no data');
                     } else {
                       switch (snapshot.data[1].getString('Label')) {
-                        // ... dentro de tu bloque switch u operación condicional
                         case 'desayuno':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.desayuno;
@@ -496,17 +466,14 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'media':
                           final index = snapshot.data[1].getInt('Index');
-                          final listaComida = snapshot.data[0]
-                              ?.media; // Ajusta según el nombre real en tu modelo (ej: mediaManana)
+                          final listaComida = snapshot.data[0]?.media;
                           final item = (listaComida != null &&
                                   index < listaComida.length)
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'almuerzo':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.almuerzo;
@@ -515,7 +482,6 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'merienda':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.merienda;
@@ -524,7 +490,6 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         case 'cena':
                           final index = snapshot.data[1].getInt('Index');
                           final listaComida = snapshot.data[0]?.cena;
@@ -533,7 +498,6 @@ class DetailsPage extends StatelessWidget {
                               ? listaComida[index]
                               : null;
                           return _buildNutrientCard(item);
-
                         default:
                           return const Text('Error');
                       }
@@ -562,7 +526,7 @@ class DetailsPage extends StatelessWidget {
                 label,
                 style: TextStyle(
                     fontSize: 15,
-                    color: Colors.grey[800],
+                    color: Colors.grey,
                     fontWeight:
                         isHighlight ? FontWeight.bold : FontWeight.normal),
               ),
@@ -577,7 +541,6 @@ class DetailsPage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 6),
-          Divider(color: Colors.grey[200], height: 1),
         ],
       ),
     );
@@ -595,7 +558,6 @@ class DetailsPage extends StatelessWidget {
         ),
       );
     }
-
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -608,7 +570,6 @@ class DetailsPage extends StatelessWidget {
               offset: const Offset(0, 4)),
         ],
       ),
-      // NUEVO: Agregamos scroll interno para evitar el desborde (Bottom Overflowed)
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -620,18 +581,19 @@ class DetailsPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.5),
             ),
-            const SizedBox(height: 16),
-
-            // Macronutrientes Base
+            const SizedBox(
+                height:
+                    16), // MODIFICACIÓN: Mapeo de llaves homologado con FoodRegistrationScreen y DietPage
             _buildNutrientRow(
-                'Energía (Kcal)', '${item['energiac'] ?? '-'} Kcal'),
-            _buildNutrientRow('Proteína', '${item['proteina'] ?? '-'} g'),
-            _buildNutrientRow('Lípidos', '${item['lipidos'] ?? '-'} g'),
+                'Energía (Kcal)', '${item['calories'] ?? '-'} Kcal'),
+            _buildNutrientRow('Proteína', '${item['protein'] ?? '-'} g'),
+            _buildNutrientRow('Lípidos', '${item['lipids'] ?? '-'} g'),
             _buildNutrientRow(
-                'Carbohidratos Totales', '${item['carbohidratos'] ?? '-'} g'),
-            const Divider(height: 24),
-
-            // Minerales
+                'Carbohidratos Totales', '${item['carbs'] ?? '-'} g'),
+            _buildNutrientRow('Fibra', '${item['fiber'] ?? '-'} g'),
+            const Divider(
+                height:
+                    24), // Minerales (Se conservan con validación segura por si se agregan en el JSON futuro)
             _buildNutrientRow('Calcio (mg)', '${item['calcio'] ?? '-'} mg'),
             _buildNutrientRow('Hierro (mg)', '${item['hierro'] ?? '-'} mg'),
             _buildNutrientRow('Sodio (mg)', '${item['sodio'] ?? '-'} mg'),
@@ -640,9 +602,7 @@ class DetailsPage extends StatelessWidget {
             _buildNutrientRow('Zinc (mg)', '${item['zinc'] ?? '-'} mg'),
             _buildNutrientRow('Magnesio (mg)', '${item['magnesio'] ?? '-'} mg'),
             _buildNutrientRow('Potasio (mg)', '${item['potasio'] ?? '-'} mg'),
-            const Divider(height: 24),
-
-            // Vitaminas
+            const Divider(height: 24), // Vitaminas
             _buildNutrientRow('Tiamina (mg)', '${item['tiamina'] ?? '-'} mg'),
             _buildNutrientRow(
                 'Riboflavina (mg)', '${item['riboflavina'] ?? '-'} mg'),
@@ -654,9 +614,7 @@ class DetailsPage extends StatelessWidget {
                 'Vitamina C (mg)', '${item['vitaminaC'] ?? '-'} mg'),
             _buildNutrientRow(
                 'Vitamina A (ER)', '${item['vitaminaA'] ?? '-'} ER'),
-            const Divider(height: 24),
-
-            // Perfil de Grasas y Colesterol
+            const Divider(height: 24), // Perfil de Grasas y Colesterol
             _buildNutrientRow(
                 'Grasa Saturada (g)', '${item['grasa_saturada'] ?? '-'} g'),
             _buildNutrientRow('Grasa Monoinsaturada (g)',

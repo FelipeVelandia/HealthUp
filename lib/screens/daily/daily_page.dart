@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nutrialg_life/points_manager.dart';
 import 'package:nutrialg_life/models/quest.dart';
+import 'package:nutrialg_life/services/database_service.dart';
+import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:nutrialg_life/models/puntos.dart';
 
 class DailyPage extends StatefulWidget {
   const DailyPage({super.key});
@@ -29,10 +33,20 @@ class _DailyQuestsScreenState extends State<DailyPage> {
   int _consumedWater = 0;
   bool _waterPointsAwardedToday = false;
 
+  // Variables locales para almacenar los contadores históricos de Firestore
+  int _historicExerciseDays = 0;
+  int _historicWaterDays = 0;
+  int _historicMealsCount = 0;
+
+  // Instancia del servicio de base de datos
+  final firestore = DatabaseService();
+
   @override
   void initState() {
     super.initState();
-    _loadDataFromStorage();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadDataFromStorage();
+    });
     _startCountdown();
   }
 
@@ -51,19 +65,17 @@ class _DailyQuestsScreenState extends State<DailyPage> {
       3: {'icon': Icons.water_drop, 'color': Colors.blue},
     };
 
-    // 1. Lógica Misión 1 (Ejercicio) - FIJA, ya no depende de _userWeight
+    // 1. Lógica Misión 1 (Ejercicio)
     const int recommendedMinutes = 30;
     String exerciseSubtitle =
         'Meta de hoy: Completa un bloque de $recommendedMinutes minutos de actividad física';
 
     String hydrationSubtitle = 'Bebe agua para mantenerte hidratado';
 
-    // Leemos el estado guardado previamente
     bool hydrationCompleted = completionMap[3] ?? false;
 
     if (_userWeight > 0) {
       // 2. Lógica Misión 3 (Hidratación inteligente)
-      // NUEVA FÓRMULA: 10 kg = 220 mL -> (Peso * 220) / 10 -> Peso * 22
       final double totalMl = _userWeight * 22;
       final double totalLiters = totalMl / 1000;
 
@@ -78,16 +90,27 @@ class _DailyQuestsScreenState extends State<DailyPage> {
         Future.microtask(() async {
           globalPointsNotifier.value += 20;
 
+          final user =
+              Provider.of<DatabaseService>(context, listen: false).user;
+          if (user != null) {
+            // MODIFICACIÓN: Incrementar contador histórico de agua y persistir en el modelo de Firestore
+            _historicWaterDays += 1;
+
+            final puntosObj = PuntosModel(
+              uid: user.uid,
+              valor: globalPointsNotifier.value,
+              historicExerciseDays: _historicExerciseDays,
+              historicWaterDays: _historicWaterDays,
+              historicMealsCount: _historicMealsCount,
+            );
+            await FirebaseFirestore.instance
+                .collection('puntos')
+                .doc(user.uid)
+                .set(puntosObj.toMap());
+          }
+
           final prefs = await SharedPreferences.getInstance();
           await prefs.setBool('water_points_awarded_key', true);
-
-          // --- NUEVA LÓGICA: ACTUALIZAR LOGROS DE HIDRATACIÓN ---
-          int currentWaterDays =
-              prefs.getInt('historic_water_days_completed_key') ?? 0;
-          currentWaterDays += 1;
-          await prefs.setInt(
-              'historic_water_days_completed_key', currentWaterDays);
-          // ------------------------------------------------------
 
           _saveDataToStorage();
 
@@ -142,10 +165,26 @@ class _DailyQuestsScreenState extends State<DailyPage> {
   }
 
   Future<void> _loadDataFromStorage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final int savedPoints = prefs.getInt('user_accumulated_points_key') ?? 0;
+    final user = Provider.of<DatabaseService>(context, listen: false).user;
 
-    globalPointsNotifier.value = savedPoints;
+    // MODIFICACIÓN: Leer puntos y contadores de logros unificados utilizando PuntosModel de Firestore
+    if (user != null) {
+      final docPuntos = await FirebaseFirestore.instance
+          .collection('puntos')
+          .doc(user.uid)
+          .get();
+      if (docPuntos.exists && docPuntos.data() != null) {
+        final puntosObj = PuntosModel.fromMap(user.uid, docPuntos.data());
+        globalPointsNotifier.value = puntosObj.valor;
+        _historicExerciseDays = puntosObj.historicExerciseDays;
+        _historicWaterDays = puntosObj.historicWaterDays;
+        _historicMealsCount = puntosObj.historicMealsCount;
+      } else {
+        globalPointsNotifier.value = 0;
+      }
+    }
+
+    final prefs = await SharedPreferences.getInstance();
 
     _userWeight = prefs.getDouble('user_weight_key') ?? 0.0;
     if (_userWeight > 0) {
@@ -158,17 +197,14 @@ class _DailyQuestsScreenState extends State<DailyPage> {
         prefs.getString('last_daily_opened_date_key') ?? "";
 
     if (todayDateStr != lastOpenedDate) {
-      // Si el día del celular cambió, reiniciamos el progreso diario en SharedPreferences
       await prefs.setInt('user_consumed_water_key', 0);
       await prefs.setBool('water_points_awarded_key', false);
       await prefs.remove('daily_quests_key');
-      // Actualizamos la fecha de control
       await prefs.setString('last_daily_opened_date_key', todayDateStr);
 
       _consumedWater = 0;
       _waterPointsAwardedToday = false;
 
-      // Creamos un mapa limpio con todas las misiones falsas (completadas = false)
       Map<int, bool> resetMap = {1: false, 2: false, 3: false};
 
       setState(() {
@@ -177,7 +213,7 @@ class _DailyQuestsScreenState extends State<DailyPage> {
         _isLoading = false;
       });
       _saveDataToStorage();
-      return; // Interrumpimos la ejecución normal ya que se reseteó con éxito
+      return;
     }
     // ------------------------------------------------
 
@@ -205,9 +241,24 @@ class _DailyQuestsScreenState extends State<DailyPage> {
   }
 
   Future<void> _saveDataToStorage() async {
+    final user = Provider.of<DatabaseService>(context, listen: false).user;
+
+    // MODIFICACIÓN: Guardado general de datos tipados mediante PuntosModel en Firestore
+    if (user != null) {
+      final puntosObj = PuntosModel(
+        uid: user.uid,
+        valor: globalPointsNotifier.value,
+        historicExerciseDays: _historicExerciseDays,
+        historicWaterDays: _historicWaterDays,
+        historicMealsCount: _historicMealsCount,
+      );
+      await FirebaseFirestore.instance
+          .collection('puntos')
+          .doc(user.uid)
+          .set(puntosObj.toMap());
+    }
+
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(
-        'user_accumulated_points_key', globalPointsNotifier.value);
     await prefs.setDouble('user_weight_key', _userWeight);
 
     final String encodedData =
@@ -262,11 +313,8 @@ class _DailyQuestsScreenState extends State<DailyPage> {
   void _startCountdown() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       final now = DateTime.now();
-      // Recalcular la medianoche dinámicamente según la hora actual del dispositivo en este segundo
       final midnight = DateTime(now.year, now.month, now.day + 1);
       final duration = midnight.difference(now);
-
-      // Si por cambio manual de hora o transición real la duración se desfasa o es negativa
       if (duration.isNegative || duration.inHours >= 24) {
         _resetDailyQuests();
       } else {
@@ -282,15 +330,12 @@ class _DailyQuestsScreenState extends State<DailyPage> {
     return "${twoDigits(duration.inHours)}:${twoDigits(duration.inMinutes.remainder(60))}:${twoDigits(duration.inSeconds.remainder(60))}";
   }
 
-  Future<void> _resetDailyQuests() async {
+  Future _resetDailyQuests() async {
     final prefs = await SharedPreferences.getInstance();
     final String todayDateStr = DateTime.now().toString().split(' ')[0];
-
     await prefs.setInt('user_consumed_water_key', 0);
     await prefs.setBool('water_points_awarded_key', false);
-    await prefs.setString(
-        'last_daily_opened_date_key', todayDateStr); // Guardar el nuevo día
-
+    await prefs.setString('last_daily_opened_date_key', todayDateStr);
     setState(() {
       _consumedWater = 0;
       _waterPointsAwardedToday = false;
@@ -302,14 +347,13 @@ class _DailyQuestsScreenState extends State<DailyPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget
+  build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-
     int completedCount = _quests.where((q) => q.isCompleted).length;
     double progress = _quests.isEmpty ? 0 : completedCount / _quests.length;
-
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
@@ -371,8 +415,8 @@ class _DailyQuestsScreenState extends State<DailyPage> {
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontWeight: FontWeight.bold),
                 textInputAction: TextInputAction.done,
-                onChanged: _onWeightInputChanged,
-                onSubmitted: (_) => _confirmAndExecuteWeightUpdate(),
+                onChanged: (value) => _onWeightInputChanged(value),
+                onSubmitted: (value) => _confirmAndExecuteWeightUpdate(),
                 decoration: InputDecoration(
                   suffixText: ' kg',
                   contentPadding:
@@ -513,27 +557,15 @@ class _DailyQuestsScreenState extends State<DailyPage> {
                 onChanged: (quest.id == 3 || quest.isCompleted)
                     ? null
                     : (bool? value) async {
-                        // Convertido a async para manejar SharedPreferences
                         setState(() {
                           quest.isCompleted = value ?? false;
                         });
-
                         if (quest.isCompleted) {
-                          globalPointsNotifier.value += 20;
-
-                          // --- NUEVA LÓGICA: ACTUALIZAR LOGROS DE EJERCICIO ---
+                          globalPointsNotifier.value +=
+                              20; // MODIFICACIÓN: Incrementar el contador histórico de ejercicio en la variable local antes de salvar en Firestore
                           if (quest.id == 1) {
-                            final prefs = await SharedPreferences.getInstance();
-                            int currentExerciseDays = prefs.getInt(
-                                    'historic_exercise_days_completed_key') ??
-                                0;
-                            currentExerciseDays += 1;
-                            await prefs.setInt(
-                                'historic_exercise_days_completed_key',
-                                currentExerciseDays);
+                            _historicExerciseDays += 1;
                           }
-                          // ----------------------------------------------------
-
                           if (mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -548,6 +580,9 @@ class _DailyQuestsScreenState extends State<DailyPage> {
                             globalPointsNotifier.value -= 20;
                             if (globalPointsNotifier.value < 0) {
                               globalPointsNotifier.value = 0;
+                            } // Si se desmarca, descontamos de forma matemática del contador local
+                            if (quest.id == 1 && _historicExerciseDays > 0) {
+                              _historicExerciseDays -= 1;
                             }
                           });
                         }
@@ -562,16 +597,19 @@ class _DailyQuestsScreenState extends State<DailyPage> {
   }
 
   Future _resetConsumedWaterManually() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('user_consumed_water_key', 0);
     if (_waterPointsAwardedToday) {
-      await prefs.setBool('water_points_awarded_key', false);
       if (globalPointsNotifier.value >= 20) {
         globalPointsNotifier.value -= 20;
       } else {
         globalPointsNotifier.value = 0;
+      } // Si reinicia manualmente el agua habiendo ganado el logro hoy, descontamos el día del contador histórico
+      if (_historicWaterDays > 0) {
+        _historicWaterDays -= 1;
       }
     }
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('user_consumed_water_key', 0);
+    await prefs.setBool('water_points_awarded_key', false);
     final Map<int, bool> currentCompletionMap = {
       for (var q in _quests) q.id: q.isCompleted
     };

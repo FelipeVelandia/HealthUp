@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +8,8 @@ import '../../services/food_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:nutrialg_life/models/puntos.dart';
+import 'package:nutrialg_life/points_manager.dart'; // ValueNotifiers globales
 
 class FoodRegistrationScreen extends StatefulWidget {
   const FoodRegistrationScreen({super.key});
@@ -56,9 +59,7 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
     'mL'
   ];
 
-  // Lista local para mostrar lo que se va registrando antes de guardar
   List<Map<String, dynamic>> _tempRegistry = [];
-
   int _waterAddedInSession = 0;
 
   void _addWater(int amount, String type) {
@@ -67,10 +68,10 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
         'name': 'Agua ($type)',
         'quantity': amount.toString(),
         'unit': 'mL',
-        'time': _selectedTime.format(context),
+        'time':
+            '${_selectedTime.hour.toString().padLeft(2, '0')}:${_selectedTime.minute.toString().padLeft(2, '0')}',
         'isWater': true,
       });
-      // Acumulamos el agua añadida temporalmente
       _waterAddedInSession += amount;
     });
     ScaffoldMessenger.of(context).showSnackBar(
@@ -80,20 +81,88 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
     );
   }
 
-  // NUEVO: Función para persistir el agua acumulada en el disco duro
-  Future<void> _saveWaterToStorage() async {
+  // MODIFICACIÓN: Lógica de persistencia de agua y actualización de logros sincronizada con PuntosModel
+  Future<void> _saveWaterAndProcessPoints(String userId) async {
     if (_waterAddedInSession <= 0) return;
+
     final prefs = await SharedPreferences.getInstance();
-    // Leemos lo que ya existía hoy y le sumamos lo nuevo
     final int currentSavedWater = prefs.getInt('user_consumed_water_key') ?? 0;
-    await prefs.setInt(
-        'user_consumed_water_key', currentSavedWater + _waterAddedInSession);
+    final int totalWaterToday = currentSavedWater + _waterAddedInSession;
+    await prefs.setInt('user_consumed_water_key', totalWaterToday);
+
+    final double userWeight = prefs.getDouble('user_weight_key') ?? 0.0;
+    final bool waterPointsAlreadyAwarded =
+        prefs.getBool('water_points_awarded_key') ?? false;
+
+    if (userWeight > 0 && !waterPointsAlreadyAwarded) {
+      final double totalMlGoal = userWeight * 22;
+
+      if (totalWaterToday >= totalMlGoal) {
+        await prefs.setBool('water_points_awarded_key', true);
+
+        // 1. Descargamos el estado actual del documento de puntos en Firestore
+        final docPuntos = await FirebaseFirestore.instance
+            .collection('puntos')
+            .doc(userId)
+            .get();
+
+        int puntosActualesEnNube = 0;
+        int historicExerciseDays = 0;
+        int historicWaterDays = 0;
+        int historicMealsCount = 0;
+
+        if (docPuntos.exists && docPuntos.data() != null) {
+          final puntosObj = PuntosModel.fromMap(userId, docPuntos.data());
+          puntosActualesEnNube = puntosObj.valor;
+          historicExerciseDays = puntosObj.historicExerciseDays;
+          historicWaterDays = puntosObj.historicWaterDays;
+          historicMealsCount = puntosObj.historicMealsCount;
+        }
+
+        // 2. Incrementamos la recompensa diaria y el logro de hidratación para AchievementsPage
+        int nuevosPuntos = puntosActualesEnNube + 20;
+        historicWaterDays += 1; // <--- Incremento directo del logro en la nube
+
+        globalPointsNotifier.value = nuevosPuntos;
+
+        // 3. Serializamos y guardamos el modelo expandido de vuelta a Firestore
+        final nuevosPuntosObj = PuntosModel(
+          uid: userId,
+          valor: nuevosPuntos,
+          historicExerciseDays: historicExerciseDays,
+          historicWaterDays: historicWaterDays,
+          historicMealsCount: historicMealsCount,
+        );
+
+        await FirebaseFirestore.instance
+            .collection('puntos')
+            .doc(userId)
+            .set(nuevosPuntosObj.toMap());
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  '💧 ¡Meta de agua alcanzada gracias a este registro! Progreso de logros actualizado.'),
+              backgroundColor: Colors.blue,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+      }
+    }
   }
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: _selectedTime,
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      },
     );
     if (picked != null) setState(() => _selectedTime = picked);
   }
@@ -125,7 +194,6 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
   void _addFoodToList() {
     String category = _categories[_selectedTab];
 
-    // 1. Validación básica de selección
     if (_selectedFood == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -142,7 +210,6 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
       return;
     }
 
-    // 2. Validación de texto vacío
     final String quantityText = _quantityController.text.trim();
     if (quantityText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -151,7 +218,6 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
       return;
     }
 
-    // 3. Validación de conversión numérica y valores mayores a cero
     final double? parsedQuantity = double.tryParse(quantityText);
     if (parsedQuantity == null || parsedQuantity <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -161,18 +227,15 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
       return;
     }
 
-    // 4. Si pasa todas las validaciones, se agrega al registro
     setState(() {
       _registry[category]!.add({
         'name': _selectedFood!.name,
-        // Guardamos el número formateado de manera limpia (ej: "2" o "2.5")
         'quantity': parsedQuantity % 1 == 0
             ? parsedQuantity.toInt().toString()
             : parsedQuantity.toString(),
         'unit': _selectedUnit,
-        'time': _selectedTime.format(context),
-
-        // Datos nutricionales para el historial
+        'time':
+            '${_selectedTime.hour.toString().padLeft(2, '0')}:${_selectedTime.minute.toString().padLeft(2, '0')}',
         'calories': _selectedFood!.calories,
         'protein': _selectedFood!.protein,
         'lipids': _selectedFood!.lipids,
@@ -180,7 +243,6 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
         'fiber': _selectedFood!.fiber,
       });
 
-      // Limpieza de campos post-guardado exitoso
       _selectedFood = null;
       _quantityController.clear();
       _selectedUnit = 'Seleccione';
@@ -210,7 +272,6 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  // 1. Selector de Categorías (Tabs) - SIEMPRE VISIBLE
                   SizedBox(
                       height: 40,
                       child: ListView.builder(
@@ -235,13 +296,8 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
                                                   ? Colors.white
                                                   : customColor))))))),
                   const SizedBox(height: 25),
-
-                  // 2. RENDERIZADO DINÁMICO SEGÚN LA PESTAÑA SELECCIONADA
                   if (isWater) ...[
-                    // Sección exclusiva de Agua
                     _buildWaterSection(),
-
-                    // Resumen temporal de agua (Solo si hay agua agregada en la sesión)
                     if (_tempRegistry.isNotEmpty) ...[
                       const Divider(height: 40),
                       const Text("Resumen actual:",
@@ -267,17 +323,24 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
                           )),
                     ],
                   ] else ...[
-                    // Sección exclusiva de Alimentos (Buscador, Tarjeta, Formulario e Historial)
+                    // SOLUCIÓN: Declaración e inferencia de tipos genéricos estrictos en todo el subárbol
                     Autocomplete<FoodItem>(
-                      displayStringForOption: (item) => item.name,
-                      optionsBuilder: (text) => text.text.isEmpty
-                          ? const Iterable.empty()
-                          : _allFoods.where((f) => f.name
-                              .toLowerCase()
-                              .contains(text.text.toLowerCase())),
-                      onSelected: (item) =>
+                      displayStringForOption: (FoodItem item) => item.name,
+                      optionsBuilder: (TextEditingValue textEditingValue) {
+                        if (textEditingValue.text.isEmpty) {
+                          return const Iterable<
+                              FoodItem>.empty(); // Retorno tipado explícito
+                        }
+                        return _allFoods.where((FoodItem f) => f.name
+                            .toLowerCase()
+                            .contains(textEditingValue.text.toLowerCase()));
+                      },
+                      onSelected: (FoodItem item) =>
                           setState(() => _selectedFood = item),
-                      fieldViewBuilder: (c, controller, focus, _) {
+                      fieldViewBuilder: (BuildContext c,
+                          TextEditingController controller,
+                          FocusNode focus,
+                          VoidCallback onFieldSubmitted) {
                         _autocompleteFieldController = controller;
                         return TextField(
                             controller: controller,
@@ -292,6 +355,7 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
                                         BorderSide(color: customColor))));
                       },
                     ),
+
                     if (_selectedFood != null) ...[
                       const SizedBox(height: 20),
                       Card(
@@ -340,7 +404,7 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
                                           decimal: true),
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
-                                        RegExp(r'^\d*\.?\d*')),
+                                        RegExp(r'^\d*.?\d*')),
                                   ],
                                   decoration: InputDecoration(
                                       labelText: "Cantidad",
@@ -352,7 +416,7 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
                                               color: customColor))))),
                           const SizedBox(width: 10),
                           Expanded(
-                              child: DropdownButtonFormField<String>(
+                              child: DropdownButtonFormField(
                                   value: _selectedUnit,
                                   items: _units
                                       .map((u) => DropdownMenuItem(
@@ -372,11 +436,10 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
                       const SizedBox(height: 20),
                       ListTile(
                           leading: Icon(Icons.access_time, color: customColor),
-                          title: Text("Hora: ${_selectedTime.format(context)}"),
+                          title: Text(
+                              "Hora: ${_selectedTime.hour.toString().padLeft(2, '0')}:${_selectedTime.minute.toString().padLeft(2, '0')}"),
                           onTap: () async {
-                            final t = await showTimePicker(
-                                context: context, initialTime: _selectedTime);
-                            if (t != null) setState(() => _selectedTime = t);
+                            await _selectTime(context);
                           }),
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -450,26 +513,19 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
                           : () async {
                               setState(() => _isSubmitting = true);
                               try {
-                                // OBTENEMOS EL ID DEL USUARIO ACTUAL DE FIREBASE AUTH
                                 final User? currentUser =
                                     FirebaseAuth.instance.currentUser;
-
                                 if (currentUser == null) {
                                   throw Exception(
                                       "No se encontró ningún usuario autenticado.");
                                 }
-
-                                // Enviamos el historial completo a la nube pasando su UID real
                                 await FoodFirestoreService.uploadRegistry(
                                   foodRegistry: _registry,
                                   waterAmount: _waterAddedInSession,
-                                  userId: currentUser
-                                      .uid, // Usamos el ID único del usuario autenticado
+                                  userId: currentUser.uid,
                                 );
-
-                                // Persistencia Local
-                                await _saveWaterToStorage();
-
+                                await _saveWaterAndProcessPoints(
+                                    currentUser.uid);
                                 if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
@@ -532,7 +588,8 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           leading: const Icon(Icons.access_time, color: Colors.blue),
-          title: Text("Hora del consumo: ${_selectedTime.format(context)}"),
+          title: Text(
+              "Hora del consumo: ${_selectedTime.hour.toString().padLeft(2, '0')}:${_selectedTime.minute.toString().padLeft(2, '0')}"),
         ),
       ],
     );

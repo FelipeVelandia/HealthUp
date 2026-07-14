@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nutrialg_life/points_manager.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:nutrialg_life/services/database_service.dart';
+import 'package:nutrialg_life/models/puntos.dart';
 
 class AchievementModel {
   final String title;
@@ -112,8 +115,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
     // --- CATEGORÍA: CONSTANCIA ESPECÍFICA ---
     AchievementModel(
       title: 'Hidratación Base',
-      description:
-          'Completa la meta de agua automatizada durante 3 días.',
+      description: 'Completa la meta de agua automatizada durante 3 días.',
       maxTarget: 3,
       icon: FontAwesomeIcons.faucetDrip,
       activeColor: Colors.cyan,
@@ -130,8 +132,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
     ),
     AchievementModel(
       title: 'Menú Disciplinado',
-      description:
-          'Registra y marca como completadas 20 comidas planificadas.',
+      description: 'Registra y marca como completadas 20 comidas planificadas.',
       maxTarget: 20,
       icon: FontAwesomeIcons.utensils,
       activeColor: Colors.pinkAccent,
@@ -151,17 +152,29 @@ class _AchievementsPageState extends State<AchievementsPage> {
   @override
   void initState() {
     super.initState();
-    _loadHistoricalStats();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadHistoricalStats();
+    });
   }
 
+  // MODIFICACIÓN: Recuperar las métricas de logros desde la colección dedicada 'puntos' en Firestore
   Future<void> _loadHistoricalStats() async {
-    final prefs = await SharedPreferences.getInstance();
+    final user = Provider.of<DatabaseService>(context, listen: false).user;
 
-    _historicExerciseDays =
-        prefs.getInt('historic_exercise_days_completed_key') ?? 0;
-    _historicWaterDays = prefs.getInt('historic_water_days_completed_key') ?? 0;
-    _historicMealsCount =
-        prefs.getInt('historic_meals_completed_count_key') ?? 0;
+    if (user != null) {
+      final docPuntos = await FirebaseFirestore.instance
+          .collection('puntos')
+          .doc(user.uid)
+          .get();
+
+      if (docPuntos.exists && docPuntos.data() != null) {
+        final puntosObj = PuntosModel.fromMap(user.uid, docPuntos.data());
+        _historicExerciseDays = puntosObj.historicExerciseDays;
+        _historicWaterDays = puntosObj.historicWaterDays;
+        _historicMealsCount = puntosObj.historicMealsCount;
+        globalPointsNotifier.value = puntosObj.valor;
+      }
+    }
 
     setState(() {
       _isLoading = false;
@@ -187,7 +200,6 @@ class _AchievementsPageState extends State<AchievementsPage> {
     }
   }
 
-  // Método para desplegar el Pop-up detallado del logro seleccionado
   void _showAchievementDetails(BuildContext context,
       AchievementModel achievement, int currentValue, bool isUnlocked) {
     showDialog(
@@ -294,7 +306,6 @@ class _AchievementsPageState extends State<AchievementsPage> {
               _getCurrentValueForAchievement(achievement, currentRewards);
           return current >= achievement.maxTarget;
         }).length;
-
         return Scaffold(
           backgroundColor: const Color(0xFFF5F5F5),
           body: Column(
@@ -323,18 +334,16 @@ class _AchievementsPageState extends State<AchievementsPage> {
                           const Text(
                             'Constancia Demostrada',
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             'Has desbloqueado $unlockedCount de ${_achievementsList.length} logros',
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.9),
-                              fontSize: 14,
-                            ),
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 14),
                           ),
                         ],
                       ),

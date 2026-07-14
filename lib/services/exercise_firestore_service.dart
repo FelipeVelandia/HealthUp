@@ -8,15 +8,20 @@ class ExerciseFirestoreService {
     required String activityName,
     required int durationMinutes,
     required DateTime scheduledTime,
-    required String userId, // Requerido y obligatorio igual que en tu FoodFirestoreService
+    required String userId, 
   }) async {
     try {
+      // Formateamos la hora y minutos en un String de 24H (Ej: "08:05" o "16:20")
+      final String horaFormateada24H = 
+          '${scheduledTime.hour.toString().padLeft(2, '0')}:${scheduledTime.minute.toString().padLeft(2, '0')}';
+
       final Map<String, dynamic> uploadData = {
-        'userId': userId, // Guardamos el ID real del usuario autenticado
-        'createdAt': FieldValue.serverTimestamp(), // Marca de tiempo del servidor
+        'userId': userId, 
+        'createdAt': FieldValue.serverTimestamp(), 
         'activityName': activityName,
         'durationMinutes': durationMinutes,
-        'scheduledTime': Timestamp.fromDate(scheduledTime), // Hora elegida
+        'scheduledTime': Timestamp.fromDate(scheduledTime), // Estampa de fecha y hora completa
+        'exerciseTime': horaFormateada24H, // <--- NUEVO: Hora explícita en formato de 24H guardada en Firestore
       };
 
       // Guarda con un ID de documento automático generado por .add()

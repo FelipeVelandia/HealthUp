@@ -6,6 +6,9 @@ import 'package:nutrialg_life/services/database_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nutrialg_life/points_manager.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:nutrialg_life/models/puntos.dart';
+import 'package:nutrialg_life/services/food_firestore_service.dart';
 
 import 'widgets/meal_card.dart';
 
@@ -29,14 +32,40 @@ class _DietPageState extends State<DietPage> {
   };
 
   bool _isLocalLoading = true;
+  dynamic _dietaDataCache;
+
+  int _historicExerciseDays = 0;
+  int _historicWaterDays = 0;
+  int _historicMealsCount = 0;
 
   @override
   void initState() {
     super.initState();
-    _loadLocalMealsState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadLocalMealsState();
+    });
   }
 
   Future<void> _loadLocalMealsState() async {
+    final user = Provider.of<DatabaseService>(context, listen: false).user;
+
+    if (user != null) {
+      final docPuntos = await FirebaseFirestore.instance
+          .collection('puntos')
+          .doc(user.uid)
+          .get();
+
+      if (docPuntos.exists && docPuntos.data() != null) {
+        final puntosObj = PuntosModel.fromMap(user.uid, docPuntos.data());
+        globalPointsNotifier.value = puntosObj.valor;
+        _historicExerciseDays = puntosObj.historicExerciseDays;
+        _historicWaterDays = puntosObj.historicWaterDays;
+        _historicMealsCount = puntosObj.historicMealsCount;
+      } else {
+        globalPointsNotifier.value = 0;
+      }
+    }
+
     final prefs = await SharedPreferences.getInstance();
     final String todayDateStr = DateTime.now().toString().split(' ')[0];
     final String lastOpenedDate =
@@ -75,63 +104,191 @@ class _DietPageState extends State<DietPage> {
   }
 
   Future<void> _saveLocalMealsState() async {
+    final user = Provider.of<DatabaseService>(context, listen: false).user;
+
+    if (user != null) {
+      final puntosObj = PuntosModel(
+        uid: user.uid,
+        valor: globalPointsNotifier.value,
+        historicExerciseDays: _historicExerciseDays,
+        historicWaterDays: _historicWaterDays,
+        historicMealsCount: _historicMealsCount,
+      );
+      await FirebaseFirestore.instance
+          .collection('puntos')
+          .doc(user.uid)
+          .set(puntosObj.toMap());
+    }
+
     final prefs = await SharedPreferences.getInstance();
     final String encoded = jsonEncode(_mealsCompletionMap);
     await prefs.setString('diet_meals_completion_key', encoded);
-    await prefs.setInt(
-        'user_accumulated_points_key', globalPointsNotifier.value);
+  }
+
+  // CORRECCIÓN DEFINITIVA: Extrae únicamente el String de la posición 0 sin convertir la lista entera
+  String _obtenerHoraSegura(dynamic mealList, String horaPorDefecto) {
+    try {
+      if (mealList == null || mealList is! List || mealList.isEmpty)
+        return horaPorDefecto;
+
+      // Accedemos estrictamente al primer elemento de la lista que contiene la hora
+      final primerElemento = mealList[0];
+
+      if (primerElemento == null) return horaPorDefecto;
+      if (primerElemento is String) return primerElemento;
+
+      if (primerElemento is Map) {
+        return (primerElemento['hora'] ??
+                primerElemento['time'] ??
+                horaPorDefecto)
+            .toString();
+      }
+
+      return horaPorDefecto;
+    } catch (e) {
+      return horaPorDefecto;
+    }
   }
 
   void _completeMealLocal(String mealLabel) async {
-    // Convertido a async para SharedPreferences
     if (_mealsCompletionMap[mealLabel] == true) return;
 
-    // 1. Obtener instancia de SharedPreferences e incrementar el contador histórico
-    final prefs = await SharedPreferences.getInstance();
-    int currentMealsCount =
-        prefs.getInt('historic_meals_completed_count_key') ?? 0;
-    currentMealsCount += 1;
-    await prefs.setInt('historic_meals_completed_count_key', currentMealsCount);
-
-    // 2. Actualizar el estado local y los puntos globales
-    setState(() {
-      _mealsCompletionMap[mealLabel] = true;
-      globalPointsNotifier.value += 20;
-    });
-
-    _saveLocalMealsState();
-
-    if (context.mounted) {
+    if (_dietaDataCache == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('¡$mealLabel completado! Ganaste +20 Pts 🍽️'),
-          backgroundColor: Colors.green,
-          duration: const Duration(seconds: 1),
+        const SnackBar(
+          content: Text(
+              '⚠️ Espera a que termine de cargar el plan de alimentación antes de completarlo.'),
+          backgroundColor: Colors.amber,
         ),
       );
+      return;
+    }
+
+    final user = Provider.of<DatabaseService>(context, listen: false).user;
+    if (user == null) return;
+
+    List<dynamic>? rawItemsList;
+    String horaComida = TimeOfDay.now().format(context);
+
+    try {
+      if (mealLabel == 'Desayuno') rawItemsList = _dietaDataCache.desayuno;
+      if (mealLabel == 'Media') rawItemsList = _dietaDataCache.media;
+      if (mealLabel == 'Almuerzo') rawItemsList = _dietaDataCache.almuerzo;
+      if (mealLabel == 'Merienda') rawItemsList = _dietaDataCache.merienda;
+      if (mealLabel == 'Cena') rawItemsList = _dietaDataCache.cena;
+    } catch (e) {
+      rawItemsList = null;
+    }
+
+    if (rawItemsList == null || rawItemsList.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              '⚠️ No hay alimentos cargados en esta categoría para guardar.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    Map<String, List<Map<String, dynamic>>> registryToUpload = {
+      'Desayuno': [],
+      'Almuerzo': [],
+      'Cena': [],
+      'Merienda': [],
+      'Media': [],
+      'Agua': []
+    };
+
+    horaComida =
+        _obtenerHoraSegura(rawItemsList, TimeOfDay.now().format(context));
+
+    for (int i = 1; i < rawItemsList.length; i++) {
+      final item = rawItemsList[i];
+      if (item != null) {
+        registryToUpload[mealLabel]!.add({
+          'name': item['titulo'] ?? 'Alimento de Dieta',
+          'quantity': item['cantidad']?.toString() ?? '1',
+          'unit': item['unidad']?.toString() ?? 'Porción',
+          'time': horaComida,
+          'calories':
+              double.tryParse(item['calories']?.toString() ?? '0') ?? 0.0,
+          'protein': double.tryParse(item['protein']?.toString() ?? '0') ?? 0.0,
+          'lipids': double.tryParse(item['lipids']?.toString() ?? '0') ?? 0.0,
+          'carbs': double.tryParse(item['carbs']?.toString() ?? '0') ?? 0.0,
+          'fiber': double.tryParse(item['fiber']?.toString() ?? '0') ?? 0.0,
+        });
+      }
+    }
+
+    try {
+      await FoodFirestoreService.uploadRegistry(
+        foodRegistry: registryToUpload,
+        waterAmount: 0,
+        userId: user.uid,
+      );
+
+      _historicMealsCount += 1;
+
+      setState(() {
+        _mealsCompletionMap[mealLabel] = true;
+        globalPointsNotifier.value += 20;
+      });
+
+      await _saveLocalMealsState();
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                '¡$mealLabel completado y sincronizado en la nube! +20 Pts 🍽️☁️'),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al guardar la comida en la nube: $e ❌'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
-  // Mapeador opcional si prefieres conservar tus funciones individuales en lugar de cambiar tu DatabaseService
-  Future<dynamic> _fetchDietaDinamica(String uid, int weekday) {
+  Future<dynamic> _fetchDietaDinamica(String uid, int weekday) async {
+    dynamic result;
     switch (weekday) {
       case DateTime.monday:
-        return firestore.getLunes(uid);
+        result = await firestore.getLunes(uid);
+        break;
       case DateTime.tuesday:
-        return firestore.getMartes(uid); // Asegúrate de tener estos métodos
+        result = await firestore.getMartes(uid);
+        break;
       case DateTime.wednesday:
-        return firestore.getMiercoles(uid);
+        result = await firestore.getMiercoles(uid);
+        break;
       case DateTime.thursday:
-        return firestore.getJueves(uid);
+        result = await firestore.getJueves(uid);
+        break;
       case DateTime.friday:
-        return firestore.getViernes(uid);
+        result = await firestore.getViernes(uid);
+        break;
       case DateTime.saturday:
-        return firestore.getSabado(uid);
+        result = await firestore.getSabado(uid);
+        break;
       case DateTime.sunday:
-        return firestore.getDomingo(uid);
+        result = await firestore.getDomingo(uid);
+        break;
       default:
-        return firestore.getLunes(uid);
+        result = await firestore.getLunes(uid);
+        break;
     }
+    _dietaDataCache = result;
+    return result;
   }
 
   @override
@@ -149,12 +306,7 @@ class _DietPageState extends State<DietPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: FutureBuilder(
-          // Opción dinámica usando el mapeador de tus métodos existentes
           future: _fetchDietaDinamica(user!.uid, dayNumber),
-
-          // O si actualizaste tu DatabaseService con el parámetro string (RECOMENDADO):
-          // future: firestore.getDietaPorDia(user!.uid, _getDiaQueryParam(dayNumber)),
-
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.data == null) {
@@ -167,11 +319,13 @@ class _DietPageState extends State<DietPage> {
                 return ListView(
                   children: [
                     // === DESAYUNO ===
-                    if (snapshot.data?.desayuno != null &&
+                    if (snapshot.data != null &&
+                        snapshot.data.desayuno != null &&
                         snapshot.data.desayuno.isNotEmpty)
                       MealCard(
                           label: 'Desayuno',
-                          time: snapshot.data.desayuno[0],
+                          time: _obtenerHoraSegura(
+                              snapshot.data.desayuno, "08:00"),
                           state: _mealsCompletionMap['Desayuno'] == true
                               ? 'completado'
                               : 'pendiente',
@@ -185,14 +339,14 @@ class _DietPageState extends State<DietPage> {
                                 mealTime: 'desayuno',
                                 label: snapshot.data.desayuno[index]['titulo'],
                                 index: index);
-                          })),
-
-                    // === MEDIA ===
-                    if (snapshot.data?.media != null &&
+                          })), // === MEDIA ===
+                    if (snapshot.data != null &&
+                        snapshot.data.media != null &&
                         snapshot.data.media.isNotEmpty)
                       MealCard(
                           label: 'Media',
-                          time: snapshot.data.media[0],
+                          time:
+                              _obtenerHoraSegura(snapshot.data.media, "11:00"),
                           state: _mealsCompletionMap['Media'] == true
                               ? 'completado'
                               : 'pendiente',
@@ -205,14 +359,14 @@ class _DietPageState extends State<DietPage> {
                                 mealTime: 'media',
                                 label: snapshot.data.media[index]['titulo'],
                                 index: index);
-                          })),
-
-                    // === ALMUERZO ===
-                    if (snapshot.data?.almuerzo != null &&
+                          })), // === ALMUERZO ===
+                    if (snapshot.data != null &&
+                        snapshot.data.almuerzo != null &&
                         snapshot.data.almuerzo.isNotEmpty)
                       MealCard(
                           label: 'Almuerzo',
-                          time: snapshot.data.almuerzo[0],
+                          time: _obtenerHoraSegura(
+                              snapshot.data.almuerzo, "14:00"),
                           state: _mealsCompletionMap['Almuerzo'] == true
                               ? 'completado'
                               : 'pendiente',
@@ -226,14 +380,14 @@ class _DietPageState extends State<DietPage> {
                                 mealTime: 'almuerzo',
                                 label: snapshot.data.almuerzo[index]['titulo'],
                                 index: index);
-                          })),
-
-                    // === MERIENDA ===
-                    if (snapshot.data?.merienda != null &&
+                          })), // === MERIENDA ===
+                    if (snapshot.data != null &&
+                        snapshot.data.merienda != null &&
                         snapshot.data.merienda.isNotEmpty)
                       MealCard(
                           label: 'Merienda',
-                          time: snapshot.data.merienda[0],
+                          time: _obtenerHoraSegura(
+                              snapshot.data.merienda, "17:00"),
                           state: _mealsCompletionMap['Merienda'] == true
                               ? 'completado'
                               : 'pendiente',
@@ -246,14 +400,13 @@ class _DietPageState extends State<DietPage> {
                                 mealTime: 'merienda',
                                 label: snapshot.data.merienda[index]['titulo'],
                                 index: index);
-                          })),
-
-                    // === CENA ===
-                    if (snapshot.data?.cena != null &&
+                          })), // === CENA ===
+                    if (snapshot.data != null &&
+                        snapshot.data.cena != null &&
                         snapshot.data.cena.isNotEmpty)
                       MealCard(
                           label: 'Cena',
-                          time: snapshot.data.cena[0],
+                          time: _obtenerHoraSegura(snapshot.data.cena, "21:00"),
                           state: _mealsCompletionMap['Cena'] == true
                               ? 'completado'
                               : 'pendiente',

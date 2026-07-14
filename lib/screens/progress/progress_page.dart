@@ -7,6 +7,8 @@ import 'dart:math';
 import 'package:flutter/services.dart';
 import 'package:nutrialg_life/services/database_service.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:nutrialg_life/models/puntos.dart';
 
 class ProgressPage extends StatelessWidget {
   ProgressPage({super.key});
@@ -14,7 +16,7 @@ class ProgressPage extends StatelessWidget {
 
   final int _pointsGoal = 20; // Meta fija de puntos
 
-  // NUEVO: Generador de saludo dinámico y empático según la hora real del dispositivo
+  // Generador de saludo dinámico y empático según la hora real del dispositivo
   String _getFriendlyGreeting() {
     final int hour = DateTime.now().hour;
     if (hour >= 6 && hour < 12) {
@@ -27,6 +29,7 @@ class ProgressPage extends StatelessWidget {
   }
 
   void _claimReward(BuildContext context) async {
+    final user = Provider.of<DatabaseService>(context, listen: false).user;
     final prefs = await SharedPreferences.getInstance();
 
     // Conservamos los puntos excedentes de forma matemática justa
@@ -34,8 +37,39 @@ class ProgressPage extends StatelessWidget {
     final int puntosExcedentes = puntosActuales - _pointsGoal;
 
     globalPointsNotifier.value = puntosExcedentes > 0 ? puntosExcedentes : 0;
-    await prefs.setInt(
-        'user_accumulated_points_key', globalPointsNotifier.value);
+
+    // MODIFICACIÓN: Al obtener el documento actual de puntos para no borrar los contadores históricos al restar puntos
+    if (user != null) {
+      final docPuntos = await FirebaseFirestore.instance
+          .collection('puntos')
+          .doc(user.uid)
+          .get();
+
+      int historicExerciseDays = 0;
+      int historicWaterDays = 0;
+      int historicMealsCount = 0;
+
+      if (docPuntos.exists && docPuntos.data() != null) {
+        final actualPuntosObj = PuntosModel.fromMap(user.uid, docPuntos.data());
+        historicExerciseDays = actualPuntosObj.historicExerciseDays;
+        historicWaterDays = actualPuntosObj.historicWaterDays;
+        historicMealsCount = actualPuntosObj.historicMealsCount;
+      }
+
+      // Creamos el nuevo objeto conservando las variables de logros intactas
+      final puntosObj = PuntosModel(
+        uid: user.uid,
+        valor: globalPointsNotifier.value,
+        historicExerciseDays: historicExerciseDays,
+        historicWaterDays: historicWaterDays,
+        historicMealsCount: historicMealsCount,
+      );
+
+      await FirebaseFirestore.instance
+          .collection('puntos')
+          .doc(user.uid)
+          .set(puntosObj.toMap());
+    }
 
     globalRewardsNotifier.value += 1;
     await prefs.setInt('user_claimed_rewards_key', globalRewardsNotifier.value);
@@ -65,7 +99,7 @@ class ProgressPage extends StatelessWidget {
           SnackBar(
             content: Text(
                 '📋 ¡Premio #${indiceAleatorio + 1} copiado! Pégalo en tu navegador.'),
-            backgroundColor: Color(0xFFB71C1C),
+            backgroundColor: const Color(0xFFB71C1C),
             duration: const Duration(seconds: 3),
           ),
         );
@@ -122,7 +156,7 @@ class ProgressPage extends StatelessWidget {
                       label: const Text('Copiar Enlace',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFFB71C1C),
+                        backgroundColor: const Color(0xFFB71C1C),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
@@ -160,11 +194,10 @@ class ProgressPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Quita la flecha de regreso
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        toolbarHeight:
-            0, // Ocultamos el AppBar tradicional para darle más espacio al nuevo banner visual
+        toolbarHeight: 0,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
@@ -181,176 +214,199 @@ class ProgressPage extends StatelessWidget {
                   );
                 } else {
                   var nombre = snapshot.data.nombre;
-                  return Column(
-                    children: [
-                      // NUEVO: Banner de Bienvenida Llamativo y Vistoso con Degradado
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [
-                              Color(0xFFB71C1C),
-                              Color(0xFFE57373)
-                            ], // Tonos verdes de tu app
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFFE57373).withOpacity(0.3),
-                              blurRadius: 12,
-                              offset: const Offset(0, 6),
-                            )
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _getFriendlyGreeting(),
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              '¡Qué alegría verte de nuevo $nombre! Vamos a revisar los grandes pasos y metas que has conquistado hoy. ✨',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white.withOpacity(0.9),
-                                fontWeight: FontWeight.w500,
-                                height: 1.4,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 5),
 
-                      // PANEL PRINCIPAL DE PROGRESO
-                      Card(
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 32.0, horizontal: 24.0),
-                          child: ValueListenableBuilder<int>(
-                            valueListenable: globalPointsNotifier,
-                            builder: (context, totalPoints, child) {
-                              double percentage =
-                                  (totalPoints / _pointsGoal).clamp(0.0, 1.0);
-                              bool canClaim = totalPoints >= _pointsGoal;
+                  // MODIFICACIÓN: Integración de la lectura asíncrona mediante PuntosModel mapeando el documento de Firestore
+                  return FutureBuilder<DocumentSnapshot>(
+                    future: FirebaseFirestore.instance
+                        .collection('puntos')
+                        .doc(user.uid)
+                        .get(),
+                    builder: (context, puntosSnapshot) {
+                      if (puntosSnapshot.connectionState ==
+                          ConnectionState.done) {
+                        if (puntosSnapshot.hasData &&
+                            puntosSnapshot.data!.exists) {
+                          final puntosObj = PuntosModel.fromMap(
+                              user.uid,
+                              puntosSnapshot.data!.data()
+                                  as Map<String, dynamic>?);
+                          globalPointsNotifier.value = puntosObj.valor;
+                        } else {
+                          globalPointsNotifier.value = 0;
+                        }
+                      }
 
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Text(
-                                    'Progreso de Nivel',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black87),
+                      return Column(
+                        children: [
+                          // BANNER DE BIENVENIDA
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(20.0),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFFB71C1C), Color(0xFFE57373)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(24),
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      const Color(0xFFE57373).withOpacity(0.3),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 6),
+                                )
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _getFriendlyGreeting(),
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    letterSpacing: 0.5,
                                   ),
-                                  const SizedBox(height: 24),
-
-                                  // Barra circular
-                                  Stack(
-                                    alignment: Alignment.center,
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  '¡Qué alegría verte de nuevo $nombre! Vamos a revisar los grandes pasos y metas que has conquistado hoy. ✨',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white.withOpacity(0.9),
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.4,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                              height: 5), // PANEL PRINCIPAL DE PROGRESO
+                          Card(
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 32.0, horizontal: 24.0),
+                              child: ValueListenableBuilder(
+                                valueListenable: globalPointsNotifier,
+                                builder: (context, totalPoints, child) {
+                                  double percentage =
+                                      (totalPoints / _pointsGoal)
+                                          .clamp(0.0, 1.0);
+                                  bool canClaim = totalPoints >= _pointsGoal;
+                                  return Column(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      SizedBox(
-                                        width: 180,
-                                        height: 180,
-                                        child: CircularProgressIndicator(
-                                          value: percentage,
-                                          strokeWidth: 14,
-                                          backgroundColor: Colors.grey.shade200,
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  canClaim
-                                                      ? Colors.green
-                                                      : Colors.blue),
-                                          strokeCap: StrokeCap.round,
-                                        ),
+                                      const Text(
+                                        'Progreso de Nivel',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black87),
                                       ),
-                                      Column(
-                                        mainAxisSize: MainAxisSize.min,
+                                      const SizedBox(
+                                          height: 24), // Barra circular
+                                      Stack(
+                                        alignment: Alignment.center,
                                         children: [
-                                          Text(
-                                            '$totalPoints',
-                                            style: TextStyle(
-                                                fontSize: 36,
-                                                fontWeight: FontWeight.bold,
-                                                color: canClaim
-                                                    ? Colors.green
-                                                    : Colors.blue),
+                                          SizedBox(
+                                            width: 180,
+                                            height: 180,
+                                            child: CircularProgressIndicator(
+                                              value: percentage,
+                                              strokeWidth: 14,
+                                              backgroundColor:
+                                                  Colors.grey.shade200,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation(
+                                                      canClaim
+                                                          ? Colors.green
+                                                          : Colors.blue),
+                                              strokeCap: StrokeCap.round,
+                                            ),
                                           ),
-                                          Text(
-                                            '/ $_pointsGoal Pts',
-                                            style: const TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey,
-                                                fontWeight: FontWeight.w500),
+                                          Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                '$totalPoints',
+                                                style: TextStyle(
+                                                    fontSize: 36,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: canClaim
+                                                        ? Colors.green
+                                                        : Colors.blue),
+                                              ),
+                                              Text(
+                                                '/ $_pointsGoal Pts',
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.grey,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
+                                      const SizedBox(height: 32),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: ElevatedButton.icon(
+                                          icon: const Icon(Icons.card_giftcard),
+                                          label: const Text(
+                                            'Reclamar Recompensa',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.green,
+                                            foregroundColor: Colors.white,
+                                            disabledBackgroundColor:
+                                                Colors.grey.shade300,
+                                            disabledForegroundColor:
+                                                Colors.grey.shade500,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12)),
+                                            elevation: canClaim ? 4 : 0,
+                                          ),
+                                          onPressed: canClaim
+                                              ? () => _claimReward(context)
+                                              : null,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 32),
+                                      ExamCard(
+                                        description:
+                                            "Formulario de antecedentes",
+                                        completed: false,
+                                        onTap: () => GoRouter.of(context)
+                                            .push("/initial"),
+                                      ),
+                                      const SizedBox(height: 25),
+                                      ExamCard(
+                                        description: "Misiones Diarias",
+                                        completed: false,
+                                        onTap: () =>
+                                            GoRouter.of(context).push("/daily"),
+                                      ),
                                     ],
-                                  ),
-                                  const SizedBox(height: 32),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    height: 50,
-                                    child: ElevatedButton.icon(
-                                      icon: const Icon(Icons.card_giftcard),
-                                      label: const Text(
-                                        'Reclamar Recompensa',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.green,
-                                        foregroundColor: Colors.white,
-                                        disabledBackgroundColor:
-                                            Colors.grey.shade300,
-                                        disabledForegroundColor:
-                                            Colors.grey.shade500,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12)),
-                                        elevation: canClaim ? 4 : 0,
-                                      ),
-                                      onPressed: canClaim
-                                          ? () => _claimReward(context)
-                                          : null,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 32),
-                                  ExamCard(
-                                    description: "Formulario de antecedentes",
-                                    completed: false,
-                                    onTap: () =>
-                                        GoRouter.of(context).push("/initial"),
-                                  ),
-                                  const SizedBox(height: 25),
-                                  ExamCard(
-                                    description: "Misiones Diarias",
-                                    completed: false,
-                                    onTap: () =>
-                                        GoRouter.of(context).push("/daily"),
-                                  ),
-                                ],
-                              );
-                            },
+                                  );
+                                },
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
+                        ],
+                      );
+                    },
                   );
                 }
               } else if (snapshot.connectionState == ConnectionState.waiting) {

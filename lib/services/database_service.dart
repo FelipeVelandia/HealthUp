@@ -56,6 +56,9 @@ class DatabaseService extends ChangeNotifier {
         // Insertar los datos del usuario en Firestore
         await _firestore.collection('pacientes').doc(userId).set(data);
 
+        // Inicializar los puntos en 0 en la nueva colección independiente
+        await guardarPuntosFirestore(userId, 0);
+
         // Comlpetar Initial Survey
         _onBoard = false;
 
@@ -143,7 +146,7 @@ class DatabaseService extends ChangeNotifier {
         .collection('dietas')
         .doc(id)
         .collection('plan')
-        .doc('mar')
+        .doc('lun')
         .get();
 
     return Plan.fromMap(snap.data());
@@ -242,6 +245,33 @@ class DatabaseService extends ChangeNotifier {
     } catch (e) {
       print("Error al obtener el informe nutrigenético: $e");
       return null;
+    }
+  }
+
+  /// NUEVO: Obtiene los puntos desde la colección independiente 'puntos'
+  Future<int> obtenerPuntosFirestore(String uid) async {
+    try {
+      final snap = await _firestore.collection('puntos').doc(uid).get();
+      if (snap.exists && snap.data() != null) {
+        return (snap.data()!['puntos'] ?? 0) as int;
+      }
+      return 0;
+    } catch (e) {
+      print("Error al leer de la colección puntos: $e");
+      return 0;
+    }
+  }
+
+  /// NUEVO: Guarda o actualiza los puntos en la colección independiente 'puntos'
+  Future<void> guardarPuntosFirestore(String uid, int puntos) async {
+    try {
+      await _firestore.collection('puntos').doc(uid).set(
+        {'puntos': puntos},
+        SetOptions(merge: true),
+      );
+      notifyListeners();
+    } catch (e) {
+      print("Error al escribir en la colección puntos: $e");
     }
   }
 }

@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Importación para extraer el usuario activo
-import 'package:nutrialg_life/services/exercise_firestore_service.dart'; // Importación del nuevo servicio
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:nutrialg_life/services/exercise_firestore_service.dart';
 
 class ExerciseRegistrationPage extends StatefulWidget {
   const ExerciseRegistrationPage({super.key});
 
+  Widget build(BuildContext context) {
+    return const _ExerciseRegistrationPageBody();
+  }
+
   @override
   State<ExerciseRegistrationPage> createState() =>
       _ExerciseRegistrationPageState();
+}
+
+class _ExerciseRegistrationPageBody extends StatelessWidget {
+  const _ExerciseRegistrationPageBody();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox.shrink();
+  }
 }
 
 class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
@@ -19,7 +32,6 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
       TextEditingController();
   TimeOfDay _selectedTime = TimeOfDay.now();
 
-  // NUEVO: Estado idéntico al de tu FoodRegistrationScreen para el control de guardado
   bool _isSubmitting = false;
 
   final List<String> _activities = [
@@ -43,14 +55,16 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
               onSurface: Color(0xFF3E302D),
             ),
           ),
-          child: child!,
+          child: MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+            child: child!,
+          ),
         );
       },
     );
     if (picked != null) setState(() => _selectedTime = picked);
   }
 
-  // MODIFICADO: Ahora es una función asíncrona que gestiona la subida en la nube
   Future<void> _procesarRegistro() async {
     if (selectedActivity == null) {
       _showError("⚠️ Selecciona una actividad");
@@ -73,7 +87,6 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
       return;
     }
 
-    // Activamos el estado de envío tal como lo haces con los alimentos
     setState(() => _isSubmitting = true);
 
     String nombreActividad = selectedActivity == 'Otros'
@@ -81,14 +94,14 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
         : selectedActivity!;
 
     try {
-      // OBTENEMOS EL ID DEL USUARIO ACTUAL DE FIREBASE AUTH
       final User? currentUser = FirebaseAuth.instance.currentUser;
 
       if (currentUser == null) {
         throw Exception("No se encontró ningún usuario autenticado.");
       }
 
-      // Reconstruimos la estampa de tiempo usando la fecha de hoy más la hora elegida
+      // Dentro de tu _ExerciseRegistrationPageState en el método _procesarRegistro():
+
       final ahora = DateTime.now();
       final fechaCompletaActividad = DateTime(
         ahora.year,
@@ -98,12 +111,12 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
         _selectedTime.minute,
       );
 
-      // Enviamos el registro a la nube pasando su UID real usando el servicio estático
+// Llama al servicio pasando el DateTime nativo requerido
       await ExerciseFirestoreService.uploadExercise(
         activityName: nombreActividad,
         durationMinutes: duracionMinutos,
         scheduledTime: fechaCompletaActividad,
-        userId: currentUser.uid, // Mismo parámetro obligatorio de tu modelo
+        userId: currentUser.uid,
       );
 
       if (context.mounted) {
@@ -138,18 +151,17 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
   void _showConfirmacion(String nombreActividad) {
     showDialog(
       context: context,
-      barrierDismissible:
-          false, // Forzamos el flujo controlado igual que en alimentos
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         title: const Text("Registro Guardado"),
         content: Text(
-            "Actividad: $nombreActividad\nDuración: ${_durationController.text} min\nHora: ${_selectedTime.format(context)}"),
+            "Actividad: $nombreActividad\nDuración: ${_durationController.text} min\nHora: ${_selectedTime.hour.toString().padLeft(2, '0')}:${_selectedTime.minute.toString().padLeft(2, '0')}"),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context); // Cierra diálogo
-              context.pop(); // Regresa al Home
+              Navigator.pop(context);
+              context.pop();
             },
             child: const Text("ACEPTAR",
                 style: TextStyle(color: Color(0xFFE57373))),
@@ -173,9 +185,7 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
         foregroundColor: const Color(0xFF3E302D),
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: () => _isSubmitting
-              ? null
-              : context.pop(), // Bloqueamos la salida si está subiendo datos
+          onPressed: () => _isSubmitting ? null : context.pop(),
         ),
       ),
       body: SingleChildScrollView(
@@ -187,7 +197,6 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
                 style: TextStyle(
                     fontWeight: FontWeight.bold, color: Color(0xFF3E302D))),
             const SizedBox(height: 12),
-
             DropdownButtonFormField<String>(
               value: selectedActivity,
               hint: const Text("Selecciona una actividad"),
@@ -205,17 +214,15 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
                   .toList(),
               onChanged: _isSubmitting
                   ? null
-                  : (val) => setState(
-                      () => selectedActivity = val), // Congelamos en carga
+                  : (val) => setState(() => selectedActivity = val),
             ),
-
             if (selectedActivity == 'Otros') ...[
               const SizedBox(height: 15),
               TextField(
                 controller: _otherActivityController,
-                enabled: !_isSubmitting, // Deshabilitamos en carga
+                enabled: !_isSubmitting,
                 decoration: InputDecoration(
-                  hintText: "¿Cuál actividad?",
+                  hintText: "@Cuál actividad?",
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -224,17 +231,15 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
                 ),
               ),
             ],
-
             const SizedBox(height: 25),
             const Text("¿Cuánto tiempo? (minutos)",
                 style: TextStyle(
                     fontWeight: FontWeight.bold, color: Color(0xFF3E302D))),
             const SizedBox(height: 12),
-
             TextField(
               controller: _durationController,
               keyboardType: TextInputType.number,
-              enabled: !_isSubmitting, // Deshabilitamos en carga
+              enabled: !_isSubmitting,
               decoration: InputDecoration(
                 hintText: "Ej: 30",
                 filled: true,
@@ -246,18 +251,13 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
                     size: 18, color: greenPrimary),
               ),
             ),
-
             const SizedBox(height: 25),
             const Text("¿A qué hora?",
                 style: TextStyle(
                     fontWeight: FontWeight.bold, color: Color(0xFF3E302D))),
             const SizedBox(height: 12),
-
             InkWell(
-              onTap: _isSubmitting
-                  ? null
-                  : () => _selectTime(
-                      context), // Congelamos el gestor de tiempo en carga
+              onTap: _isSubmitting ? null : () => _selectTime(context),
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -268,7 +268,8 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
                   children: [
                     const Icon(Icons.access_time, color: greenPrimary),
                     const SizedBox(width: 12),
-                    Text(_selectedTime.format(context),
+                    Text(
+                        "${_selectedTime.hour.toString().padLeft(2, '0')}:${_selectedTime.minute.toString().padLeft(2, '0')}",
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w500)),
                     const Spacer(),
@@ -277,10 +278,7 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
                 ),
               ),
             ),
-
             const SizedBox(height: 40),
-
-            // RENDERIZADO DEL BOTÓN DE GUARDADO ADAPTADO
             SizedBox(
               width: double.infinity,
               height: 55,
@@ -291,12 +289,9 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
                       borderRadius: BorderRadius.circular(12)),
                   elevation: 0,
                 ),
-                onPressed: _isSubmitting
-                    ? null
-                    : _procesarRegistro, // Control de envío
+                onPressed: _isSubmitting ? null : _procesarRegistro,
                 child: _isSubmitting
-                    ? const CircularProgressIndicator(
-                        color: Colors.white) // Spinner idéntico
+                    ? const CircularProgressIndicator(color: Colors.white)
                     : const Text("GUARDAR ACTIVIDAD",
                         style: TextStyle(
                             color: Colors.white,
