@@ -37,6 +37,7 @@ class _DailyQuestsScreenState extends State<DailyPage> {
   int _historicExerciseDays = 0;
   int _historicWaterDays = 0;
   int _historicMealsCount = 0;
+  int _historicRewardsCount = 0; // <--- NUEVA VARIABLE DE ESTADO EN LA PÁGINA
 
   // Instancia del servicio de base de datos
   final firestore = DatabaseService();
@@ -93,7 +94,7 @@ class _DailyQuestsScreenState extends State<DailyPage> {
           final user =
               Provider.of<DatabaseService>(context, listen: false).user;
           if (user != null) {
-            // MODIFICACIÓN: Incrementar contador histórico de agua y persistir en el modelo de Firestore
+            // MODIFICACIÓN: Incrementar contador histórico de agua y persistir con PuntosModel completo sin dañar premios
             _historicWaterDays += 1;
 
             final puntosObj = PuntosModel(
@@ -102,6 +103,8 @@ class _DailyQuestsScreenState extends State<DailyPage> {
               historicExerciseDays: _historicExerciseDays,
               historicWaterDays: _historicWaterDays,
               historicMealsCount: _historicMealsCount,
+              historicRewardsCount:
+                  _historicRewardsCount, // <--- ADICIÓN PROTECTORA
             );
             await FirebaseFirestore.instance
                 .collection('puntos')
@@ -164,10 +167,10 @@ class _DailyQuestsScreenState extends State<DailyPage> {
     ];
   }
 
+  // MODIFICACIÓN COMPLETA: Sincronización nativa que incluye el mapeo seguro de historicRewardsCount
   Future<void> _loadDataFromStorage() async {
     final user = Provider.of<DatabaseService>(context, listen: false).user;
 
-    // MODIFICACIÓN: Leer puntos y contadores de logros unificados utilizando PuntosModel de Firestore
     if (user != null) {
       final docPuntos = await FirebaseFirestore.instance
           .collection('puntos')
@@ -179,6 +182,8 @@ class _DailyQuestsScreenState extends State<DailyPage> {
         _historicExerciseDays = puntosObj.historicExerciseDays;
         _historicWaterDays = puntosObj.historicWaterDays;
         _historicMealsCount = puntosObj.historicMealsCount;
+        _historicRewardsCount =
+            puntosObj.historicRewardsCount; // <--- OBTENCIÓN NATIVA DE PREMIOS
       } else {
         globalPointsNotifier.value = 0;
       }
@@ -191,7 +196,6 @@ class _DailyQuestsScreenState extends State<DailyPage> {
       _weightController.text = _userWeight.toStringAsFixed(1);
     }
 
-    // --- NUEVA LÓGICA DE CONTROL DE CAMBIO DE DÍA ---
     final String todayDateStr = DateTime.now().toString().split(' ')[0];
     final String lastOpenedDate =
         prefs.getString('last_daily_opened_date_key') ?? "";
@@ -215,7 +219,6 @@ class _DailyQuestsScreenState extends State<DailyPage> {
       _saveDataToStorage();
       return;
     }
-    // ------------------------------------------------
 
     _consumedWater = prefs.getInt('user_consumed_water_key') ?? 0;
     _waterPointsAwardedToday =
@@ -240,10 +243,10 @@ class _DailyQuestsScreenState extends State<DailyPage> {
     _saveDataToStorage();
   }
 
+  // MODIFICACIÓN COMPLETA: Almacenamiento unificado que previene la sobreescritura accidental del contador de logros
   Future<void> _saveDataToStorage() async {
     final user = Provider.of<DatabaseService>(context, listen: false).user;
 
-    // MODIFICACIÓN: Guardado general de datos tipados mediante PuntosModel en Firestore
     if (user != null) {
       final puntosObj = PuntosModel(
         uid: user.uid,
@@ -251,6 +254,8 @@ class _DailyQuestsScreenState extends State<DailyPage> {
         historicExerciseDays: _historicExerciseDays,
         historicWaterDays: _historicWaterDays,
         historicMealsCount: _historicMealsCount,
+        historicRewardsCount:
+            _historicRewardsCount, // <--- INTEGRADO AL CONSTRUCTOR COMPLETO
       );
       await FirebaseFirestore.instance
           .collection('puntos')
@@ -347,8 +352,7 @@ class _DailyQuestsScreenState extends State<DailyPage> {
   }
 
   @override
-  Widget
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -561,8 +565,7 @@ class _DailyQuestsScreenState extends State<DailyPage> {
                           quest.isCompleted = value ?? false;
                         });
                         if (quest.isCompleted) {
-                          globalPointsNotifier.value +=
-                              20; // MODIFICACIÓN: Incrementar el contador histórico de ejercicio en la variable local antes de salvar en Firestore
+                          globalPointsNotifier.value += 20;
                           if (quest.id == 1) {
                             _historicExerciseDays += 1;
                           }
@@ -580,7 +583,7 @@ class _DailyQuestsScreenState extends State<DailyPage> {
                             globalPointsNotifier.value -= 20;
                             if (globalPointsNotifier.value < 0) {
                               globalPointsNotifier.value = 0;
-                            } // Si se desmarca, descontamos de forma matemática del contador local
+                            }
                             if (quest.id == 1 && _historicExerciseDays > 0) {
                               _historicExerciseDays -= 1;
                             }
@@ -602,7 +605,7 @@ class _DailyQuestsScreenState extends State<DailyPage> {
         globalPointsNotifier.value -= 20;
       } else {
         globalPointsNotifier.value = 0;
-      } // Si reinicia manualmente el agua habiendo ganado el logro hoy, descontamos el día del contador histórico
+      }
       if (_historicWaterDays > 0) {
         _historicWaterDays -= 1;
       }

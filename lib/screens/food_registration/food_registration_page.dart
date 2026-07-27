@@ -81,7 +81,7 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
     );
   }
 
-  // MODIFICACIÓN: Lógica de persistencia de agua y actualización de logros sincronizada con PuntosModel
+  // MODIFICACIÓN COMPLETA: Sincronización nativa con PuntosModel incluyendo el historicRewardsCount
   Future<void> _saveWaterAndProcessPoints(String userId) async {
     if (_waterAddedInSession <= 0) return;
 
@@ -110,6 +110,7 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
         int historicExerciseDays = 0;
         int historicWaterDays = 0;
         int historicMealsCount = 0;
+        int historicRewardsCount = 0; // <--- AGREGADO
 
         if (docPuntos.exists && docPuntos.data() != null) {
           final puntosObj = PuntosModel.fromMap(userId, docPuntos.data());
@@ -117,21 +118,25 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
           historicExerciseDays = puntosObj.historicExerciseDays;
           historicWaterDays = puntosObj.historicWaterDays;
           historicMealsCount = puntosObj.historicMealsCount;
+          historicRewardsCount =
+              puntosObj.historicRewardsCount; // <--- EXTRACTO SEGURO NATIVO
         }
 
-        // 2. Incrementamos la recompensa diaria y el logro de hidratación para AchievementsPage
+        // 2. Incrementamos los puntos y el logro de hidratación
         int nuevosPuntos = puntosActualesEnNube + 20;
-        historicWaterDays += 1; // <--- Incremento directo del logro en la nube
+        historicWaterDays += 1;
 
         globalPointsNotifier.value = nuevosPuntos;
 
-        // 3. Serializamos y guardamos el modelo expandido de vuelta a Firestore
+        // 3. Serializamos usando el constructor nativo completo sin destruir el histórico de premios
         final nuevosPuntosObj = PuntosModel(
           uid: userId,
           valor: nuevosPuntos,
           historicExerciseDays: historicExerciseDays,
           historicWaterDays: historicWaterDays,
           historicMealsCount: historicMealsCount,
+          historicRewardsCount:
+              historicRewardsCount, // <--- PERSISTENCIA GARANTIZADA EN LA NUBE
         );
 
         await FirebaseFirestore.instance
@@ -323,19 +328,19 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
                           )),
                     ],
                   ] else ...[
-                    // SOLUCIÓN: Declaración e inferencia de tipos genéricos estrictos en todo el subárbol
+                    // SOLUCIÓN: Añadido tipo explícito <FoodItem> en onSelected para alinearse con la inferencia de tipos de Dart
                     Autocomplete<FoodItem>(
                       displayStringForOption: (FoodItem item) => item.name,
                       optionsBuilder: (TextEditingValue textEditingValue) {
                         if (textEditingValue.text.isEmpty) {
-                          return const Iterable<
-                              FoodItem>.empty(); // Retorno tipado explícito
+                          return const Iterable<FoodItem>.empty();
                         }
                         return _allFoods.where((FoodItem f) => f.name
                             .toLowerCase()
                             .contains(textEditingValue.text.toLowerCase()));
                       },
-                      onSelected: (FoodItem item) =>
+                      onSelected: (FoodItem
+                              item) => // <--- Corregido: Se remueve la ambigüedad tipando explícitamente el parámetro del callback
                           setState(() => _selectedFood = item),
                       fieldViewBuilder: (BuildContext c,
                           TextEditingController controller,
@@ -355,7 +360,6 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
                                         BorderSide(color: customColor))));
                       },
                     ),
-
                     if (_selectedFood != null) ...[
                       const SizedBox(height: 20),
                       Card(

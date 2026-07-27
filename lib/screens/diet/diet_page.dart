@@ -37,6 +37,7 @@ class _DietPageState extends State<DietPage> {
   int _historicExerciseDays = 0;
   int _historicWaterDays = 0;
   int _historicMealsCount = 0;
+  int _historicRewardsCount = 0; // <--- NUEVA VARIABLE DE ESTADO EN LA PÁGINA
 
   @override
   void initState() {
@@ -46,6 +47,7 @@ class _DietPageState extends State<DietPage> {
     });
   }
 
+  // MODIFICACIÓN COMPLETA: Carga nativa que incluye el contador de premios históricos
   Future<void> _loadLocalMealsState() async {
     final user = Provider.of<DatabaseService>(context, listen: false).user;
 
@@ -61,6 +63,8 @@ class _DietPageState extends State<DietPage> {
         _historicExerciseDays = puntosObj.historicExerciseDays;
         _historicWaterDays = puntosObj.historicWaterDays;
         _historicMealsCount = puntosObj.historicMealsCount;
+        _historicRewardsCount =
+            puntosObj.historicRewardsCount; // <--- ADQUISICIÓN NATIVA SEGURA
       } else {
         globalPointsNotifier.value = 0;
       }
@@ -103,6 +107,7 @@ class _DietPageState extends State<DietPage> {
     }
   }
 
+  // MODIFICACIÓN COMPLETA: Guardado nativo usando el PuntosModel expandido para proteger los premios
   Future<void> _saveLocalMealsState() async {
     final user = Provider.of<DatabaseService>(context, listen: false).user;
 
@@ -113,6 +118,8 @@ class _DietPageState extends State<DietPage> {
         historicExerciseDays: _historicExerciseDays,
         historicWaterDays: _historicWaterDays,
         historicMealsCount: _historicMealsCount,
+        historicRewardsCount:
+            _historicRewardsCount, // <--- INTEGRADO AL MODELO NATIVO
       );
       await FirebaseFirestore.instance
           .collection('puntos')
@@ -125,13 +132,11 @@ class _DietPageState extends State<DietPage> {
     await prefs.setString('diet_meals_completion_key', encoded);
   }
 
-  // CORRECCIÓN DEFINITIVA: Extrae únicamente el String de la posición 0 sin convertir la lista entera
   String _obtenerHoraSegura(dynamic mealList, String horaPorDefecto) {
     try {
       if (mealList == null || mealList is! List || mealList.isEmpty)
         return horaPorDefecto;
 
-      // Accedemos estrictamente al primer elemento de la lista que contiene la hora
       final primerElemento = mealList[0];
 
       if (primerElemento == null) return horaPorDefecto;
@@ -259,6 +264,7 @@ class _DietPageState extends State<DietPage> {
     }
   }
 
+  // MODIFICACIÓN: Eliminada la duplicidad sintáctica del argumento 'String uid' en la firma
   Future<dynamic> _fetchDietaDinamica(String uid, int weekday) async {
     dynamic result;
     switch (weekday) {

@@ -35,6 +35,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
   int _historicExerciseDays = 0;
   int _historicWaterDays = 0;
   int _historicMealsCount = 0;
+  int _historicRewardsCount = 0; // Contador histórico nativo e independiente
   bool _isLoading = true;
 
   final List<AchievementModel> _achievementsList = [
@@ -157,7 +158,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
     });
   }
 
-  // MODIFICACIÓN: Recuperar las métricas de logros desde la colección dedicada 'puntos' en Firestore
+  // MODIFICACIÓN COMPLETA: Sincronización limpia desde las propiedades nativas de PuntosModel
   Future<void> _loadHistoricalStats() async {
     final user = Provider.of<DatabaseService>(context, listen: false).user;
 
@@ -169,10 +170,17 @@ class _AchievementsPageState extends State<AchievementsPage> {
 
       if (docPuntos.exists && docPuntos.data() != null) {
         final puntosObj = PuntosModel.fromMap(user.uid, docPuntos.data());
+
         _historicExerciseDays = puntosObj.historicExerciseDays;
         _historicWaterDays = puntosObj.historicWaterDays;
         _historicMealsCount = puntosObj.historicMealsCount;
+        _historicRewardsCount =
+            puntosObj.historicRewardsCount; // <--- LECTURA NATIVA PERFECTA
+
         globalPointsNotifier.value = puntosObj.valor;
+
+        // Sincronizamos el Notificador Global de la app por si otras vistas lo consumen de forma reactiva
+        globalRewardsNotifier.value = _historicRewardsCount;
       }
     }
 
@@ -181,13 +189,14 @@ class _AchievementsPageState extends State<AchievementsPage> {
     });
   }
 
+  // MODIFICACIÓN COMPLETA: Retornamos la variable interna histórica para evitar la dependencia de notificadores mutables locales
   int _getCurrentValueForAchievement(
       AchievementModel achievement, int currentRewards) {
     switch (achievement.category) {
       case 'exercise':
         return _historicExerciseDays;
       case 'rewards':
-        return currentRewards;
+        return _historicRewardsCount; // <--- Vinculación al contador persistente inmune a reinicios
       case 'streaks':
         if (achievement.title.contains('Hidratación') ||
             achievement.title.contains('Manantial')) {
@@ -294,13 +303,11 @@ class _AchievementsPageState extends State<AchievementsPage> {
         body: Center(child: CircularProgressIndicator()),
       );
     }
-
     return AnimatedBuilder(
       animation:
           Listenable.merge([globalPointsNotifier, globalRewardsNotifier]),
       builder: (context, child) {
         final int currentRewards = globalRewardsNotifier.value;
-
         int unlockedCount = _achievementsList.where((achievement) {
           int current =
               _getCurrentValueForAchievement(achievement, currentRewards);

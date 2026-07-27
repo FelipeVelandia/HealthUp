@@ -28,17 +28,17 @@ class ProgressPage extends StatelessWidget {
     }
   }
 
+  // MODIFICACIÓN COMPLETA: Acumulación histórica e independiente de premios usando PuntosModel nativo
   void _claimReward(BuildContext context) async {
     final user = Provider.of<DatabaseService>(context, listen: false).user;
     final prefs = await SharedPreferences.getInstance();
 
-    // Conservamos los puntos excedentes de forma matemática justa
+    // Conservamos los puntos excedentes de forma matemática justa al subir de nivel
     final int puntosActuales = globalPointsNotifier.value;
     final int puntosExcedentes = puntosActuales - _pointsGoal;
 
     globalPointsNotifier.value = puntosExcedentes > 0 ? puntosExcedentes : 0;
 
-    // MODIFICACIÓN: Al obtener el documento actual de puntos para no borrar los contadores históricos al restar puntos
     if (user != null) {
       final docPuntos = await FirebaseFirestore.instance
           .collection('puntos')
@@ -48,31 +48,47 @@ class ProgressPage extends StatelessWidget {
       int historicExerciseDays = 0;
       int historicWaterDays = 0;
       int historicMealsCount = 0;
+      int historicRewardsCount = 0;
 
       if (docPuntos.exists && docPuntos.data() != null) {
         final actualPuntosObj = PuntosModel.fromMap(user.uid, docPuntos.data());
         historicExerciseDays = actualPuntosObj.historicExerciseDays;
         historicWaterDays = actualPuntosObj.historicWaterDays;
         historicMealsCount = actualPuntosObj.historicMealsCount;
+        historicRewardsCount =
+            actualPuntosObj.historicRewardsCount; // <--- LEÍDO NATIVAMENTE
       }
 
-      // Creamos el nuevo objeto conservando las variables de logros intactas
+      // INCREMENTO HISTÓRICO LINEAL: Sumamos el nuevo premio sin alterar el resto de contadores
+      historicRewardsCount += 1;
+
+      // Actualizamos los notificadores globales de la interfaz y SharedPreferences
+      globalRewardsNotifier.value = historicRewardsCount;
+      await prefs.setInt(
+          'user_claimed_rewards_key', globalRewardsNotifier.value);
+
+      // Creamos el nuevo objeto usando la propiedad nativa del modelo adaptado
       final puntosObj = PuntosModel(
         uid: user.uid,
         valor: globalPointsNotifier.value,
         historicExerciseDays: historicExerciseDays,
         historicWaterDays: historicWaterDays,
         historicMealsCount: historicMealsCount,
+        historicRewardsCount:
+            historicRewardsCount, // <--- INTEGRADO NATIVAMENTE
       );
 
+      // Guardamos la estructura limpia en Firebase
       await FirebaseFirestore.instance
           .collection('puntos')
           .doc(user.uid)
           .set(puntosObj.toMap());
+    } else {
+      // Respaldo local por si el usuario pierde conexión temporal
+      globalRewardsNotifier.value += 1;
+      await prefs.setInt(
+          'user_claimed_rewards_key', globalRewardsNotifier.value);
     }
-
-    globalRewardsNotifier.value += 1;
-    await prefs.setInt('user_claimed_rewards_key', globalRewardsNotifier.value);
 
     final List<String> listaEnlacesPremios = [
       'https://ejemplo.com',
@@ -215,7 +231,7 @@ class ProgressPage extends StatelessWidget {
                 } else {
                   var nombre = snapshot.data.nombre;
 
-                  // MODIFICACIÓN: Integración de la lectura asíncrona mediante PuntosModel mapeando el documento de Firestore
+                  // MODIFICACIÓN: Integración nativa de PuntosModel al mapear los datos de Firestore
                   return FutureBuilder<DocumentSnapshot>(
                     future: FirebaseFirestore.instance
                         .collection('puntos')
@@ -231,14 +247,16 @@ class ProgressPage extends StatelessWidget {
                               puntosSnapshot.data!.data()
                                   as Map<String, dynamic>?);
                           globalPointsNotifier.value = puntosObj.valor;
+                          // También sincronizamos de forma inicial la variable de premios para otras vistas reactivas
+                          globalRewardsNotifier.value =
+                              puntosObj.historicRewardsCount;
                         } else {
                           globalPointsNotifier.value = 0;
+                          globalRewardsNotifier.value = 0;
                         }
                       }
-
                       return Column(
                         children: [
-                          // BANNER DE BIENVENIDA
                           Container(
                             width: double.infinity,
                             padding: const EdgeInsets.all(20.0),
@@ -283,8 +301,7 @@ class ProgressPage extends StatelessWidget {
                               ],
                             ),
                           ),
-                          const SizedBox(
-                              height: 5), // PANEL PRINCIPAL DE PROGRESO
+                          const SizedBox(height: 5),
                           Card(
                             elevation: 4,
                             shape: RoundedRectangleBorder(
@@ -309,8 +326,7 @@ class ProgressPage extends StatelessWidget {
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black87),
                                       ),
-                                      const SizedBox(
-                                          height: 24), // Barra circular
+                                      const SizedBox(height: 24),
                                       Stack(
                                         alignment: Alignment.center,
                                         children: [
