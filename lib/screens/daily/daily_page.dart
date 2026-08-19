@@ -443,12 +443,12 @@ class _DailyQuestsScreenState extends State<DailyPage> {
               tooltip:
                   _isWeightConfirmed ? 'Peso confirmado' : 'Confirmar Peso',
             ),
-            IconButton(
+            /*IconButton(
               icon: const Icon(Icons.restart_alt,
                   color: Colors.redAccent, size: 26),
               onPressed: _resetConsumedWaterManually,
               tooltip: 'Reiniciar agua del día',
-            ),
+            ),*/
           ],
         ),
       ),
@@ -599,7 +599,7 @@ class _DailyQuestsScreenState extends State<DailyPage> {
     );
   }
 
-  Future _resetConsumedWaterManually() async {
+  /*Future _resetConsumedWaterManually() async {
     if (_waterPointsAwardedToday) {
       if (globalPointsNotifier.value >= 20) {
         globalPointsNotifier.value -= 20;
@@ -632,5 +632,5 @@ class _DailyQuestsScreenState extends State<DailyPage> {
         ),
       );
     }
-  }
+  }*/
 }

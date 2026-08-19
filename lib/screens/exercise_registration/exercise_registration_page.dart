@@ -122,7 +122,7 @@ class _ExerciseRegistrationPageState extends State<ExerciseRegistrationPage> {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('¡Ejercicio sincronizado en la nube con éxito! ☁️🎉'),
+            content: Text('¡Ejercicio registrado con éxito! ☁️🎉'),
             backgroundColor: Colors.green,
           ),
         );

@@ -14,7 +14,7 @@ class ProgressPage extends StatelessWidget {
   ProgressPage({super.key});
   final firestore = DatabaseService();
 
-  final int _pointsGoal = 20; // Meta fija de puntos
+  final int _pointsGoal = 1000; // Meta fija de puntos
 
   // Generador de saludo dinámico y empático según la hora real del dispositivo
   String _getFriendlyGreeting() {
@@ -342,7 +342,7 @@ class ProgressPage extends StatelessWidget {
                                                   AlwaysStoppedAnimation(
                                                       canClaim
                                                           ? Colors.green
-                                                          : Colors.blue),
+                                                          : Colors.red),
                                               strokeCap: StrokeCap.round,
                                             ),
                                           ),
@@ -356,7 +356,7 @@ class ProgressPage extends StatelessWidget {
                                                     fontWeight: FontWeight.bold,
                                                     color: canClaim
                                                         ? Colors.green
-                                                        : Colors.blue),
+                                                        : Colors.red),
                                               ),
                                               Text(
                                                 '/ $_pointsGoal Pts',
@@ -426,7 +426,7 @@ class ProgressPage extends StatelessWidget {
                   );
                 }
               } else if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Text('Loading');
+                return const Text('Loading...');
               } else {
                 return const Text('Error');
               }

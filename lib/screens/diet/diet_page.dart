@@ -246,7 +246,7 @@ class _DietPageState extends State<DietPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                '¡$mealLabel completado y sincronizado en la nube! +20 Pts 🍽️☁️'),
+                '¡$mealLabel completado! +20 Pts 🍽️☁️'),
             backgroundColor: Colors.green,
             duration: const Duration(seconds: 2),
           ),

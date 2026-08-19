@@ -534,7 +534,7 @@ class _FoodRegistrationScreenState extends State<FoodRegistrationScreen> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
-                                          '¡Historial sincronizado en la nube con éxito! ☁️🎉'),
+                                          '¡Historial registrado con éxito! ☁️🎉'),
                                       backgroundColor: Colors.green,
                                     ),
                                   );
